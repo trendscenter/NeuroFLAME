@@ -64,10 +64,16 @@ Authentication is managed through JWTs, with authorization checks at each endpoi
 
 4. **Computation Job Management**
    - Coordinates lifecycles of containers, servers, and the jobs to run.
+   - Boots up and connects the network
+   - Submits jobs
+   - Shutsdown network on job completion
 
 5. **Database**
    - Stores users, consortiums, projects, kits, and runs information.
    - Uses MongoDB.
+
+6. **Reverse Proxy/Broker**
+   - Directs communication between components of federated analysis projects to and from the respective servers, managing traffic for multiple projects simultaneously over a shared external endpoint.
 
 ## Development Roadmap
 
