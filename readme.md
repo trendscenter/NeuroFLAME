@@ -59,20 +59,24 @@ Authentication is managed through JWTs, with authorization checks at each endpoi
 2. **Authentication Service**
    - Authenticates tokens.
 
-3. **File Distribution API**
-   - Distributes startup kits and necessary files to consortium members securely.
-
-4. **Computation Job Management**
+3. **Computation Job Management**
    - Coordinates lifecycles of containers, servers, and the jobs to run.
    - Boots up and connects the network
    - Submits jobs
    - Shutsdown network on job completion
 
-5. **Database**
-   - Stores users, consortiums, projects, kits, and runs information.
+4. **Database**
+   - Stores users, consortia, and run information.
    - Uses MongoDB.
 
-6. **Reverse Proxy/Broker**
+5. **File System**
+   - provides a workspace for generating and zipping run kits
+   - provides run specific results directory to be mounted
+
+6. **File Hosting API**
+   - Distributes startup kits and necessary files to consortium members securely.
+
+7. **Reverse Proxy/Broker TBD**
    - Directs communication between components of federated analysis projects to and from the respective servers, managing traffic for multiple projects simultaneously over a shared external endpoint.
 
 ## Development Roadmap
