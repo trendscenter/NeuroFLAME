@@ -27,7 +27,7 @@
 - Maybe we just let the flare servers be on different ports?
 
 ## Development Needs
-- We nee the central platform and a client side app that can interact with the central platform and the local system.
+- We need the central platform and a client side app that can interact with the central platform and the local system.
 
 ## Client Side Application Features
 - UI
