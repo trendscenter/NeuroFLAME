@@ -22,11 +22,11 @@ export async function launchCentralNode({
     if(containerService === "docker") {
         // Run the docker command
         console.log("Running docker command");
-        dockerLaunch(imageName, directoriesToMount, portBindings, commandsToRun);
+        // dockerLaunch(imageName, directoriesToMount, portBindings, commandsToRun);
     }
     if(containerService === "singularity") {
         // Run the singularity command
         console.log("Running singularity command");
-        singularityLaunch(imageName, directoriesToMount, portBindings, commandsToRun);
+        // singularityLaunch(imageName, directoriesToMount, portBindings, commandsToRun);
     }
 }

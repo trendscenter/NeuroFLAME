@@ -1,3 +1,4 @@
+import fs from 'fs'
 import path from 'path'
 import { generateProjectFile } from './generateProjectFile'
 import { createStartupKits } from './createStartupKits'
@@ -21,12 +22,20 @@ export async function startRun({
   computationParameters,
 }: StartRunArgs) {
   console.log('Running startRun command')
+  // show the current path
 
-  const baseDirectory = '/baseDirectory'
-  const runDirectory = path.join(baseDirectory, 'runs', consortiumId, runId)
+  const baseDirectory = path.join('C:\\development\\effective-palm-tree\\', 'basedir')
+  const runDirectory = path.join(baseDirectory, 'runs/', consortiumId, runId)
+  const startupKitsPath = path.join(runDirectory, 'startupKits/')
+  const runKitsPath = path.join(runDirectory, 'runKits/')
 
-  const {port: fed_learn_port, server: fed_learn_server} = await reservePort()
-  const {port: admin_port, server: admin_server} = await reservePort()
+  // Ensure all necessary directories are created
+  await ensureDirectoryExists(runDirectory)
+  await ensureDirectoryExists(startupKitsPath)
+  await ensureDirectoryExists(runKitsPath)
+
+  const { port: fed_learn_port, server: fed_learn_server } = await reservePort()
+  const { port: admin_port, server: admin_server } = await reservePort()
 
   const FQDN = 'host.docker.internal'
 
@@ -86,4 +95,15 @@ export async function startRun({
     portBindings: portBindings,
     commandsToRun: commandsToRun,
   })
+}
+
+async function ensureDirectoryExists(directoryPath: string): Promise<void> {
+  try {
+    await fs.promises.mkdir(directoryPath, { recursive: true })
+    console.log(`Directory ensured: ${directoryPath}`)
+  } catch (error: any) {
+    if (error.code !== 'EEXIST') {
+      throw error // Rethrow the error if it's not about the directory already existing
+    }
+  }
 }
