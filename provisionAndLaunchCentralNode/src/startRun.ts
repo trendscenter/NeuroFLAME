@@ -38,6 +38,7 @@ export async function startRun({
   const { port: admin_port, server: admin_server } = await reservePort()
 
   const FQDN = 'host.docker.internal'
+  const adminName = "admin@admin.com"
 
   await generateProjectFile({
     projectName: 'project',
@@ -54,9 +55,11 @@ export async function startRun({
   })
 
   await createRunKits({
-    startupKitsPath: path.join(runDirectory, 'startupKits'),
+    startupKitsPath: path.join(runDirectory, 'startupKits', 'project', 'prod_00'),
     outputDirectory: path.join(runDirectory, 'runKits'),
     computationParameters: computationParameters,
+    FQDN: FQDN,
+    adminName: adminName,
   })
 
   const containerService = 'docker'
