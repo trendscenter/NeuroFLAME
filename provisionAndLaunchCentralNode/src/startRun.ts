@@ -24,7 +24,10 @@ export async function startRun({
   console.log('Running startRun command')
   // show the current path
 
-  const baseDirectory = path.join('C:\\development\\effective-palm-tree\\', 'basedir')
+  const baseDirectory = path.join(
+    'C:\\development\\effective-palm-tree\\',
+    'basedir',
+  )
   const runDirectory = path.join(baseDirectory, 'runs/', consortiumId, runId)
   const startupKitsPath = path.join(runDirectory, 'startupKits/')
   const runKitsPath = path.join(runDirectory, 'runKits/')
@@ -38,7 +41,7 @@ export async function startRun({
   const { port: admin_port, server: admin_server } = await reservePort()
 
   const FQDN = 'host.docker.internal'
-  const adminName = "admin@admin.com"
+  const adminName = 'admin@admin.com'
 
   await generateProjectFile({
     projectName: 'project',
@@ -55,7 +58,12 @@ export async function startRun({
   })
 
   await createRunKits({
-    startupKitsPath: path.join(runDirectory, 'startupKits', 'project', 'prod_00'),
+    startupKitsPath: path.join(
+      runDirectory,
+      'startupKits',
+      'project',
+      'prod_00',
+    ),
     outputDirectory: path.join(runDirectory, 'runKits'),
     computationParameters: computationParameters,
     FQDN: FQDN,
@@ -70,12 +78,8 @@ export async function startRun({
     },
   ]
 
-  const commandsToRun = [
-    './runKits/server/start.sh',
-    './runKits/admin/fl_admin.sh',
-    'submit_job job',
-  ]
-
+  const commandsToRun = ['bash', '/runKit/init.sh']
+  
   const portBindings = [
     {
       hostPort: fed_learn_port,

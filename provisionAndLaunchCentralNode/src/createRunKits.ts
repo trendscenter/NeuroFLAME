@@ -44,15 +44,29 @@ export async function createRunKits({
     await fs.mkdir(centralNodePath, { recursive: true })
     // Copy the server's startupKit to the central node runKit
     const serverStartupKitPath = path.join(startupKitsPath, FQDN)
-    await copyDirectory(serverStartupKitPath, path.join(centralNodePath, 'server'))
+    await copyDirectory(
+      serverStartupKitPath,
+      path.join(centralNodePath, 'server'),
+    )
     // Copy the admin's startupKit to the central node runKit
     const adminStartupKitPath = path.join(startupKitsPath, adminName)
-    await copyDirectory(adminStartupKitPath, path.join(centralNodePath, 'admin'))
+    await copyDirectory(
+      adminStartupKitPath,
+      path.join(centralNodePath, 'admin'),
+    )
     // Create or modify computationParameters.json within the central node's runKit
     await fs.writeFile(
       path.join(centralNodePath, 'computationParameters.json'),
       computationParameters,
     )
+
+    // Additional step: Create init.sh in the centralNode runKit directory
+    const initScriptContent = `#!/bin/bash
+        /runKit/server/startup/start.sh
+        `
+
+    const initScriptPath = path.join(centralNodePath, 'init.sh')
+    await fs.writeFile(initScriptPath, initScriptContent, { mode: 0o755 }) // mode: 0o755 makes the script executable
 
     console.log('RunKits created successfully.')
   } catch (error) {
