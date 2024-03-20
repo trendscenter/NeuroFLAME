@@ -9,9 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dockerode": "^4.0.2",
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
+    "@types/dockerode": "^3.3.26",
     "@types/js-yaml": "^4.0.9"
   }
 }

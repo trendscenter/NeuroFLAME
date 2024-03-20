@@ -1,37 +1,61 @@
-import { exec } from 'child_process'
-import { promisify } from 'util'
+import Docker from 'dockerode';
+import fs from 'fs';
+import path from 'path';
 
-// Promisify exec for use with async/await
-const execP = promisify(exec)
+const docker = new Docker();
 
 interface CreateStartupKitsArgs {
-  projectFilePath: string
-  outputDirectory: string
+  projectFilePath: string;
+  outputDirectory: string;
 }
 
 export async function createStartupKits({
   projectFilePath,
   outputDirectory,
 }: CreateStartupKitsArgs) {
-  const provisionImageName = 'nvflare-provisioner'
+  const provisionImageName = 'nvflare-provisioner';
+  
+  // Ensure the output directory is an absolute path
+  const outputDirPath = path.resolve(outputDirectory);
 
-  const command = `
-        docker run --rm \
-        -v "${projectFilePath}":/project/Project.yml \
-        -v "${outputDirectory}":/outputDirectory \
-        ${provisionImageName}\
-        nvflare provision -p /project/Project.yml -w /outputDirectory
-      `
-      
   try {
-    // Execute the Docker command
-    const { stdout, stderr } = await execP(command)
-    // Log output and errors (if any)
-    if (stdout) console.log('Command stdout:', stdout)
-    if (stderr) console.error('Command stderr:', stderr)
-    console.log('Docker task completed successfully.')
+    // Ensure the project file path is valid and obtain its absolute path
+    if (!fs.existsSync(projectFilePath)) {
+      throw new Error(`Project file does not exist at path: ${projectFilePath}`);
+    }
+    const projectFilePathAbsolute = path.resolve(projectFilePath);
+
+    // Create container options
+    const containerOptions = {
+      Image: provisionImageName,
+      Cmd: ['nvflare', 'provision', '-p', '/project/Project.yml', '-w', '/outputDirectory'],
+      HostConfig: {
+        Binds: [
+          `${projectFilePathAbsolute}:/project/Project.yml`,
+          `${outputDirPath}:/outputDirectory`
+        ],
+      },
+    };
+
+    // Create and start the container
+    const container = await docker.createContainer(containerOptions);
+    await container.start();
+
+    // Wait for the container to finish
+    const stream = await container.logs({
+      follow: true,
+      stdout: true,
+      stderr: true,
+    });
+
+    stream.on('data', (data: any) => console.log(data.toString()));
+    stream.on('end', async () => {
+      console.log('Docker task completed successfully.');
+      // Remove the container
+      await container.remove();
+    });
   } catch (error) {
-    console.error('Failed to execute Docker command:', error)
-    throw error 
+    console.error('Failed to execute Docker command:', error);
+    throw error;
   }
 }
