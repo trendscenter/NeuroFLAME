@@ -12,7 +12,7 @@ interface LaunchCentralNodeArgs {
     commandsToRun: string[];
 }
 
-export function launchCentralNode({
+export async function launchCentralNode({
     containerService,
     imageName,
     directoriesToMount,

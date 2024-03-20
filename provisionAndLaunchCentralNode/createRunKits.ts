@@ -1,10 +1,10 @@
 interface CreateRunKitsArgs {
   startupKitsPath: string
   outputDirectory: string
-  computationParameters: JSON
+  computationParameters: string
 }
 
-export function createRunKits({
+export async function createRunKits({
   startupKitsPath,
   outputDirectory,
   computationParameters,

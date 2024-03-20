@@ -7,7 +7,7 @@ interface GenerateProjectFileArgs {
   siteNames: string[]
 }
 
-export function generateProjectFile({
+export async function generateProjectFile({
   projectName,
   FQDN,
   fed_learn_port,
@@ -15,5 +15,5 @@ export function generateProjectFile({
   outputFilePath,
   siteNames,
 }: GenerateProjectFileArgs) {
-    
+
 }

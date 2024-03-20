@@ -3,7 +3,7 @@ interface CreateStartupKitsArgs {
     outputDirectory: string;
 }
 
-export function createStartupKits({
+export async function createStartupKits({
     projectFilePath,
     outputDirectory,
   }: CreateStartupKitsArgs) {
