@@ -60,13 +60,22 @@ export async function createRunKits({
       computationParameters,
     )
 
-    // Additional step: Create init.sh in the centralNode runKit directory
-    const initScriptContent = `#!/bin/bash
-        /runKit/server/startup/start.sh
-        `
+    const entrypointScript = `#!/bin/bash
+set -e
+echo "starting server"
+cd /runKit/server/startup/ && ./start.sh
+echo "starting admin"
+cd /runKit/admin/startup/ && ./fl_admin.sh <<EOF
+admin@admin.com
+submit_job /workspace/jobs/job
+EOF
 
-    const initScriptPath = path.join(centralNodePath, 'init.sh')
-    await fs.writeFile(initScriptPath, initScriptContent, { mode: 0o755 }) // mode: 0o755 makes the script executable
+# Keep the container running
+tail -f /dev/null
+    `
+
+    const initScriptPath = path.join(centralNodePath, 'entrypoint.sh')
+    await fs.writeFile(initScriptPath, entrypointScript, { mode: 0o755 }) // mode: 0o755 makes the script executable
 
     console.log('RunKits created successfully.')
   } catch (error) {

@@ -78,8 +78,8 @@ export async function startRun({
     },
   ]
 
-  const commandsToRun = ['bash', '/runKit/init.sh']
-  
+  const commandsToRun = ['bash', '-c', '/runKit/entrypoint.sh']
+
   const portBindings = [
     {
       hostPort: fed_learn_port,
