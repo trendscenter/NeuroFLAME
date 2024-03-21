@@ -71,11 +71,10 @@ submit_job /workspace/jobs/job
 EOF
 
 # Keep the container running
-tail -f /dev/null
-    `
+tail -f /dev/null`
 
-    const initScriptPath = path.join(centralNodePath, 'entrypoint.sh')
-    await fs.writeFile(initScriptPath, entrypointScript, { mode: 0o755 }) // mode: 0o755 makes the script executable
+    const entrypointScriptPath = path.join(centralNodePath, 'entrypoint.sh')
+    await fs.writeFile(entrypointScriptPath, entrypointScript, { mode: 0o755 }) // mode: 0o755 makes the script executable
 
     console.log('RunKits created successfully.')
   } catch (error) {

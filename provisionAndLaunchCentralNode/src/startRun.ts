@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { generateProjectFile } from './generateProjectFile'
 import { createStartupKits } from './createStartupKits'
-import { launchCentralNode } from './launchCentralNode'
+import { launchNode } from './launchNode'
 import { createRunKits } from './createRunKits'
 import { reservePort } from './portManagement'
 
@@ -95,7 +95,7 @@ export async function startRun({
   await fed_learn_server.close()
   await admin_server.close()
 
-  await launchCentralNode({
+  await launchNode({
     containerService: containerService,
     imageName: imageName,
     directoriesToMount: directoriesToMount,

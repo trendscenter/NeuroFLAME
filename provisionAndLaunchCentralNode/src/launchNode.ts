@@ -1,7 +1,7 @@
 import Docker from 'dockerode'
 const docker = new Docker()
 
-interface LaunchCentralNodeArgs {
+interface LaunchNodeArgs {
   containerService: string
   imageName: string
   directoriesToMount: Array<{
@@ -23,13 +23,13 @@ interface PortBindings {
   [portWithProtocol: string]: Array<{ HostPort: string }> // Define port bindings with HostPort as string
 }
 
-export async function launchCentralNode({
+export async function launchNode({
   containerService,
   imageName,
   directoriesToMount,
   portBindings,
   commandsToRun,
-}: LaunchCentralNodeArgs) {
+}: LaunchNodeArgs) {
   if (containerService === 'docker') {
     console.log('Running docker command')
 
