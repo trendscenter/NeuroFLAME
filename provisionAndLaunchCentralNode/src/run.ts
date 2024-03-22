@@ -1,5 +1,5 @@
 import { launchNode } from './launchNode'
-import { startRun } from './startRun'
+import { centralHandleStartRunEvent } from './centralHandleStartRunEvent'
 import path from 'path'
 import fs from 'fs'
 
@@ -8,7 +8,7 @@ async function run() {
   const consortiumId = 'consortium1'
   const userIds = ['user1', 'user2']
 
-  await startRun({
+  await centralHandleStartRunEvent({
     imageName: 'boilerplate_average_app',
     userIds: userIds,
     consortiumId: consortiumId,

@@ -6,7 +6,7 @@ import { launchNode } from './launchNode'
 import { createRunKits } from './createRunKits'
 import { reservePort } from './portManagement'
 
-interface StartRunArgs {
+interface centralHandleStartRunEventArgs {
   imageName: string
   userIds: string[]
   consortiumId: string
@@ -14,15 +14,14 @@ interface StartRunArgs {
   computationParameters: string
 }
 
-export async function startRun({
+export async function centralHandleStartRunEvent({
   imageName,
   userIds,
   consortiumId,
   runId,
   computationParameters,
-}: StartRunArgs) {
+}: centralHandleStartRunEventArgs) {
   console.log('Running startRun command')
-  // show the current path
 
   const baseDirectory = path.join(
     'C:\\development\\effective-palm-tree\\',
