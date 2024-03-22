@@ -16,7 +16,11 @@ async function run() {
     computationParameters: JSON.stringify({ lambda: 0.1 }),
   })
 
-  const commandsToRun = ['bash', '-c', '/workspace/runKit/startup/start.sh && tail -f /dev/null'];
+  const commandsToRun = [
+    'bash',
+    '-c',
+    '/workspace/runKit/startup/start.sh && tail -f /dev/null',
+  ]
 
   // Launch edge nodes for each site
   for (const userId of userIds) {
