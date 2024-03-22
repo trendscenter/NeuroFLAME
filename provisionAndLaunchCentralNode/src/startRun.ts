@@ -94,7 +94,7 @@ export async function startRun({
   // Release the ports
   await fed_learn_server.close()
   await admin_server.close()
-
+  console.log('launching central node')
   await launchNode({
     containerService: containerService,
     imageName: imageName,
@@ -102,6 +102,7 @@ export async function startRun({
     portBindings: portBindings,
     commandsToRun: commandsToRun,
   })
+  console.log('central node launched')
 }
 
 async function ensureDirectoryExists(directoryPath: string): Promise<void> {

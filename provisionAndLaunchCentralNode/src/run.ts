@@ -17,24 +17,52 @@ async function run() {
     }),
   })
 
-  // launch edge node
+  // launch edge node for site 1
+  const hostDirectorySite1 = path.join(
+    __dirname,
+    '../../basedir/runs/',
+    consortiumId,
+    runId,
+    'runKits',
+    userIds[0],
+  )
+
+    const commandsToRun = ['bash', '-c', '/workspace/runKit/startup/start.sh && tail -f /dev/null']
+
   await launchNode({
     containerService: 'docker',
     imageName: 'boilerplate_average_app',
     directoriesToMount: [
       {
-        hostDirectory: path.join(
-          '../basedir/runs/',
-          consortiumId,
-          runId,
-          'runKits',
-          userIds[0],
-        ),
+        hostDirectory: hostDirectorySite1,
         containerDirectory: '/workspace/runKit/',
       },
     ],
     portBindings: [],
-    commandsToRun: ["tail -f /dev/null"],
+    commandsToRun: commandsToRun,
+  })
+
+  // launch edge node for site 2
+  const hostDirectorySite2 = path.join(
+    __dirname,
+    '../../basedir/runs/',
+    consortiumId,
+    runId,
+    'runKits',
+    userIds[1],
+  )
+
+  await launchNode({
+    containerService: 'docker',
+    imageName: 'boilerplate_average_app',
+    directoriesToMount: [
+      {
+        hostDirectory: hostDirectorySite2,
+        containerDirectory: '/workspace/runKit/',
+      },
+    ],
+    portBindings: [],
+    commandsToRun: commandsToRun,
   })
 }
 
