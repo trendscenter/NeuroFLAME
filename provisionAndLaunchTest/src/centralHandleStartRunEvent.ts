@@ -5,7 +5,7 @@ import { createStartupKits } from './createStartupKits'
 import { launchNode } from './launchNode'
 import { createRunKits } from './createRunKits'
 import { reservePort } from './portManagement'
-import { zipAndMove } from './zipAndMove'
+import { prepareHostingDirectory } from './prepareHostingDirectory'
 
 interface centralHandleStartRunEventArgs {
   imageName: string
@@ -73,10 +73,14 @@ export async function centralHandleStartRunEvent({
     adminName: adminName,
   })
 
-  await zipAndMove({
-    sourceDir: hostingDirectory,
-    targetDir: runKitsPath,
+  // Zip and move the runKits to the hosting directory
+  await prepareHostingDirectory({
+    sourceDir: runKitsPath,
+    targetDir: hostingDirectory,
+    exclude: ['centralNode']
   })
+
+
 
   // Release the ports
   await fed_learn_server.close()
@@ -113,9 +117,10 @@ async function ensureDirectoryExists(directoryPath: string): Promise<void> {
   try {
     await fs.promises.mkdir(directoryPath, { recursive: true })
     console.log(`Directory ensured: ${directoryPath}`)
-  } catch (error: any) {
-    if (error.code !== 'EEXIST') {
-      throw error // Rethrow the error if it's not about the directory already existing
+  } catch (error) {
+    if ((error as { code?: string }).code === 'EEXIST') {
+      return
     }
+    throw error
   }
 }
