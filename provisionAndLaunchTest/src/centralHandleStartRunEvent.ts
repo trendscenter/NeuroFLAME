@@ -23,10 +23,15 @@ export async function centralHandleStartRunEvent({
 }: centralHandleStartRunEventArgs) {
   console.log('Running startRun command')
 
+  // These variables are likely to be passed in as environment variables
   const baseDirectory = path.join(
     'C:\\development\\effective-palm-tree\\',
     'basedir',
   )
+  const FQDN = 'host.docker.internal'
+  const adminName = 'admin@admin.com'
+  //
+
   const runDirectory = path.join(baseDirectory, 'runs/', consortiumId, runId)
   const startupKitsPath = path.join(runDirectory, 'startupKits/')
   const runKitsPath = path.join(runDirectory, 'runKits/')
@@ -38,9 +43,6 @@ export async function centralHandleStartRunEvent({
 
   const { port: fed_learn_port, server: fed_learn_server } = await reservePort()
   const { port: admin_port, server: admin_server } = await reservePort()
-
-  const FQDN = 'host.docker.internal'
-  const adminName = 'admin@admin.com'
 
   await generateProjectFile({
     projectName: 'project',
@@ -69,38 +71,34 @@ export async function centralHandleStartRunEvent({
     adminName: adminName,
   })
 
-  const containerService = 'docker'
-  const directoriesToMount = [
-    {
-      hostDirectory: path.join(runDirectory, 'runKits', 'centralNode'),
-      containerDirectory: '/runKit/',
-    },
-  ]
-
-  const commandsToRun = ['bash', '-c', '/runKit/entrypoint.sh']
-
-  const portBindings = [
-    {
-      hostPort: fed_learn_port,
-      containerPort: fed_learn_port,
-    },
-    {
-      hostPort: admin_port,
-      containerPort: admin_port,
-    },
-  ]
-
   // Release the ports
   await fed_learn_server.close()
   await admin_server.close()
+
   console.log('launching central node')
+
   await launchNode({
-    containerService: containerService,
+    containerService: 'docker',
     imageName: imageName,
-    directoriesToMount: directoriesToMount,
-    portBindings: portBindings,
-    commandsToRun: commandsToRun,
+    directoriesToMount: [
+      {
+        hostDirectory: path.join(runDirectory, 'runKits', 'centralNode'),
+        containerDirectory: '/runKit/',
+      },
+    ],
+    portBindings: [
+      {
+        hostPort: fed_learn_port,
+        containerPort: fed_learn_port,
+      },
+      {
+        hostPort: admin_port,
+        containerPort: admin_port,
+      },
+    ],
+    commandsToRun: ['bash', '-c', '/runKit/entrypoint.sh'],
   })
+
   console.log('central node launched')
 }
 

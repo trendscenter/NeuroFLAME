@@ -11,9 +11,9 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\provisionAndLaunchCentralNode\\src\\run.ts",
+            "program": "${workspaceFolder}\\provisionAndLaunchTest\\src\\run.ts",
             "outFiles": [
-                "${workspaceFolder}\\provisionAndLaunchCentralNode\\build\\**\\*.js"
+                "${workspaceFolder}\\provisionAndLaunchTest\\build\\**\\*.js"
             ]
         }
     ]
