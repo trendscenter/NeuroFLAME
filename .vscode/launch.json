@@ -7,7 +7,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Provision and Launch test",
             "skipFiles": [
                 "<node_internals>/**"
             ],

@@ -5,6 +5,7 @@ import { createStartupKits } from './createStartupKits'
 import { launchNode } from './launchNode'
 import { createRunKits } from './createRunKits'
 import { reservePort } from './portManagement'
+import { zipAndMove } from './zipAndMove'
 
 interface centralHandleStartRunEventArgs {
   imageName: string
@@ -35,6 +36,7 @@ export async function centralHandleStartRunEvent({
   const runDirectory = path.join(baseDirectory, 'runs/', consortiumId, runId)
   const startupKitsPath = path.join(runDirectory, 'startupKits/')
   const runKitsPath = path.join(runDirectory, 'runKits/')
+  const hostingDirectory = path.join(runDirectory, 'hosting/')
 
   // Ensure all necessary directories are created
   await ensureDirectoryExists(runDirectory)
@@ -65,10 +67,15 @@ export async function centralHandleStartRunEvent({
       'project',
       'prod_00',
     ),
-    outputDirectory: path.join(runDirectory, 'runKits'),
+    outputDirectory: runKitsPath,
     computationParameters: computationParameters,
     FQDN: FQDN,
     adminName: adminName,
+  })
+
+  await zipAndMove({
+    sourceDir: hostingDirectory,
+    targetDir: runKitsPath,
   })
 
   // Release the ports

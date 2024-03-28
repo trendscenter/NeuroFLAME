@@ -1,6 +1,4 @@
 import Docker from 'dockerode'
-import path from 'path'
-import fs from 'fs/promises' // Use the Promise-based API for file system operations
 
 const docker = new Docker() // Initialize a Dockerode client
 
@@ -13,7 +11,7 @@ export async function createStartupKits({
   projectFilePath,
   outputDirectory,
 }: CreateStartupKitsArgs): Promise<void> {
-  const provisionImageName = 'nvflare-provisioner'
+  const provisionImageName = 'nvflare-pt'
 
   // Define container options
   const containerOptions = {

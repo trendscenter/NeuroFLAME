@@ -9,10 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "archiver": "^7.0.1",
     "dockerode": "^4.0.2",
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
+    "@types/archiver": "^6.0.2",
     "@types/dockerode": "^3.3.26",
     "@types/js-yaml": "^4.0.9"
   }
