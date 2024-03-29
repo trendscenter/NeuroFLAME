@@ -3,21 +3,23 @@
 
 ```
 runs/[consortiumId]/[runId]/
-	provision/
-	    project.yaml
+	startupKits/
+	    Project.yaml
 	    [site1id]/
 	    [site2id]/
-	    server/
-	    admin/
-	    parameters.json
-    host/
-        [site1id]/kit.zip/
-        [site2id]/kit.zip/
-    run_kit/
-        admin@admin/
-	    server/
-	    parameters.json
-	results/
+	    admin@admin.com/
+	    host.docker.internal/
+	runKits/
+		central/
+        	admin/
+	    	server/
+	    	parameters.json
+		[site1id]/
+		[site2id]/
+    hosting/
+        [site1id].zip
+        [site2id].zip
+		central.zip
 ```
 
 **Run provision**
@@ -30,7 +32,7 @@ runs/[consortiumId]/[runId]/
 **Central node startup**
 
 * Launch the container with the following details
-	* mount the run_kit directory
+	* mount the runKit directory
 	* commands
 		* start server
 		* submit job
