@@ -77,10 +77,8 @@ export async function centralHandleStartRunEvent({
   await prepareHostingDirectory({
     sourceDir: runKitsPath,
     targetDir: hostingDirectory,
-    exclude: ['centralNode']
+    exclude: ['centralNode'],
   })
-
-
 
   // Release the ports
   await fed_learn_server.close()
@@ -107,7 +105,7 @@ export async function centralHandleStartRunEvent({
         containerPort: admin_port,
       },
     ],
-    commandsToRun: ['bash', '-c', '/runKit/entrypoint.sh'],
+    commandsToRun: ['python', '/workspace/entry_central.py'],
   })
 
   console.log('central node launched')

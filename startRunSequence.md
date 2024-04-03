@@ -1,6 +1,8 @@
 
 # System Run Initiation and Monitoring Process
 
+# TODO: change this document to reflect the provisioning step happening outside of the central client
+
 ## Introduction
 
 This document outlines the sequential process and interactions within the system, initiated by a consortium lead's action to start a run. It describes the flow from triggering a run in the UI, through the central client's provisioning and startup, to the edge clients beginning their operations. Furthermore, it details the error reporting and status update mechanisms.
