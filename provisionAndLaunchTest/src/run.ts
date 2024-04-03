@@ -16,12 +16,11 @@ async function run() {
     computationParameters: JSON.stringify({ lambda: 0.1 }),
   })
 
-  const commandsToRun = [
-    'bash',
-    '-c',
-    '/workspace/runKit/startup/start.sh && tail -f /dev/null',
-  ]
 
+  const commandsToRun = [
+    "python3", "entry_edge.py"
+  ]
+  
   // Launch edge nodes for each site
   for (const userId of userIds) {
     await launchEdgeNode(consortiumId, runId, userId, commandsToRun)
