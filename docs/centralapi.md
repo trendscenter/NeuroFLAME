@@ -41,3 +41,33 @@ Operations for Central clients, mirroring Edge clients with additional status re
 - Mutations:
   - `CentralClientRunReportStatus`
   - `CentralClientReportError`
+
+
+```
+import concern1 from concern1
+resolvers={
+	queries: {
+		...concern1.queries
+		...concern2.queries
+	}
+}
+```
+
+
+```
+resolvers={
+	queries:{}
+	mutations:{}
+	subscriptions:{}
+}
+```
+
+```
+resolvers={
+	startRun: (all the args)=>{
+		// await provision and host
+	    // emit start run event
+	}
+
+}
+```
