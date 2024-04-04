@@ -5,8 +5,12 @@ import { ACCESS_TOKEN_SECRET, ACCESS_TOKEN_DURATION, REFRESH_TOKEN_SECRET, REFRE
 const { sign, verify } = jwt;
 export const generateTokens = (payload = {}, options = {}) => {
     const { shouldExpire = true } = options;
-    const accessTokenOptions = shouldExpire ? { expiresIn: ACCESS_TOKEN_DURATION } : {};
-    const refreshTokenOptions = shouldExpire ? { expiresIn: REFRESH_TOKEN_DURATION } : {};
+    const accessTokenOptions = shouldExpire
+        ? { expiresIn: ACCESS_TOKEN_DURATION }
+        : {};
+    const refreshTokenOptions = shouldExpire
+        ? { expiresIn: REFRESH_TOKEN_DURATION }
+        : {};
     const accessToken = sign(payload, ACCESS_TOKEN_SECRET, accessTokenOptions);
     const refreshToken = sign(payload, REFRESH_TOKEN_SECRET, refreshTokenOptions);
     return { accessToken, refreshToken };
@@ -34,3 +38,5 @@ export const hashPassword = async (password) => {
     const saltRounds = 10;
     return hash(password, saltRounds);
 };
+// const myTokens = generateTokens({ id: 'dev' }, { shouldExpire: false })
+// console.log(myTokens)
