@@ -15,6 +15,6 @@
             "outFiles": [
                 "${workspaceFolder}\\provisionAndLaunchTest\\build\\**\\*.js"
             ]
-        }
+        },
     ]
 }

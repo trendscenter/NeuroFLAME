@@ -6,10 +6,17 @@ export default `#graphql
     computationParameters: String
   }
 
+  type RunStartPayload {
+    runId: String
+    imageName: String
+    userIds: [String]
+    consortiumId: String
+    computationParameters: String
+  }
+
   type StartRunOutput {
     runId: String
   }
-
 
   type Query {
     _empty: String
@@ -17,5 +24,9 @@ export default `#graphql
 
   type Mutation {
     startRun(input: StartRunInput): StartRunOutput
+  }
+
+  type Subscription {
+    runStart: RunStartPayload
   }
 `;

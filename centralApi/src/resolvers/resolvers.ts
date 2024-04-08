@@ -1,3 +1,6 @@
+import pubsub from './pubSubService.js'
+import { withFilter } from 'graphql-subscriptions'
+
 interface Context {
   userId: string
 }
@@ -13,26 +16,47 @@ interface StartRunOutput {
   runId: string
 }
 
+interface RunStartPayload {
+  runId: string
+  imageName: string
+  userIds: string[]
+  consortiumId: string
+  computationParameters: string
+}
+
 export default {
   Mutation: {
     startRun: async (
-      _,
+      _: unknown,
       { input }: { input: StartRunInput },
-      context,
+      context: Context,
     ): Promise<StartRunOutput> => {
-      // is this user authorized?
-      // is this a valid user
-      // is this user an admin of the consortium they are trying to run?
+      const runId = '1234' // Simulated run ID generation logic
 
-      // generate a runId
-      // create a run in the database
-      const runId = '1234'
-
-      // await call to provision run
-
-      // emit a start run event
+      pubsub.publish('RUN_START', {
+        runId,
+        imageName: input.imageName,
+        userIds: input.userIds,
+        consortiumId: input.consortiumId,
+        computationParameters: input.computationParameters,
+      })
 
       return { runId }
+    },
+  },
+  Subscription: {
+    runStart: {
+      resolve: (payload: RunStartPayload): RunStartPayload => {
+        return payload
+      },
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(['RUN_START']),
+        // Placeholder for future filtering logic. Currently returns true for all payloads.
+        (payload: RunStartPayload, variables: unknown, context: Context) => {
+          return true // Example condition, adjust according to business logic.
+          // return context.userId === 'central';
+        },
+      ),
     },
   },
 }

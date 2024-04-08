@@ -53,5 +53,5 @@ export const hashPassword = async (password) => {
   return hash(password, saltRounds)
 }
 
-// const myTokens = generateTokens({ id: 'dev' }, { shouldExpire: false })
+// const myTokens = generateTokens({ id: 'central' }, { shouldExpire: false })
 // console.log(myTokens)
