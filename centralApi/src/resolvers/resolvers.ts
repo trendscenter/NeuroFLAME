@@ -31,7 +31,7 @@ export default {
       { input }: { input: StartRunInput },
       context: Context,
     ): Promise<StartRunOutput> => {
-      const runId = '1234' // Simulated run ID generation logic
+      const runId = Date.now().toString()
 
       pubsub.publish('RUN_START', {
         runId,
