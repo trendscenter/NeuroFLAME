@@ -9,11 +9,11 @@ import { useServer } from 'graphql-ws/lib/use/ws'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 
-import typeDefs from './resolvers/typeDefs.js';
+import typeDefs from './resolvers/typeDefs.js'
 import resolvers from './resolvers/resolvers.js'
 
-import { httpServerContext, wsServerContext } from './serverContexts.js';
-import { validateAccessToken } from './authentication.js';
+import { httpServerContext, wsServerContext } from './serverContexts.js'
+import { validateAccessToken } from './authentication.js'
 
 export async function start({ port }) {
   const PORT = port
@@ -68,19 +68,32 @@ export async function start({ port }) {
   app.use(
     '/graphql',
     expressMiddleware(server, {
-      context: httpServerContext
+      context: httpServerContext,
     }),
   )
 
   app.post('/authenticateToken', (req, res) => {
     const token = req.body.token // assuming the token is sent in the request body
     try {
-      const decodedAccessToken = validateAccessToken(token);
-      res.json(decodedAccessToken);
+      const decodedAccessToken = validateAccessToken(token)
+      res.json(decodedAccessToken)
       res.json({ decodedAccessToken: 'decodedAccessToken' })
     } catch (e) {
       res.status(401).json(null) // 401 Unauthorized
     }
+  })
+
+  app.post('/host/download', (req, res) => {
+    // validate the token
+    const decodedAccessToken = validateAccessToken(req.body.token)
+    const { consortiumId, runId, userId } = decodedAccessToken
+    if (!consortiumId || !runId || !userId) {
+      return res.status(400).send('Missing required user payload data')
+    }
+    // authorize the user
+    
+    // construct the file path from the payload
+    // send the file
   })
 
   // Now that our HTTP server is fully set up, actually listen.

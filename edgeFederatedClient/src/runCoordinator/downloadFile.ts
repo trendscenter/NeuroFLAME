@@ -1,12 +1,8 @@
-import getConfig from '../config/getConfig'
-import inMemoryStore from '../inMemoryStore'
 import axios from 'axios'
 import fs from 'fs'
 
-import path from 'path'
 
-// Adjust the downloadFile function to accept an accessToken for the request header
-export default async function({
+export default async function ({
   url,
   outputPath,
   accessToken, // Add accessToken to the parameters

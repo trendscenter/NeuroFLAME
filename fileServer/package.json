@@ -1,0 +1,19 @@
+{
+  "name": "edgefederatedclient",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "compile": "tsc",
+    "start": "npm run compile && node ./dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21"
+  }
+}
