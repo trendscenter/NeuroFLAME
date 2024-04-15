@@ -2,16 +2,16 @@ import express, { Request, Response, NextFunction } from 'express'
 import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
-import getConfig from './config/getConfig'
+import multer from 'multer'
+import unzipper from 'unzipper'
+import getConfig from './config/getConfig.js'
 
-// Define the structure of the user payload expected in the request
 interface UserPayload {
-  consortiumId: string
-  runId: string
-  userId: string
+  consortiumId?: string
+  runId?: string
+  id: string
 }
 
-// Extend Express Request object to include custom user property
 declare global {
   namespace Express {
     interface Request {
@@ -20,84 +20,65 @@ declare global {
   }
 }
 
-// Initialize Express application
 const app = express()
-
 const config = await getConfig()
-const PORT = config.port // Port number for the server
-const BASE_DIR = config.baseDir // Base directory for storing files
-const AUTHENTICATION_URL = config.authenticationUrl // URL for the authentication service
+const PORT = config.port
+const BASE_DIR = config.baseDir
+const AUTHENTICATION_URL = config.authenticationUrl
 
-// Middleware to parse JSON bodies
-app.use(express.json())
-
-/**
- * Middleware to validate JWT by calling an external authentication service.
- * If the token is valid, it attaches the decoded user information to the request object.
- */
-const validateJWT = async (
+const decodeAndValidateJWT = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
-  const token = req.headers['x-access-token']
+  const token = req.headers['x-access-token'] as string | undefined
   if (!token) {
     res.status(401).send('Access token is required')
     return
   }
 
   try {
-    const response = await axios.post(
-      AUTHENTICATION_URL,
-      {},
-      {
-        headers: { 'x-access-token': token },
-      },
-    )
+    const response = await axios.post(AUTHENTICATION_URL, { token })
 
-    if (response.data && response.data.isValid) {
-      req.user = response.data.decodedToken as UserPayload
+    // Check if the auth server confirms the token validity
+    if (
+      response.status === 200 &&
+      response.data &&
+      response.data.decodedAccessToken
+    ) {
+      req.user = response.data.decodedAccessToken // Assuming this is a valid user object
       next()
     } else {
-      res.status(401).send('Invalid Token')
+      res.status(401).send('Invalid token')
     }
   } catch (error) {
     res.status(500).send('Authentication service error')
   }
 }
 
-/**
- * Endpoint to handle file download requests.
- * Validates user data and sends the requested file if it exists.
- */
-app.post(
-  '/download',
-  validateJWT,
-  async (req: Request, res: Response): Promise<void> => {
-    const user = req.user!
-    if (!user || !user.consortiumId || !user.runId || !user.userId) {
-      res.status(400).send('Missing required user payload data')
-      return
-    }
-
-    const filePath = path.join(
-      BASE_DIR,
-      user.consortiumId,
-      user.runId,
-      `${user.userId}.zip`,
-    )
-    if (await fileExists(filePath)) {
-      res.sendFile(filePath)
-    } else {
-      res.status(404).send('File not found')
-    }
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const { consortiumId, runId } = req.params
+    const uploadPath = path.join(BASE_DIR, consortiumId, runId) // Temporarily store ZIP here
+    fs.mkdirSync(uploadPath, { recursive: true }) // Ensure directory exists
+    cb(null, uploadPath)
   },
-)
+  filename: function (req, file, cb) {
+    cb(null, file.originalname) // Keep the original filename
+  },
+})
 
-/**
- * Helper function to check if a file exists at the given path.
- * Returns true if the file exists, false otherwise.
- */
+const upload = multer({ storage: storage })
+
+// Middleware to ensure that only users with id 'central' can upload files
+const isCentralUser = (req: Request, res: Response, next: NextFunction) => {
+  if (req.user && req.user.id === 'central') {
+    next()
+  } else {
+    res.status(403).send('Unauthorized: Only central user can upload files.')
+  }
+}
+
 async function fileExists(filePath: string): Promise<boolean> {
   try {
     await fs.promises.access(filePath, fs.constants.F_OK)
@@ -107,7 +88,82 @@ async function fileExists(filePath: string): Promise<boolean> {
   }
 }
 
-// Start the server on the configured port
+app.use(express.json())
+
+app.post(
+  '/download/:consortiumId/:runId/:id',
+  decodeAndValidateJWT,
+  async (req: Request, res: Response): Promise<void> => {
+    const user = req.user!
+    // ensure that the user has the required fields and that the data in the fields matches the URL parameters
+
+    if (!user || !user.consortiumId || !user.runId || !user.id) {
+      res.status(400).send('Missing required user payload data')
+      return
+    }
+    if (
+      user.consortiumId !== req.params.consortiumId ||
+      user.runId !== req.params.runId ||
+      user.id !== req.params.id
+    ) {
+      res
+        .status(400)
+        .send('User payload data does not match requested resource')
+      return
+    }
+
+    const filePath = path.join(
+      BASE_DIR,
+      user.consortiumId,
+      user.runId,
+      `${user.id}.zip`,
+    )
+
+    if (await fileExists(filePath)) {
+      res.sendFile(filePath)
+    } else {
+      res.status(404).send('File not found')
+    }
+  },
+)
+
+app.post(
+  '/upload/:consortiumId/:runId',
+  decodeAndValidateJWT,
+  isCentralUser,
+  upload.single('file'),
+  async (req: Request, res: Response) => {
+    if (req.file) {
+      try {
+        // Define the path where the ZIP file is temporarily stored
+        const zipPath = req.file.path
+        // Define the destination path for extracted contents
+        const extractPath = path.join(
+          BASE_DIR,
+          req.params.consortiumId,
+          req.params.runId,
+        )
+
+        // Unzip the file to the destination directory
+        await fs
+          .createReadStream(zipPath)
+          .pipe(unzipper.Extract({ path: extractPath }))
+          .promise()
+
+        // Optionally, delete the ZIP file after extraction
+        fs.unlinkSync(zipPath)
+
+        res.send(`File uploaded and extracted successfully to ${extractPath}`)
+      } catch (error) {
+        console.error('Error unzipping file:', error)
+        res.status(500).send('Error unzipping the file')
+      }
+    } else {
+      res.status(400).send('No file uploaded.')
+    }
+  },
+)
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

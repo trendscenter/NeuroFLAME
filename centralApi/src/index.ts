@@ -74,12 +74,20 @@ export async function start({ port }) {
 
   app.post('/authenticateToken', (req, res) => {
     const token = req.body.token // assuming the token is sent in the request body
+    if (!token) {
+      res.status(400).send('Token is required')
+      return
+    }
+
     try {
       const decodedAccessToken = validateAccessToken(token)
-      res.json(decodedAccessToken)
-      res.json({ decodedAccessToken: 'decodedAccessToken' })
+      if (decodedAccessToken) {
+        res.status(200).json({ decodedAccessToken })
+      } else {
+        res.status(401).send('Token is invalid')
+      }
     } catch (e) {
-      res.status(401).json(null) // 401 Unauthorized
+      res.status(401).send('Failed to decode token') // More specific error message
     }
   })
 
@@ -91,7 +99,7 @@ export async function start({ port }) {
       return res.status(400).send('Missing required user payload data')
     }
     // authorize the user
-    
+
     // construct the file path from the payload
     // send the file
   })

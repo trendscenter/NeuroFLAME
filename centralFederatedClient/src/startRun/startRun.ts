@@ -2,6 +2,7 @@ import path from 'path'
 import { provisionRun } from './provisionRun/provisionRun.js'
 import { reservePort } from './portManagement.js'
 import { launchNode } from './launchNode.js'
+import uploadToFileServer from './uploadToFileServer.js'
 
 interface startRunArgs {
   imageName: string
@@ -36,6 +37,12 @@ export default async function ({
     computationParameters,
     fed_learn_port,
     admin_port,
+  })
+
+  await uploadToFileServer({
+    consortiumId,
+    runId,
+    path_baseDirectory,
   })
 
   await fed_learn_server.close()

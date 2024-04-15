@@ -52,18 +52,37 @@ export async function start({ port }) {
     app.use(cors());
     app.use(bodyParser.json());
     app.use('/graphql', expressMiddleware(server, {
-        context: httpServerContext
+        context: httpServerContext,
     }));
     app.post('/authenticateToken', (req, res) => {
         const token = req.body.token; // assuming the token is sent in the request body
+        if (!token) {
+            res.status(400).send('Token is required');
+            return;
+        }
         try {
             const decodedAccessToken = validateAccessToken(token);
-            res.json(decodedAccessToken);
-            res.json({ decodedAccessToken: 'decodedAccessToken' });
+            if (decodedAccessToken) {
+                res.status(200).json({ decodedAccessToken });
+            }
+            else {
+                res.status(401).send('Token is invalid');
+            }
         }
         catch (e) {
-            res.status(401).json(null); // 401 Unauthorized
+            res.status(401).send('Failed to decode token'); // More specific error message
         }
+    });
+    app.post('/host/download', (req, res) => {
+        // validate the token
+        const decodedAccessToken = validateAccessToken(req.body.token);
+        const { consortiumId, runId, userId } = decodedAccessToken;
+        if (!consortiumId || !runId || !userId) {
+            return res.status(400).send('Missing required user payload data');
+        }
+        // authorize the user
+        // construct the file path from the payload
+        // send the file
     });
     // Now that our HTTP server is fully set up, actually listen.
     httpServer.listen(PORT, () => {
