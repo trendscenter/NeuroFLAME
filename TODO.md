@@ -1,0 +1,8 @@
+- [ ] In a clean way, ready for deployment and use, handle setting and loading configuration for each component
+- [ ] Do proper authorization for subscriptions and other resolvers
+- [ ] Report to the central server when the provisioning step is complete
+- [ ] Handle computation parameters in the boilerplate app
+- [ ] Host the platform across multiple machines
+- [ ] Monitor events from runs
+- [ ] Contemplate image distribution
+- [ ] Make the entire platform easy to deply
