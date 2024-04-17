@@ -1,9 +1,9 @@
 import { getConfig } from '../../config/getConfig.js'
-import inMemoryStore from '../../inMemoryStore.js'
 import downloadFile from '../downloadFile.js'
 import { launchNode } from '../launchNode.js'
 import path from 'path'
 import { unzipFile } from '../unzipFile.js'
+import fs from 'fs/promises'
 
 export const RUN_START_SUBSCRIPTION = `
 subscription runStartSubscription {
@@ -28,11 +28,20 @@ export const runStartHandler = {
       downloadToken,
     } = data.runStartEdge
 
-    const { httpUrl, path_base_directory } = await getConfig()
-    const accessToken = inMemoryStore.get('accessToken')
+    const { path_base_directory } = await getConfig()
 
-    // get the destination path for the runKit on the local machine
-    const runKitPath = path.join(path_base_directory, consortiumId, runId)
+    const consortiumPath = path.join(path_base_directory, consortiumId)
+    const runPath = path.join(consortiumPath, runId)
+    const runKitPath = path.join(runPath, 'runKit')
+    const resultsPath = path.join(runPath, 'results')
+
+    // make sure all of these paths exist
+    await fs.mkdir(consortiumPath, { recursive: true })
+    await fs.mkdir(runPath, { recursive: true })
+    await fs.mkdir(runKitPath, { recursive: true })
+    await fs.mkdir(resultsPath, { recursive: true })
+    
+    const mountConfigPath = path.join(consortiumPath, 'mount_config.json')
 
     // download the runkit to the appropriate directory
     await downloadFile({
@@ -44,16 +53,30 @@ export const runStartHandler = {
 
     // unzip the file
     await unzipFile(runKitPath, 'kit.zip')
-    
-    // mount the runkit directory
-    const directoriesToMount = [
-      {
-        hostDirectory: runKitPath,
-        containerDirectory: '/workspace/runKit',
-      },
-    ]
 
-    // mount the data directory
+    const directoriesToMount = []
+    // mount the runkit directory
+    directoriesToMount.push({
+      hostDirectory: runKitPath,
+      containerDirectory: '/workspace/runKit',
+    })
+
+    // find where the data path is defined for this consortium
+    // load the json file that defines the data path from the consortium directory
+    const mountConfig = JSON.parse(await fs.readFile(mountConfigPath, 'utf-8'))
+    const dataPath = mountConfig.dataPath
+
+    // mount the data path
+    directoriesToMount.push({
+      hostDirectory: dataPath,
+      containerDirectory: '/workspace/data',
+    })
+
+    // mount the results path
+    directoriesToMount.push({
+      hostDirectory: resultsPath,
+      containerDirectory: '/workspace/results',
+    })
 
     launchNode({
       containerService: 'docker',

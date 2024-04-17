@@ -2,8 +2,8 @@ import jwt from 'jsonwebtoken'
 import { hash } from 'bcrypt'
 export { compare } from 'bcrypt'
 import {
-  ACCESS_TOKEN_SECRET,
   ACCESS_TOKEN_DURATION,
+  ACCESS_TOKEN_SECRET,
 } from './environmentVariables.js'
 
 const { sign, verify } = jwt

@@ -1,4 +1,5 @@
 import { generateTokens } from '../authentication.js'
+import getConfig from '../config/getConfig.js'
 import pubsub from './pubSubService.js'
 import { withFilter } from 'graphql-subscriptions'
 
@@ -94,14 +95,16 @@ export default {
           { shouldExpire: true },
         )
 
-        const { accessToken } = tokens
+        const { accessToken } = tokens as { accessToken: string }
+
+        const { fileServerUrl } = getConfig()
 
         const output = {
           userId,
           runId,
           imageName,
           consortiumId,
-          downloadUrl: `http://localhost:4002/download/${consortiumId}/${runId}/${userId}`,
+          downloadUrl: `${fileServerUrl}/download/${consortiumId}/${runId}/${userId}`,
           downloadToken: accessToken,
         }
 
