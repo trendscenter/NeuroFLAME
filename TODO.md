@@ -5,4 +5,4 @@
 - [ ] Host the platform across multiple machines
 - [ ] Monitor events from runs
 - [ ] Contemplate image distribution
-- [ ] Make the entire platform easy to deply
+- [ ] Make the entire platform easy to deploy
