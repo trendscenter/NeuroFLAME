@@ -3,6 +3,7 @@ import { provisionRun } from './provisionRun/provisionRun.js'
 import { reservePort } from './portManagement.js'
 import { launchNode } from './launchNode.js'
 import uploadToFileServer from './uploadToFileServer.js'
+import defaultConfig from '../defaultConfig.js'
 
 interface startRunArgs {
   imageName: string
@@ -18,12 +19,8 @@ export default async function ({
   runId,
   computationParameters,
 }: startRunArgs) {
-  // provision and host
 
-  const path_baseDirectory = path.join(
-    'C:\\development\\effective-palm-tree\\',
-    'basedir',
-  )
+  const path_baseDirectory = defaultConfig.baseDir
 
   const path_run = path.join(path_baseDirectory, 'runs/', consortiumId, runId)
   const path_centralNodeRunKit = path.join(path_run, 'runKits', 'centralNode')

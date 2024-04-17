@@ -6,16 +6,16 @@ import multer from 'multer'
 import unzipper from 'unzipper'
 import getConfig from './config/getConfig.js'
 
-interface UserPayload {
+interface TokenPayload {
   consortiumId?: string
   runId?: string
-  id: string
+  userId: string
 }
 
 declare global {
   namespace Express {
     interface Request {
-      user?: UserPayload
+      tokenPayload?: TokenPayload
     }
   }
 }
@@ -46,7 +46,7 @@ const decodeAndValidateJWT = async (
       response.data &&
       response.data.decodedAccessToken
     ) {
-      req.user = response.data.decodedAccessToken // Assuming this is a valid user object
+      req.tokenPayload = response.data.decodedAccessToken // Assuming this is a valid user object
       next()
     } else {
       res.status(401).send('Invalid token')
@@ -72,7 +72,7 @@ const upload = multer({ storage: storage })
 
 // Middleware to ensure that only users with id 'central' can upload files
 const isCentralUser = (req: Request, res: Response, next: NextFunction) => {
-  if (req.user && req.user.id === 'central') {
+  if (req.tokenPayload && req.tokenPayload.userId === 'central') {
     next()
   } else {
     res.status(403).send('Unauthorized: Only central user can upload files.')
@@ -91,32 +91,37 @@ async function fileExists(filePath: string): Promise<boolean> {
 app.use(express.json())
 
 app.post(
-  '/download/:consortiumId/:runId/:id',
+  '/download/:consortiumId/:runId/:userId',
   decodeAndValidateJWT,
   async (req: Request, res: Response): Promise<void> => {
-    const user = req.user!
-    // ensure that the user has the required fields and that the data in the fields matches the URL parameters
+    const tokenPayload = req.tokenPayload!
+    // ensure that the tokenPayload has the required fields and that the data in the fields matches the URL parameters
 
-    if (!user || !user.consortiumId || !user.runId || !user.id) {
-      res.status(400).send('Missing required user payload data')
+    if (
+      !tokenPayload ||
+      !tokenPayload.consortiumId ||
+      !tokenPayload.runId ||
+      !tokenPayload.userId
+    ) {
+      res.status(400).send('Missing required tokenPayload payload data')
       return
     }
     if (
-      user.consortiumId !== req.params.consortiumId ||
-      user.runId !== req.params.runId ||
-      user.id !== req.params.id
+      tokenPayload.consortiumId !== req.params.consortiumId ||
+      tokenPayload.runId !== req.params.runId ||
+      tokenPayload.userId !== req.params.userId
     ) {
       res
         .status(400)
-        .send('User payload data does not match requested resource')
+        .send('tokenPayload payload data does not match requested resource')
       return
     }
 
     const filePath = path.join(
       BASE_DIR,
-      user.consortiumId,
-      user.runId,
-      `${user.id}.zip`,
+      tokenPayload.consortiumId,
+      tokenPayload.runId,
+      `${tokenPayload.userId}.zip`,
     )
 
     if (await fileExists(filePath)) {

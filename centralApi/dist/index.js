@@ -76,6 +76,7 @@ export async function start({ port }) {
     app.post('/host/download', (req, res) => {
         // validate the token
         const decodedAccessToken = validateAccessToken(req.body.token);
+        console.log({ decodedAccessToken });
         const { consortiumId, runId, userId } = decodedAccessToken;
         if (!consortiumId || !runId || !userId) {
             return res.status(400).send('Missing required user payload data');

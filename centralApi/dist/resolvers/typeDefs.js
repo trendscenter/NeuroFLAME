@@ -6,12 +6,20 @@ export default `#graphql
     computationParameters: String
   }
 
-  type RunStartPayload {
+  type RunStartCentralPayload {
     runId: String
     imageName: String
     userIds: [String]
     consortiumId: String
     computationParameters: String
+  }
+
+  type RunStartEdgePayload {
+    runId: String
+    imageName: String
+    consortiumId: String
+    downloadUrl: String
+    downloadToken: String
   }
 
   type StartRunOutput {
@@ -27,6 +35,7 @@ export default `#graphql
   }
 
   type Subscription {
-    runStart: RunStartPayload
+    runStartCentral: RunStartCentralPayload
+    runStartEdge: RunStartEdgePayload
   }
 `;

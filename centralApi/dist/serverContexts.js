@@ -7,10 +7,10 @@ import { validateAccessToken } from './authentication.js';
 const getContextFromToken = (accessToken) => {
     try {
         const decodedAccessToken = validateAccessToken(accessToken);
-        return { user: { id: decodedAccessToken.user.id } };
+        return decodedAccessToken;
     }
     catch (e) {
-        // Optionally log the error
+        console.error('Failed to validate access token:', e.message);
         return null;
     }
 };

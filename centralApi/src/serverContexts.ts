@@ -1,4 +1,4 @@
-import { validateAccessToken } from './authentication.js';
+import { validateAccessToken } from './authentication.js'
 
 /**
  * Generate context from an access token.
@@ -6,15 +6,14 @@ import { validateAccessToken } from './authentication.js';
  * @returns {object|null} - Context containing the user
  */
 const getContextFromToken = (accessToken) => {
-    try {
-        const decodedAccessToken = validateAccessToken(accessToken);
-        return { user: { id: decodedAccessToken.user.id } };
-    }
-    catch (e) {
-        // Optionally log the error
-        return null;
-    }
-};
+  try {
+    const decodedAccessToken = validateAccessToken(accessToken)
+    return decodedAccessToken
+  } catch (e) {
+    console.error('Failed to validate access token:', e.message)
+    return null
+  }
+}
 
 /**
  * Generate WebSocket server context.
@@ -22,10 +21,10 @@ const getContextFromToken = (accessToken) => {
  * @returns {object|null} - Context containing the user
  */
 const wsServerContext = (ctx) => {
-    const { accessToken } = ctx.connectionParams;
-    const context = getContextFromToken(accessToken)
-    return context;
-};
+  const { accessToken } = ctx.connectionParams
+  const context = getContextFromToken(accessToken)
+  return context
+}
 
 /**
  * Generate HTTP server context.
@@ -34,9 +33,9 @@ const wsServerContext = (ctx) => {
  * @returns {object|null} - Context containing the user
  */
 const httpServerContext = async ({ req, res }) => {
-    const accessToken = req.headers['x-access-token']?.replace(/^null$/, '');
-    const context = getContextFromToken(accessToken)
-    return context;
-};
+  const accessToken = req.headers['x-access-token']?.replace(/^null$/, '')
+  const context = getContextFromToken(accessToken)
+  return context
+}
 
-export { wsServerContext, httpServerContext };
+export { wsServerContext, httpServerContext }

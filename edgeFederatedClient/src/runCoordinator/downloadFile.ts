@@ -1,30 +1,63 @@
 import axios from 'axios'
 import fs from 'fs'
-
+import path from 'path'
 
 export default async function ({
   url,
-  outputPath,
-  accessToken, // Add accessToken to the parameters
+  accessToken,
+  path_output_dir,
+  outputFilename,
 }: {
   url: string
-  outputPath: string
-  accessToken: string // Ensure accessToken is passed as a parameter
+  accessToken: string
+  path_output_dir: string
+  outputFilename: string
 }) {
-  const response = await axios({
-    method: 'POST',
-    url: url,
-    headers: {
-      'x-access-token': accessToken, // Set the x-access-token header
-    },
-    responseType: 'stream',
-  })
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: url,
+      headers: {
+        'x-access-token': accessToken,
+      },
+      responseType: 'stream',
+    })
 
-  const writer = fs.createWriteStream(outputPath)
-  response.data.pipe(writer)
+    // Log successful receipt of the response
+    console.log('Response received, streaming to file.')
 
-  return new Promise((resolve, reject) => {
-    writer.on('finish', resolve)
-    writer.on('error', reject)
-  })
+    await fs.promises.mkdir(path_output_dir, { recursive: true })
+    const path_output_file = path.join(path_output_dir, outputFilename)
+    const writer = fs.createWriteStream(path_output_file)
+
+    response.data.pipe(writer)
+
+    return new Promise<void>((resolve, reject) => {
+      writer.on('finish', () => {
+        console.log('File write completed successfully.')
+        resolve()
+      })
+      writer.on('error', (error) => {
+        console.error('File write failed:', error)
+        reject(error)
+      })
+    })
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const errorDetails = {
+        message: error.message,
+        url: error.config?.url,
+        method: error.config?.method,
+        statusCode: error.response?.status,
+        statusText: error.response?.statusText,
+      }
+      console.error(
+        'Failed to download file:',
+        JSON.stringify(errorDetails, null, 2),
+      )
+    } else {
+      console.error('Unexpected error:', error)
+    }
+    throw error // Rethrow the error after logging it
+  }
 }

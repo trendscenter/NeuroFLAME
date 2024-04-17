@@ -2,7 +2,7 @@ import startRun from '../../startRun/startRun.js'
 
 export const RUN_START_SUBSCRIPTION = `
 subscription runStartSubscription {
-    runStart {
+    runStartCentral {
         consortiumId
         runId
         userIds
@@ -12,8 +12,8 @@ subscription runStartSubscription {
 }`
 
 export const runStartHandler = {
-  error: (err: any) => console.error('Run Start - Subscription error:', err),
-  complete: () => console.log('Run Start - Subscription completed'),
+  error: (err: any) => console.error('Run Start Central - Subscription error:', err),
+  complete: () => console.log('Run Start Central - Subscription completed'),
   next: ({ data }: { data: any }) => {
     const {
       consortiumId,
@@ -21,7 +21,7 @@ export const runStartHandler = {
       userIds,
       computationParameters,
       imageName,
-    } = data.runStart
+    } = data.runStartCentral
 
     startRun({
       imageName,

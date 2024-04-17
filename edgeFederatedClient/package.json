@@ -6,17 +6,19 @@
   "type": "module",
   "scripts": {
     "compile": "tsc",
-    "start": "npm run compile && node ./dist/index.js"
+    "start": "npm run compile && node ./dist/index.js $npm_config_path"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "dockerode": "^4.0.2",
     "graphql-ws": "^5.16.0",
+    "unzipper": "^0.11.3",
     "ws": "^8.16.0"
   },
   "devDependencies": {
     "@types/dockerode": "^3.3.28",
+    "@types/unzipper": "^0.10.9",
     "@types/ws": "^8.5.10"
   }
 }

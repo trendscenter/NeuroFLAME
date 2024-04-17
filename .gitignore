@@ -1,5 +1,4 @@
 */build/
 **/node_modules/
-basedir/*
 **/dist/
-fileHostDir/
+_devTestDirectories/
