@@ -43,7 +43,10 @@ export default async function ({
       })
     })
   } catch (error) {
+    let customError
     if (axios.isAxiosError(error)) {
+      customError = new Error(`Failed to download file: ${error.message}`)
+
       const errorDetails = {
         message: error.message,
         url: error.config?.url,
@@ -57,7 +60,8 @@ export default async function ({
       )
     } else {
       console.error('Unexpected error:', error)
+      customError = error
     }
-    throw error // Rethrow the error after logging it
+    throw customError // Rethrow the error after logging it
   }
 }

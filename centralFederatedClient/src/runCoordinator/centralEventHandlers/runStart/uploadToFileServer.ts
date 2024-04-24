@@ -5,7 +5,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import archiver from 'archiver'
 
-import defaultConfig from '../defaultConfig.js'
+import defaultConfig from '../../../config/defaultConfig.js'
 
 interface UploadParameters {
   consortiumId: string

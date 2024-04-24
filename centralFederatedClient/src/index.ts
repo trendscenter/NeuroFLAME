@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs'
 import * as runCoordinator from './runCoordinator/runCoordinator.js'
-import defaultConfig from './defaultConfig.js'
+import defaultConfig from './config/defaultConfig.js'
 
 interface FederatedClientLaunchConfiguration {
   httpUrl: string

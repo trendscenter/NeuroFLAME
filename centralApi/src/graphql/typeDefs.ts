@@ -53,7 +53,7 @@ export default `#graphql
 
   type Mutation {
     startRun(input: StartRunInput): StartRunOutput
-    reportReady(runId: String): Boolean
+    reportRunReady(runId: String): Boolean
     reportError(runId: String, errorMessage: String): Boolean
     reportComplete(runId: String): Boolean
     reportStatus(runId: String, status: String): Boolean

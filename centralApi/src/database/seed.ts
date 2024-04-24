@@ -80,7 +80,7 @@ const seedDatabase = async () => {
         description: 'This is the first consortium',
         leader: user1Id,
         members: [user1Id],
-        activeMembers: [user1Id],
+        activeMembers: [user1Id, user2Id],
         studyConfiguration: {
           consortiumLeaderNotes: 'Leader notes for Consortium One',
           computationParameters: JSON.stringify({ parameter: 'value' }),
@@ -98,7 +98,7 @@ const seedDatabase = async () => {
         description: 'This is the second consortium',
         leader: user2Id,
         members: [user2Id],
-        activeMembers: [user2Id],
+        activeMembers: [user1Id, user2Id],
         studyConfiguration: {
           consortiumLeaderNotes: 'Leader notes for Consortium Two',
           computationParameters: JSON.stringify({ parameter: 'value' }),

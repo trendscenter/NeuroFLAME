@@ -3,7 +3,7 @@ import { provisionRun } from './provisionRun/provisionRun.js'
 import { reservePort } from './portManagement.js'
 import { launchNode } from './launchNode.js'
 import uploadToFileServer from './uploadToFileServer.js'
-import defaultConfig from '../defaultConfig.js'
+import defaultConfig from '../../../config/defaultConfig.js'
 
 interface startRunArgs {
   imageName: string

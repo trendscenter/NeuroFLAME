@@ -61,19 +61,26 @@ export default {
 
       return { runId: run._id.toString() }
     },
-    reportReady: async (
+    reportRunReady: async (
       _: unknown,
       { runId }: { runId: string },
       context: Context,
     ): Promise<boolean> => {
+      console.log('reportRunReady', runId)
       // authenticate the user
       // is the token valid?
+      if (!context.userId) {
+        throw new Error('User not authenticated')
+      }
 
       // authorize the user
-      // is the user id in the token `central`?
+      if (!context.roles.includes('central')) {
+        throw new Error('User not authorized')
+      }
 
       // get the run's details from the database
       const run = await Run.findById(runId)
+      const result = await Run.updateOne({ _id: runId }, { status: 'Ready' })
       const imageName = run.studyConfiguration.computation.imageName
       const consortiumId = run.consortium._id
 

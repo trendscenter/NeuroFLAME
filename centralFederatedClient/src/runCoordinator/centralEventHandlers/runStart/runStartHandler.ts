@@ -1,4 +1,5 @@
-import startRun from '../../startRun/startRun.js'
+import reportRunReady from './reportRunReady.js'
+import startRun from './startRun.js'
 
 export const RUN_START_SUBSCRIPTION = `
 subscription runStartSubscription {
@@ -33,6 +34,6 @@ export const runStartHandler = {
     })
 
     // report to the central api that the run is ready
-    
+    await reportRunReady({ runId })
   },
 }

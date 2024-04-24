@@ -1,6 +1,6 @@
 import { createClient } from 'graphql-ws';
 import { WebSocket } from 'ws';
-import { runStartHandler, RUN_START_SUBSCRIPTION } from './centralEventHandlers/runStart.js';
+import { runStartHandler, RUN_START_SUBSCRIPTION } from './centralEventHandlers/runStart/runStartHandler.js';
 
 // Interface for subscription event handlers
 interface EventHandlers {
