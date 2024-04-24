@@ -1,5 +1,7 @@
 import { generateTokens } from '../authentication/authentication.js'
 import getConfig from '../config/getConfig.js'
+import Consortium from '../database/models/Consortium.js'
+import Run from '../database/models/Run.js'
 import pubsub from './pubSubService.js'
 import { withFilter } from 'graphql-subscriptions'
 
@@ -41,20 +43,35 @@ export default {
       { input }: { input: StartRunInput },
       context: Context,
     ): Promise<StartRunOutput> => {
-      const runId = Date.now().toString()
+      // authenticate the user
+      // is the token valid?
 
-      pubsub.publish('RUN_START_CENTRAL', {
-        runId,
-        imageName: input.imageName,
-        userIds: input.userIds,
-        consortiumId: input.consortiumId,
-        computationParameters: input.computationParameters,
+      // get the details for this consortium
+      const consortium = await Consortium.findById(input.consortiumId)
+
+      // authorize the user
+      // is the user id in the token the leader of the consortium?
+      
+      // create a new run in the database
+      const run = await Run.create({
+        consortium: consortium._id,
+        consortiumLeader: consortium.leader,
+        studyConfiguration: consortium.studyConfiguration,
+        members: consortium.activeMembers,
+        status: 'Provisioning',
+        runErrors: [],
       })
 
-      // mock the delay for the central federated client to report completing their provisioning and start steps
-      await new Promise((resolve) => setTimeout(resolve, 10000))
 
-      return { runId }
+      pubsub.publish('RUN_START_CENTRAL', {
+        runId: run._id.toString(),
+        imageName: consortium.studyConfiguration.computation.imageName,
+        userIds: consortium.activeMembers.map((member) => member.toString()),
+        consortiumId: input.consortiumId,
+        computationParameters: consortium.studyConfiguration.computationParameters,
+      })
+
+      return { runId: run._id.toString() }
     },
     reportReady: async (
       _: unknown,
@@ -62,15 +79,21 @@ export default {
       context: Context,
     ): Promise<boolean> => {
       // authenticate the user
-      // authorize the user
-      // get the run's details from the database
-      // publish the `RUN_START_EDGE` event
+      // is the token valid?
 
-      // pubsub.publish('RUN_START_EDGE', {
-      //   runId,
-      //   imageName: input.imageName,
-      //   consortiumId: input.consortiumId,
-      // })
+      // authorize the user
+      // is the user id in the token `central`?
+
+      // get the run's details from the database
+      const run = await Run.findById(runId)
+      const imageName = run.studyConfiguration.computation.imageName
+      const consortiumId = run.consortium._id
+
+      pubsub.publish('RUN_START_EDGE', {
+        runId,
+        imageName: imageName,
+        consortiumId: consortiumId,
+      })
 
       return true
     },

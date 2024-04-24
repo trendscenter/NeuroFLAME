@@ -1,11 +1,11 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { computationSchema } from './Computation.js';
+import { computationSchema, IComputation } from './Computation.js';
 
 // Define an interface for the StudyConfiguration part of documents
 export interface IStudyConfiguration extends Document {
   consortiumLeaderNotes: string;
   computationParameters: string;
-  computation: Document; // Optional reference to a Computation document
+  computation: IComputation; // Optional reference to a Computation document
 }
 
 // Create a schema for the Study Configuration

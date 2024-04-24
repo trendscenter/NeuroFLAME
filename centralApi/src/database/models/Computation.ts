@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
-interface IComputation extends Document {
+export interface IComputation extends Document {
   title: string;
   imageName: string;
   notes: string;

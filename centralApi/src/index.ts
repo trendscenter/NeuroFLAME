@@ -32,6 +32,7 @@ export async function start({
   }
 }) {
   const { url, user, pass } = databaseDetails
+
   await mongoose.connect(url, {
     autoIndex: false,
     user: user,
