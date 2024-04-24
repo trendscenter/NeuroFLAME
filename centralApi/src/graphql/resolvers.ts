@@ -1,4 +1,4 @@
-import { generateTokens } from '../authentication.js'
+import { generateTokens } from '../authentication/authentication.js'
 import getConfig from '../config/getConfig.js'
 import pubsub from './pubSubService.js'
 import { withFilter } from 'graphql-subscriptions'
@@ -54,13 +54,40 @@ export default {
       // mock the delay for the central federated client to report completing their provisioning and start steps
       await new Promise((resolve) => setTimeout(resolve, 10000))
 
-      pubsub.publish('RUN_START_EDGE', {
-        runId,
-        imageName: input.imageName,
-        consortiumId: input.consortiumId,
-      })
-
       return { runId }
+    },
+    reportReady: async (
+      _: unknown,
+      { runId }: { runId: string },
+      context: Context,
+    ): Promise<boolean> => {
+      // authenticate the user
+      // authorize the user
+      // get the run's details from the database
+      // publish the `RUN_START_EDGE` event
+
+      // pubsub.publish('RUN_START_EDGE', {
+      //   runId,
+      //   imageName: input.imageName,
+      //   consortiumId: input.consortiumId,
+      // })
+
+      return true
+    },
+    reportError: async (
+      _: unknown,
+      { runId, errorMessage }: { runId: string; errorMessage: string },
+    ): Promise<boolean> => {
+      return true
+    },
+    reportComplete: async (_: unknown, { runId }): Promise<boolean> => {
+      return true
+    },
+    reportStatus: async (
+      _: unknown,
+      { runId, statusMessage }: { runId: string; statusMessage: string },
+    ): Promise<boolean> => {
+      return true
     },
   },
   Subscription: {

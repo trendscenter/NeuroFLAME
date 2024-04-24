@@ -8,16 +8,37 @@ import WebSocket from 'ws'
 import { useServer } from 'graphql-ws/lib/use/ws'
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import mongoose from 'mongoose'
 
-import typeDefs from './resolvers/typeDefs.js'
-import resolvers from './resolvers/resolvers.js'
+import typeDefs from './graphql/typeDefs.js'
+import resolvers from './graphql/resolvers.js'
 
 import { httpServerContext, wsServerContext } from './serverContexts.js'
-import { validateAccessToken } from './authentication.js'
+import { validateAccessToken } from './authentication/authentication.js'
 
-export async function start({ port }) {
+import getConfig from './config/getConfig.js'
+
+const config = getConfig()
+
+export async function start({
+  port,
+  databaseDetails,
+}: {
+  port: number
+  databaseDetails: {
+    url: string
+    user: string
+    pass: string
+  }
+}) {
+  const { url, user, pass } = databaseDetails
+  await mongoose.connect(url, {
+    autoIndex: false,
+    user: user,
+    pass: pass,
+  })
+
   const PORT = port
-
   // Create schema, which will be used separately by ApolloServer and
   // the WebSocket server.
   const schema = makeExecutableSchema({ typeDefs, resolvers })
@@ -114,4 +135,7 @@ export async function start({ port }) {
   })
 }
 
-start({ port: 4000 }).catch(console.error) // Proper error handling
+start({
+  port: config.apolloPort,
+  databaseDetails: config.databaseDetails,
+}).catch(console.error) // Proper error handling

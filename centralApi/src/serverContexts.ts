@@ -1,4 +1,4 @@
-import { validateAccessToken } from './authentication.js'
+import { validateAccessToken } from './authentication/authentication.js'
 
 /**
  * Generate context from an access token.
