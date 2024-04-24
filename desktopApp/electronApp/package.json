@@ -38,11 +38,7 @@
         ]
       }
     ],
-    "files": [
-      "**/*",
-      "../reactApp/build/**/*"
-    ],
-    "asar": false,
+    "asar": true,
     "win": {
       "target": "nsis"
     },
