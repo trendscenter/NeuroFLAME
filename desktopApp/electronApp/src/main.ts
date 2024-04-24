@@ -24,7 +24,7 @@ function createWindow() {
   const startUrl = app.isPackaged
     ? url.format({
         // pathname: path.join(__dirname, '../../reactApp/build/index.html'),
-        pathname: path.join(__dirname, '.index.html'),
+        pathname: path.join(__dirname, './index.html'),
         protocol: 'file:',
         slashes: true,
       })

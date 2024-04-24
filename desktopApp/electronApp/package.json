@@ -1,7 +1,7 @@
 {
   "name": "electronapp",
   "version": "1.0.0",
-  "description": "",
+  "description": "desktop app",
   "main": "build/main.js",
   "type": "module",
   "scripts": {
@@ -13,9 +13,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-   
-  },
+  "dependencies": {},
   "devDependencies": {
     "electron": "^30.0.1",
     "@types/electron": "^1.6.10",
@@ -29,13 +27,22 @@
     "productName": "YourProductName",
     "directories": {
       "buildResources": "assets",
-      "output": "dist",
-      "app": "."
+      "output": "dist"
     },
+    "extraResources": [
+      {
+        "from": "../reactApp/build",
+        "to": "app/build",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
     "files": [
       "**/*",
       "../reactApp/build/**/*"
     ],
+    "asar": false,
     "win": {
       "target": "nsis"
     },
