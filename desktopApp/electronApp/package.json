@@ -1,0 +1,49 @@
+{
+  "name": "electronapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/main.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+   
+  },
+  "devDependencies": {
+    "electron": "^30.0.1",
+    "@types/electron": "^1.6.10",
+    "@types/node": "^20.12.7",
+    "electron-builder": "^24.13.3",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.4.5"
+  },
+  "build": {
+    "appId": "your.app.id",
+    "productName": "YourProductName",
+    "directories": {
+      "buildResources": "assets",
+      "output": "dist",
+      "app": "."
+    },
+    "files": [
+      "**/*",
+      "../reactApp/build/**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}
