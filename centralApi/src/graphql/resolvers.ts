@@ -12,6 +12,7 @@ import {
 } from './typeDefs.js'
 interface Context {
   userId: string
+  roles: string[]
 }
 
 export default {
@@ -22,13 +23,22 @@ export default {
       context: Context,
     ): Promise<StartRunOutput> => {
       // authenticate the user
-      // is the token valid?
+      if (!context.userId) {
+        throw new Error('User not authenticated')
+      }
 
-      // get the details for this consortium
+      // get the consortium details from the database
       const consortium = await Consortium.findById(input.consortiumId)
+      if (!consortium) {
+        throw new Error('Consortium not found')
+      }
 
       // authorize the user
-      // is the user id in the token the leader of the consortium?
+      if (consortium.leader.toString() !== context.userId) {
+        throw new Error(
+          'User is not authorized to start a run for this consortium',
+        )
+      }
 
       // create a new run in the database
       const run = await Run.create({
@@ -44,7 +54,7 @@ export default {
         runId: run._id.toString(),
         imageName: consortium.studyConfiguration.computation.imageName,
         userIds: consortium.activeMembers.map((member) => member.toString()),
-        consortiumId: input.consortiumId,
+        consortiumId: consortium._id.toString(),
         computationParameters:
           consortium.studyConfiguration.computationParameters,
       })

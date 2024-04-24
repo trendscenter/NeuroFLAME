@@ -37,6 +37,7 @@ export async function start({
     autoIndex: false,
     user: user,
     pass: pass,
+    authSource: 'admin',
   })
 
   const PORT = port
@@ -111,20 +112,6 @@ export async function start({
     } catch (e) {
       res.status(401).send('Failed to decode token') // More specific error message
     }
-  })
-
-  app.post('/host/download', (req, res) => {
-    // validate the token
-    const decodedAccessToken = validateAccessToken(req.body.token)
-    console.log({ decodedAccessToken })
-    const { consortiumId, runId, userId } = decodedAccessToken
-    if (!consortiumId || !runId || !userId) {
-      return res.status(400).send('Missing required user payload data')
-    }
-    // authorize the user
-
-    // construct the file path from the payload
-    // send the file
   })
 
   // Now that our HTTP server is fully set up, actually listen.

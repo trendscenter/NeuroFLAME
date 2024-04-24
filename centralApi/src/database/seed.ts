@@ -3,101 +3,124 @@ import Consortium from './models/Consortium.js'
 import Computation from './models/Computation.js'
 import Run from './models/Run.js'
 import User from './models/User.js'
-import getConfig from '../config/getConfig.js'
 import bcrypt from 'bcrypt'
+import getConfig from '../config/getConfig.js'
 
 const { databaseDetails } = getConfig()
 const { url, user, pass } = databaseDetails
 const saltRounds = 10
+
+// Predefined ObjectIds
+const centralUserId = new mongoose.Types.ObjectId('66289c79aebab67040a20067')
+const user1Id = new mongoose.Types.ObjectId('66289c79aebab67040a20068')
+const user2Id = new mongoose.Types.ObjectId('66289c79aebab67040a20069')
+const computation1Id = new mongoose.Types.ObjectId('66289c79aebab67040a21000')
+const computation2Id = new mongoose.Types.ObjectId('66289c79aebab67040a21001')
+const consortium1Id = new mongoose.Types.ObjectId('66289c79aebab67040a22000')
+const consortium2Id = new mongoose.Types.ObjectId('66289c79aecab67040a22001')
+const run1Id = new mongoose.Types.ObjectId('66289c79aecab67040a23000')
+const run2Id = new mongoose.Types.ObjectId('66289c79aecab67040a23001')
 
 const seedDatabase = async () => {
   try {
     await mongoose.connect(url, { user, pass, authSource: 'admin' })
     console.log('MongoDB connected successfully.')
 
+    // Clear existing data
     await User.deleteMany({})
     await Consortium.deleteMany({})
     await Computation.deleteMany({})
     await Run.deleteMany({})
 
+    // Create users
     const users = [
       {
-        _id: 'central',
+        _id: user1Id,
+        username: 'user1',
+        hash: await bcrypt.hash('password1', saltRounds),
+      },
+      {
+        _id: user2Id,
+        username: 'user2',
+        hash: await bcrypt.hash('password2', saltRounds),
+      },
+      {
+        _id: centralUserId,
         username: 'centralUser',
         hash: await bcrypt.hash('centralPassword', saltRounds),
+        roles: ['central'],
       },
-      { username: 'user1', hash: await bcrypt.hash('password1', saltRounds) },
-      { username: 'user2', hash: await bcrypt.hash('password2', saltRounds) },
     ]
-    const createdUsers = await User.insertMany(users)
+    await User.insertMany(users)
     console.log('Users seeded successfully!')
 
+    // Create computations
     const computations = [
       {
+        _id: computation1Id,
         title: 'Computation A',
         imageName: 'boilerplate_average_app',
-        notes: 'this is the boilerplate average app',
+        notes: 'This is the boilerplate average app',
       },
       {
+        _id: computation2Id,
         title: 'Computation B',
         imageName: 'compB.png',
         notes: 'Notes for Computation B',
       },
     ]
-    const createdComputations = await Computation.insertMany(computations)
+    await Computation.insertMany(computations)
     console.log('Computations seeded successfully!')
 
+    // Create consortia
     const consortia = [
       {
+        _id: consortium1Id,
         title: 'Consortium One',
         description: 'This is the first consortium',
-        leader: createdUsers[0]._id,
-        members: [createdUsers[0]._id],
-        activeMembers: [createdUsers[0]._id],
+        leader: user1Id,
+        members: [user1Id],
+        activeMembers: [user1Id],
         studyConfiguration: {
           consortiumLeaderNotes: 'Leader notes for Consortium One',
           computationParameters: JSON.stringify({ parameter: 'value' }),
-          computation: {
-            title: createdComputations[0].title, // only selected fields if necessary
-            imageName: createdComputations[0].imageName,
-            notes: createdComputations[0].notes,
-          },
+          computation: computation1Id,
         },
       },
       {
+        _id: consortium2Id,
         title: 'Consortium Two',
         description: 'This is the second consortium',
-        leader: createdUsers[1]._id,
-        members: [createdUsers[1]._id],
-        activeMembers: [createdUsers[1]._id],
+        leader: user2Id,
+        members: [user2Id],
+        activeMembers: [user2Id],
         studyConfiguration: {
           consortiumLeaderNotes: 'Leader notes for Consortium Two',
           computationParameters: JSON.stringify({ parameter: 'value' }),
-          computation: {
-            title: createdComputations[1].title,
-            imageName: createdComputations[1].imageName,
-            notes: createdComputations[1].notes,
-          },
+          computation: computation2Id,
         },
       },
     ]
-    const createdConsortia = await Consortium.insertMany(consortia)
+    await Consortium.insertMany(consortia)
     console.log('Consortia seeded successfully!')
 
+    // Create runs
     const runs = [
       {
-        consortium: createdConsortia[0]._id,
-        consortiumLeader: createdUsers[0]._id,
-        studyConfiguration: createdConsortia[0].studyConfiguration,
-        members: createdConsortia[0].members,
+        _id: run1Id,
+        consortium: consortium1Id,
+        consortiumLeader: user1Id,
+        studyConfiguration: consortia[0].studyConfiguration,
+        members: consortia[0].members,
         status: 'Active',
         runErrors: ['Error encountered during processing Run 1.'],
       },
       {
-        consortium: createdConsortia[1]._id,
-        consortiumLeader: createdUsers[1]._id,
-        studyConfiguration: createdConsortia[1].studyConfiguration,
-        members: createdConsortia[1].members,
+        _id: run2Id,
+        consortium: consortium2Id,
+        consortiumLeader: user2Id,
+        studyConfiguration: consortia[1].studyConfiguration,
+        members: consortia[1].members,
         status: 'Pending',
         runErrors: [],
       },

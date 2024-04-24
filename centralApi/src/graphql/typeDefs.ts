@@ -1,9 +1,30 @@
+export interface StartRunInput {
+  consortiumId: string
+}
+
+export interface StartRunOutput {
+  runId: string
+}
+
+export interface runStartCentralPayload {
+  runId: string
+  imageName: string
+  userIds: string[]
+  consortiumId: string
+  computationParameters: string
+}
+
+export interface runStartEdgePayload {
+  runId: string
+  imageName: string
+  consortiumId: string
+  downloadUrl: string
+  downloadToken: string
+}
+
 export default `#graphql
   input StartRunInput {
-    imageName: String
-    userIds: [String]
     consortiumId: String
-    computationParameters: String
   }
 
   type RunStartCentralPayload {
@@ -43,30 +64,3 @@ export default `#graphql
     runStartEdge: RunStartEdgePayload
   }
 `
-
-export interface StartRunInput {
-  imageName: string
-  userIds: string[]
-  consortiumId: string
-  computationParameters: string
-}
-
-export interface StartRunOutput {
-  runId: string
-}
-
-export interface runStartCentralPayload {
-  runId: string
-  imageName: string
-  userIds: string[]
-  consortiumId: string
-  computationParameters: string
-}
-
-export interface runStartEdgePayload {
-  runId: string
-  imageName: string
-  consortiumId: string
-  downloadUrl: string
-  downloadToken: string
-}

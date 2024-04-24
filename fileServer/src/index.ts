@@ -10,6 +10,7 @@ interface TokenPayload {
   consortiumId?: string
   runId?: string
   userId: string
+  roles?: string[]
 }
 
 declare global {
@@ -72,7 +73,7 @@ const upload = multer({ storage: storage })
 
 // Middleware to ensure that only users with id 'central' can upload files
 const isCentralUser = (req: Request, res: Response, next: NextFunction) => {
-  if (req.tokenPayload && req.tokenPayload.userId === 'central') {
+  if (req.tokenPayload && req.tokenPayload.roles?.includes('central')) {
     next()
   } else {
     res.status(403).send('Unauthorized: Only central user can upload files.')
