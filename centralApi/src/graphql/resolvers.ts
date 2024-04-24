@@ -114,7 +114,8 @@ export default {
           variables: unknown,
           context: Context,
         ) => {
-          return context.userId === 'central'
+          console.log(context)
+          return context.roles.includes('central')
         },
       ),
     },

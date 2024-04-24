@@ -65,7 +65,7 @@ const seedDatabase = async () => {
       {
         _id: computation2Id,
         title: 'Computation B',
-        imageName: 'compB.png',
+        imageName: 'boilerplate_average_app',
         notes: 'Notes for Computation B',
       },
     ]
@@ -84,7 +84,12 @@ const seedDatabase = async () => {
         studyConfiguration: {
           consortiumLeaderNotes: 'Leader notes for Consortium One',
           computationParameters: JSON.stringify({ parameter: 'value' }),
-          computation: computation1Id,
+          computation: {
+            title: computations[0].title,
+            imageName: computations[0].imageName,
+            notes: computations[0].notes,
+          
+          },
         },
       },
       {
@@ -97,7 +102,11 @@ const seedDatabase = async () => {
         studyConfiguration: {
           consortiumLeaderNotes: 'Leader notes for Consortium Two',
           computationParameters: JSON.stringify({ parameter: 'value' }),
-          computation: computation2Id,
+          computation: {
+            title: computations[1].title,
+            imageName: computations[1].imageName,
+            notes: computations[1].notes,
+          },
         },
       },
     ]

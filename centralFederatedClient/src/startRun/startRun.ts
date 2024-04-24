@@ -19,7 +19,7 @@ export default async function ({
   runId,
   computationParameters,
 }: startRunArgs) {
-
+  console.log('Starting run...')
   const path_baseDirectory = defaultConfig.baseDir
 
   const path_run = path.join(path_baseDirectory, 'runs/', consortiumId, runId)
@@ -42,8 +42,8 @@ export default async function ({
     path_baseDirectory,
   })
 
-  await fed_learn_server.close()
-  await admin_server.close()
+  fed_learn_server.close()
+  admin_server.close()
 
   // launch the node
   await launchNode({
