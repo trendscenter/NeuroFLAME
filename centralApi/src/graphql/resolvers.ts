@@ -4,36 +4,14 @@ import Consortium from '../database/models/Consortium.js'
 import Run from '../database/models/Run.js'
 import pubsub from './pubSubService.js'
 import { withFilter } from 'graphql-subscriptions'
-
+import {
+  StartRunInput,
+  StartRunOutput,
+  runStartCentralPayload,
+  runStartEdgePayload,
+} from './typeDefs.js'
 interface Context {
   userId: string
-}
-
-interface StartRunInput {
-  imageName: string
-  userIds: string[]
-  consortiumId: string
-  computationParameters: string
-}
-
-interface StartRunOutput {
-  runId: string
-}
-
-interface runStartCentralPayload {
-  runId: string
-  imageName: string
-  userIds: string[]
-  consortiumId: string
-  computationParameters: string
-}
-
-interface runStartEdgePayload {
-  runId: string
-  imageName: string
-  consortiumId: string
-  downloadUrl: string
-  downloadToken: string
 }
 
 export default {
@@ -51,7 +29,7 @@ export default {
 
       // authorize the user
       // is the user id in the token the leader of the consortium?
-      
+
       // create a new run in the database
       const run = await Run.create({
         consortium: consortium._id,
@@ -62,13 +40,13 @@ export default {
         runErrors: [],
       })
 
-
       pubsub.publish('RUN_START_CENTRAL', {
         runId: run._id.toString(),
         imageName: consortium.studyConfiguration.computation.imageName,
         userIds: consortium.activeMembers.map((member) => member.toString()),
         consortiumId: input.consortiumId,
-        computationParameters: consortium.studyConfiguration.computationParameters,
+        computationParameters:
+          consortium.studyConfiguration.computationParameters,
       })
 
       return { runId: run._id.toString() }
