@@ -1,17 +1,22 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
+import ReactDOM from 'react-dom';
 import App from './App';
+import { fetchConfig } from './fetchConfig';
+import  ApolloClientsProvider  from './contexts/ApolloClientsProvider';
 
-// Use TypeScript's non-null assertion operator (!) to assure that the element exists.
-const rootElement = document.getElementById('root') as HTMLElement;
+const startApp = async () => {
+  const config = await fetchConfig();
 
-// Create a root.
-const root = ReactDOM.createRoot(rootElement);
+  if (config) {
+    ReactDOM.render(
+      <ApolloClientsProvider config={config}>
+        <App />
+      </ApolloClientsProvider>,
+      document.getElementById('root')
+    );
+  } else {
+    console.error('Failed to start the app due to configuration loading failure.');
+  }
+};
 
-// Render the App component within React.StrictMode.
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+startApp();
