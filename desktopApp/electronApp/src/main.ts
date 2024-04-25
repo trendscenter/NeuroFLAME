@@ -1,68 +1,76 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import path from 'path'
 import url, { fileURLToPath } from 'url'
+import fs from 'fs'
+import defaultConfig from './defaultConfig.json' with {type: 'json'}
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
+const __dirname = path.dirname(fileURLToPath(import.meta.url)) //
+
 let mainWindow: BrowserWindow | null
 
 function createWindow() {
-  // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      // Enabling nodeIntegration allows Node.js modules to be used in the renderer process
-      nodeIntegration: true,
-      // Context isolation is a security feature that helps prevent attacks
-      contextIsolation: false,
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
+      additionalArguments: ['this is a test', 'this is another test'],
     },
   })
 
   // Load the index.html of the app.
-  const startUrl = app.isPackaged
-    ? url.format({
-        // pathname: path.join(__dirname, '../../reactApp/build/index.html'),
-        pathname: path.join(__dirname, './index.html'),
-        protocol: 'file:',
-        slashes: true,
-      })
-    : 'http://localhost:3000'
-
-  console.log({ startUrl })
+  const packagedUrl = url.format({
+    pathname: path.join(__dirname, '../../app/build/index.html'),
+    protocol: 'file:',
+    slashes: true,
+  })
+  const devUrl = 'http://localhost:3000'
+  const startUrl = app.isPackaged ? packagedUrl : devUrl
   mainWindow.loadURL(startUrl)
 
-  // Open the DevTools. - Uncomment the next line if you want to open the DevTools automatically
-  // mainWindow.webContents.openDevTools();
-
-  // Emitted when the window is closed.
   mainWindow.on('closed', () => {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
     mainWindow = null
   })
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.on('ready', createWindow)
 
-// Quit when all windows are closed.
 app.on('window-all-closed', () => {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
 
 app.on('activate', () => {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
     createWindow()
+  }
+})
+
+ipcMain.handle('getConfig', async () => {
+  const configPath = path.join(app.getPath('userData'), 'config.json')
+  console.log('Reading configuration from:', configPath)
+
+  try {
+    const config = await fs.promises.readFile(configPath, 'utf8')
+    return JSON.parse(config) // Parse and return the configuration
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      // File does not exist, create it with default configuration
+      console.log(
+        'Configuration file not found, creating default configuration.',
+      )
+      await fs.promises.writeFile(
+        configPath,
+        JSON.stringify(defaultConfig, null, 2),
+      )
+      return defaultConfig
+    } else {
+      // Handle other errors more specifically
+      console.error('Failed to read or parse the configuration file:', error)
+      throw new Error('Failed to access the configuration file.')
+    }
   }
 })

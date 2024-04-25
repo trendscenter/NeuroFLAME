@@ -10,12 +10,14 @@
     "rootDir": "src",                       // Specify the root directory of input files.
     "types": ["node", "electron"],          // Specify type definitions to include.
     "sourceMap": true,                      // Enable source map generation for debugging.
-    "strict": true                          // Enable all strict type-checking options.
+    "strict": true,                         // Enable all strict type-checking options.
+    "resolveJsonModule": true,
   },
   "include": [
     "src/**/*"                              // Include all files in the src directory for compilation.
   ],
   "exclude": [
+    "src/preload.js",
     "node_modules",                         // Exclude the node_modules directory to speed up the compilation.
     "**/*.spec.ts",                         // Exclude test files from compilation.
     "**/*.test.ts"
