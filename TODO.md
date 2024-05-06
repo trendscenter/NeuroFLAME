@@ -1,7 +1,7 @@
 - [ ] deployment-ready handling of setting and loading configuration for each component
 - [ ] Do proper authorization for subscriptions and other resolvers
-- [ ] Report to the central server when the provisioning step is complete
-- [ ] Handle computation parameters in the boilerplate app
+- [x] Report to the central server when the provisioning step is complete
+- [x] Handle computation parameters in the boilerplate app
 - [ ] Host the platform across multiple machines
 - [ ] Monitor events from runs
 - [ ] Contemplate image distribution
@@ -14,3 +14,4 @@
   - [ ] selecting image
   - [ ] managing members
 - [ ] document the system architecture in more abstract conceptual terms so its clear what is implementation and what is intentional design
+- [ ] Implement computation schema
