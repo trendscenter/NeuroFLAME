@@ -60,12 +60,14 @@ const seedDatabase = async () => {
         _id: computation1Id,
         title: 'Computation A',
         imageName: 'boilerplate_average_app',
+        imageDownloadUrl: 'https://example.com/boilerplate_average_app',
         notes: 'This is the boilerplate average app',
       },
       {
         _id: computation2Id,
         title: 'Computation B',
         imageName: 'boilerplate_average_app',
+        imageDownloadUrl: 'https://example.com/boilerplate_average_app',
         notes: 'Notes for Computation B',
       },
     ]
@@ -105,6 +107,7 @@ const seedDatabase = async () => {
           computation: {
             title: computations[1].title,
             imageName: computations[1].imageName,
+            imageDownloadUrl: computations[1].imageDownloadUrl,
             notes: computations[1].notes,
           },
         },
