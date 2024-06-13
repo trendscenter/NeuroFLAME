@@ -11,12 +11,36 @@ import {
   runStartCentralPayload,
   runStartEdgePayload,
 } from './typeDefs.js'
+import { Query } from 'mongoose'
 interface Context {
   userId: string
   roles: string[]
 }
 
+import { ConsortiumListItem } from './typeDefs'
+
 export default {
+  Query: {
+    getConsortiumList: async (): Promise<ConsortiumListItem[]> => {
+      const consortiums = await Consortium.find()
+        .populate('leader')
+        .populate('members')
+        .lean(); // Use lean() for better performance and to get plain JavaScript objects
+      
+      return consortiums.map(consortium => ({
+        title: consortium.title,
+        description: consortium.description,
+        leader: {
+          id: (consortium.leader as any)._id.toString(),
+          username: (consortium.leader as any).username,
+        },
+        members: (consortium.members as any[]).map(member => ({
+          id: member._id.toString(),
+          username: member.username,
+        })),
+      }));
+    },
+  },
   Mutation: {
     login: async (
       _,

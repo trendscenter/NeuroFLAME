@@ -22,7 +22,34 @@ export interface runStartEdgePayload {
   downloadToken: string
 }
 
+export interface PublicUser {
+  id: string;
+  username: string;
+}
+export interface User {
+  id: string
+  username: string
+}
+
+export interface ConsortiumListItem {
+  title: string;
+  description: string;
+  leader: PublicUser;
+  members: PublicUser[];
+}
+
 export default `#graphql
+  type PublicUser {
+    id: String
+    username: String
+  }
+
+  type ConsortiumListItem {
+    title: String
+    description: String
+    leader: PublicUser
+    members: [PublicUser]
+  }
 
   input StartRunInput {
     consortiumId: String
@@ -49,7 +76,7 @@ export default `#graphql
   }
 
   type Query {
-    _empty: String
+    getConsortiumList: [ConsortiumListItem]
   }
 
   type Mutation {
