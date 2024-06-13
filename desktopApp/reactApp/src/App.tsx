@@ -1,15 +1,16 @@
 import React from 'react';
-import './App.css';
 import MutationTest from './components/MutationTest';
 import PageLogin from './components/PageLogin';
+import ConsortiumList from './components/ConsortiumList';
 
 const App: React.FC = () => {
   return (
     <div className="App">
-      <header className="App-header">
+
         <PageLogin></PageLogin>
+        <ConsortiumList></ConsortiumList>
         <MutationTest></MutationTest>
-      </header>
+
     </div>
   );
 }
