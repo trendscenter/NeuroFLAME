@@ -8,7 +8,7 @@ interface ApolloClientsContextType {
 }
 
 // Create and export the context
-export const ApolloClientsContext = createContext<ApolloClientsContextType | null>({
+export const ApolloClientsContext = createContext<ApolloClientsContextType>({
   centralApiApolloClient: undefined,
   edgeClientApolloClient: undefined
 });

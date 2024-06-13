@@ -25,6 +25,7 @@ export const createApolloClient = ({
   wsUrl,
   getAccessToken,
 }: ApolloClientConfig) => {
+  console.log("creating apollo client with httpUrl", httpUrl, "wsUrl", wsUrl, "getAccessToken", getAccessToken)
   const httpLink = new HttpLink({ uri: httpUrl })
   const wsLink = new GraphQLWsLink(
     createClient({

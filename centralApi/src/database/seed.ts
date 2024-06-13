@@ -90,7 +90,7 @@ const seedDatabase = async () => {
             title: computations[0].title,
             imageName: computations[0].imageName,
             notes: computations[0].notes,
-          
+            imageDownloadUrl: computations[0].imageDownloadUrl,
           },
         },
       },
