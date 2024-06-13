@@ -25,7 +25,6 @@ export const createApolloClient = ({
   wsUrl,
   getAccessToken,
 }: ApolloClientConfig) => {
-  console.log("creating apollo client with httpUrl", httpUrl, "wsUrl", wsUrl, "getAccessToken", getAccessToken)
   const httpLink = new HttpLink({ uri: httpUrl })
   const wsLink = new GraphQLWsLink(
     createClient({
@@ -35,7 +34,7 @@ export const createApolloClient = ({
       },
     }),
   )
-  
+
   const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors)
       graphQLErrors.forEach(({ message, locations, path }) =>
@@ -45,11 +44,11 @@ export const createApolloClient = ({
       )
     if (networkError) console.error(`[Network error]: ${networkError}`)
   })
-  
+
   // Authentication Link
   const authLink = new ApolloLink((operation, forward) => {
     const accessToken = getAccessToken()
-  
+
     operation.setContext(({ headers = {} }) => ({
       headers: {
         ...headers,
@@ -58,7 +57,7 @@ export const createApolloClient = ({
     }))
     return forward(operation)
   })
-  
+
 
   const splitLink = split(
     ({ query }) => {

@@ -1,7 +1,8 @@
-import { generateTokens } from '../authentication/authentication.js'
+import { generateTokens, compare } from '../authentication/authentication.js'
 import getConfig from '../config/getConfig.js'
 import Consortium from '../database/models/Consortium.js'
 import Run from '../database/models/Run.js'
+import User from '../database/models/User.js'
 import pubsub from './pubSubService.js'
 import { withFilter } from 'graphql-subscriptions'
 import {
@@ -17,6 +18,32 @@ interface Context {
 
 export default {
   Mutation: {
+    login: async (
+      _,
+      {
+        username,
+        password,
+      }: {
+        username: string
+        password: string
+      },
+      context,
+    ): Promise<string> => {
+      // get the user from the database
+      const user = await User.findOne({ username })
+      if (!user) {
+        throw new Error('User not found')
+      }
+      // compare the password
+      if (!(await compare(password, user.hash))) {
+        throw new Error('Invalid username or password')
+      }
+
+      // create a token
+      const tokens = generateTokens({ userId: user._id })
+      const { accessToken } = tokens as { accessToken: string }
+      return accessToken
+    },
     startRun: async (
       _: unknown,
       { input }: { input: StartRunInput },

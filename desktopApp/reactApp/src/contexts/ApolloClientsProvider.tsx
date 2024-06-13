@@ -20,6 +20,7 @@ const ApolloClientsProvider: React.FC<Props> = ({ children, config }) => {
   >()
 
   useEffect(() => {
+    console.log("creating centralApiApolloClient", config.centralServerUrl)
     setCentralApiApolloClient(
       createApolloClient({
         httpUrl: config.centralServerUrl,
@@ -27,6 +28,7 @@ const ApolloClientsProvider: React.FC<Props> = ({ children, config }) => {
         getAccessToken: () => localStorage.getItem('accessToken') || '',
       }),
     )
+    console.log("creating edgeClientApolloClient", config.edgeClientUrl)
     setEdgeClientApolloClient(
       createApolloClient({
         httpUrl: config.edgeClientUrl,
@@ -35,6 +37,10 @@ const ApolloClientsProvider: React.FC<Props> = ({ children, config }) => {
       }),
     )
   }, [config])
+
+  if(!centralApiApolloClient || !edgeClientApolloClient) {
+    return <div>Loading...</div>
+  }
 
   return (
     <ApolloClientsContext.Provider value={{ centralApiApolloClient, edgeClientApolloClient }}>

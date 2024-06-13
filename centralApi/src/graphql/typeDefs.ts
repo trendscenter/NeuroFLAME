@@ -23,6 +23,7 @@ export interface runStartEdgePayload {
 }
 
 export default `#graphql
+
   input StartRunInput {
     consortiumId: String
   }
@@ -52,6 +53,7 @@ export default `#graphql
   }
 
   type Mutation {
+    login(username: String, password: String): String
     startRun(input: StartRunInput): StartRunOutput
     reportRunReady(runId: String): Boolean
     reportError(runId: String, errorMessage: String): Boolean
