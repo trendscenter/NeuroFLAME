@@ -1,4 +1,4 @@
-import React, { createContext, useContext, Context } from 'react';
+import { createContext, useContext } from 'react';
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 
 // Define the type for the context state
@@ -8,9 +8,12 @@ interface ApolloClientsContextType {
 }
 
 // Create and export the context
-const ApolloClientsContext = createContext<ApolloClientsContextType>({});
+export const ApolloClientsContext = createContext<ApolloClientsContextType | null>({
+  centralApiApolloClient: undefined,
+  edgeClientApolloClient: undefined
+});
 
 // Custom hook for using the Apollo clients context
 export const useApolloClients = () => useContext(ApolloClientsContext);
 
-export default ApolloClientsContext;
+

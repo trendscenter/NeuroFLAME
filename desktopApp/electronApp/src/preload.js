@@ -1,5 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('electronAPI', {
+contextBridge.exposeInMainWorld('ElectronAPI', {
   getConfig: async () => ipcRenderer.invoke('getConfig')
 });
