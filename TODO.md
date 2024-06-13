@@ -15,3 +15,10 @@
   - [ ] managing members
 - [ ] document the system architecture in more abstract conceptual terms so its clear what is implementation and what is intentional design
 - [ ] Implement computation schema
+
+Simple routing
+Some api design
+Keeping the types all synchronized
+Making the schemas simple
+Reporting errors
+State machine
