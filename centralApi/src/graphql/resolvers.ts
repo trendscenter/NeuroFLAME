@@ -3,21 +3,21 @@ import getConfig from '../config/getConfig.js'
 import Consortium from '../database/models/Consortium.js'
 import Run from '../database/models/Run.js'
 import User from '../database/models/User.js'
+import Computation from '../database/models/Computation.js'
 import pubsub from './pubSubService.js'
 import { withFilter } from 'graphql-subscriptions'
 import {
+  ConsortiumListItem,
+  ComputationListItem,
   StartRunInput,
   StartRunOutput,
   runStartCentralPayload,
   runStartEdgePayload,
 } from './typeDefs.js'
-import { Query } from 'mongoose'
 interface Context {
   userId: string
   roles: string[]
 }
-
-import { ConsortiumListItem } from './typeDefs'
 
 export default {
   Query: {
@@ -28,6 +28,7 @@ export default {
         .lean(); // Use lean() for better performance and to get plain JavaScript objects
       
       return consortiums.map(consortium => ({
+        id: consortium._id.toString(),
         title: consortium.title,
         description: consortium.description,
         leader: {
@@ -40,6 +41,14 @@ export default {
         })),
       }));
     },
+    getComputationList: async (): Promise<ComputationListItem[]> => {
+      const computations = await Computation.find().lean();
+      return computations.map(computation => ({
+        id: computation._id.toString(),
+        title: computation.title,
+        imageName: computation.imageName,
+      }));
+    }
   },
   Mutation: {
     login: async (

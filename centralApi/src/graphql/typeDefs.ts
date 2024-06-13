@@ -38,6 +38,12 @@ export interface ConsortiumListItem {
   members: PublicUser[];
 }
 
+export interface ComputationListItem {
+  id: string;
+  title: string;
+  imageName: string;
+}
+
 export default `#graphql
   type PublicUser {
     id: String
@@ -45,11 +51,19 @@ export default `#graphql
   }
 
   type ConsortiumListItem {
+    id: String
     title: String
     description: String
     leader: PublicUser
     members: [PublicUser]
   }
+
+  type ComputationListItem {
+    id: String
+    title: String
+    imageName: String
+  }
+  
 
   input StartRunInput {
     consortiumId: String
@@ -77,6 +91,7 @@ export default `#graphql
 
   type Query {
     getConsortiumList: [ConsortiumListItem]
+    getComputationList: [ComputationListItem]
   }
 
   type Mutation {

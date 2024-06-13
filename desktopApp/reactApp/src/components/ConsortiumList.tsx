@@ -9,6 +9,7 @@ interface PublicUser {
 }
 
 interface ConsortiumListItem {
+  id: string;
   title: string;
   description: string;
   leader: PublicUser;
@@ -18,6 +19,7 @@ interface ConsortiumListItem {
 export const GET_CONSORTIUM_LIST = gql`
   query GetConsortiumList {
     getConsortiumList {
+      id
       title
       description
       leader {
@@ -47,6 +49,7 @@ const ConsortiumList: React.FC = () => {
     <div>
       <h1>Consortium List</h1>
       {data?.getConsortiumList.map((consortium) => (
+        
         <div key={consortium.title}>
           <h2>{consortium.title}</h2>
           <p>{consortium.description}</p>
