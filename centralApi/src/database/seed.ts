@@ -6,7 +6,7 @@ import User from './models/User.js'
 import bcrypt from 'bcrypt'
 import getConfig from '../config/getConfig.js'
 
-const { databaseDetails } = getConfig()
+const { databaseDetails } = await getConfig()
 const { url, user, pass } = databaseDetails
 const saltRounds = 10
 

@@ -25,9 +25,9 @@ export default {
       const consortiums = await Consortium.find()
         .populate('leader')
         .populate('members')
-        .lean(); // Use lean() for better performance and to get plain JavaScript objects
-      
-      return consortiums.map(consortium => ({
+        .lean() // Use lean() for better performance and to get plain JavaScript objects
+
+      return consortiums.map((consortium) => ({
         id: consortium._id.toString(),
         title: consortium.title,
         description: consortium.description,
@@ -35,20 +35,20 @@ export default {
           id: (consortium.leader as any)._id.toString(),
           username: (consortium.leader as any).username,
         },
-        members: (consortium.members as any[]).map(member => ({
+        members: (consortium.members as any[]).map((member) => ({
           id: member._id.toString(),
           username: member.username,
         })),
-      }));
+      }))
     },
     getComputationList: async (): Promise<ComputationListItem[]> => {
-      const computations = await Computation.find().lean();
-      return computations.map(computation => ({
+      const computations = await Computation.find().lean()
+      return computations.map((computation) => ({
         id: computation._id.toString(),
         title: computation.title,
         imageName: computation.imageName,
-      }));
-    }
+      }))
+    },
   },
   Mutation: {
     login: async (
@@ -187,11 +187,11 @@ export default {
       ),
     },
     runStartEdge: {
-      resolve: (
+      resolve: async (
         payload: runStartEdgePayload,
         args: unknown,
         context: Context,
-      ): runStartEdgePayload => {
+      ): Promise<runStartEdgePayload> => {
         const { runId, imageName, consortiumId } = payload
         // get the user's id from the context
         const userId = context.userId
@@ -203,7 +203,7 @@ export default {
 
         const { accessToken } = tokens as { accessToken: string }
 
-        const { fileServerUrl } = getConfig()
+        const { fileServerUrl } = await getConfig()
 
         const output = {
           userId,
