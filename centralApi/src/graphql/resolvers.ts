@@ -11,8 +11,10 @@ import {
   ComputationListItem,
   StartRunInput,
   StartRunOutput,
-  runStartCentralPayload,
-  runStartEdgePayload,
+  RunStartCentralPayload,
+  RunStartEdgePayload,
+  PublicUser,
+  ConsortiumDetails,
 } from './typeDefs.js'
 interface Context {
   userId: string
@@ -49,6 +51,50 @@ export default {
         imageName: computation.imageName,
       }))
     },
+    getConsortiumDetails: async (
+      _: unknown,
+      { consortiumId }: {consortiumId: String}
+    ): Promise<ConsortiumDetails | null> => {
+      try {
+        const consortium = await Consortium.findById(consortiumId)
+          .populate('leader', 'id username')
+          .populate('members', 'id username')
+          .populate('activeMembers', 'id username')
+          .populate('studyConfiguration.computation', 'title imageName imageDownloadUrl notes owner')
+          .exec();
+    
+        if (!consortium) {
+          throw new Error('Consortium not found');
+        }
+    
+        const transformUser = (user: any): PublicUser => ({
+          id: user.id,
+          username: user.username,
+        });
+    
+        return {
+          title: consortium.title,
+          description: consortium.description,
+          leader: transformUser(consortium.leader),
+          members: consortium.members.map(transformUser),
+          activeMembers: consortium.activeMembers.map(transformUser),
+          studyConfiguration: {
+            consortiumLeaderNotes: consortium.studyConfiguration.consortiumLeaderNotes,
+            computationParameters: consortium.studyConfiguration.computationParameters,
+            computation: {
+              title: consortium.studyConfiguration.computation.title,
+              imageName: consortium.studyConfiguration.computation.imageName,
+              imageDownloadUrl: consortium.studyConfiguration.computation.imageDownloadUrl,
+              notes: consortium.studyConfiguration.computation.notes,
+              owner: consortium.studyConfiguration.computation.owner,
+            },
+          },
+        };
+      } catch (error) {
+        console.error('Error in getConsortiumDetails:', error);
+        throw new Error(`Failed to fetch consortium details: ${error.message}`);
+      }
+    }
   },
   Mutation: {
     login: async (
@@ -167,17 +213,113 @@ export default {
     ): Promise<boolean> => {
       return true
     },
+    studySetComputation: async (
+      _: unknown,
+      {
+        consortiumId,
+        computationId,
+      }: { consortiumId: String; computationId: String },
+      context: Context,
+    ): Promise<boolean> => {
+      try {
+        // Check to see if the consortium exists
+        const consortium = await Consortium.findById(consortiumId)
+        if (!consortium) {
+          throw new Error('Consortium not found')
+        }
+
+        // Check if the caller is authorized
+        if (consortium.leader.toString() !== context.userId) {
+          throw new Error('Not authorized')
+        }
+
+        // Check to see if the computation exists
+        const computation = await Computation.findById(computationId)
+        if (!computation) {
+          throw new Error('Computation not found')
+        }
+
+        // Set the computation in the study configuration
+        consortium.set('studyConfiguration.computation', computation)
+        await consortium.save()
+
+        return true
+      } catch (error) {
+        console.error('Error in studySetComputation:', error)
+        throw new Error(`Failed to set computation: ${error.message}`)
+      }
+    },
+    studySetParameters: async (
+      _: unknown,
+      {
+        consortiumId,
+        parameters,
+      }: { consortiumId: String; parameters: String },
+      context: Context,
+    ): Promise<boolean> => {
+      try {
+        // Check to see if the consortium exists
+        const consortium = await Consortium.findById(consortiumId)
+        if (!consortium) {
+          throw new Error('Consortium not found')
+        }
+
+        // Check if the caller is authorized
+        if (consortium.leader.toString() !== context.userId) {
+          throw new Error('Not authorized')
+        }
+
+        // Set the computation in the study configuration
+        consortium.set('studyConfiguration.computationParameters', parameters)
+        await consortium.save()
+
+        return true
+      } catch (error) {
+        console.error('Error in setStudyParameters:', error)
+        throw new Error(`Failed to set computation: ${error.message}`)
+      }
+    },
+    studySetNotes: async (
+      _: unknown,
+      {
+        consortiumId,
+        notes,
+      }: { consortiumId: String; notes: String },
+      context: Context,
+    ): Promise<boolean> => {
+      try {
+        // Check to see if the consortium exists
+        const consortium = await Consortium.findById(consortiumId)
+        if (!consortium) {
+          throw new Error('Consortium not found')
+        }
+
+        // Check if the caller is authorized
+        if (consortium.leader.toString() !== context.userId) {
+          throw new Error('Not authorized')
+        }
+
+        // Set the computation in the study configuration
+        consortium.set('studyConfiguration.consortiumLeaderNotes', notes)
+        await consortium.save()
+
+        return true
+      } catch (error) {
+        console.error('Error in setStudyNotes:', error)
+        throw new Error(`Failed to set computation: ${error.message}`)
+      }
+    },
   },
   Subscription: {
     runStartCentral: {
-      resolve: (payload: runStartCentralPayload): runStartCentralPayload => {
+      resolve: (payload: RunStartCentralPayload): RunStartCentralPayload => {
         return payload
       },
       subscribe: withFilter(
         () => pubsub.asyncIterator(['RUN_START_CENTRAL']),
         // Placeholder for future filtering logic. Currently returns true for all payloads.
         (
-          payload: runStartCentralPayload,
+          payload: RunStartCentralPayload,
           variables: unknown,
           context: Context,
         ) => {
@@ -188,10 +330,10 @@ export default {
     },
     runStartEdge: {
       resolve: async (
-        payload: runStartEdgePayload,
+        payload: RunStartEdgePayload,
         args: unknown,
         context: Context,
-      ): Promise<runStartEdgePayload> => {
+      ): Promise<RunStartEdgePayload> => {
         const { runId, imageName, consortiumId } = payload
         // get the user's id from the context
         const userId = context.userId
@@ -219,11 +361,7 @@ export default {
       subscribe: withFilter(
         () => pubsub.asyncIterator(['RUN_START_EDGE']),
         // Placeholder for future filtering logic. Currently returns true for all payloads.
-        (
-          payload: runStartEdgePayload,
-          variables: unknown,
-          context: Context,
-        ) => {
+        (payload: RunStartEdgePayload, variables: unknown, context: Context) => {
           // if the user is not a part of this run, they should not receive the payload
           return true
         },
