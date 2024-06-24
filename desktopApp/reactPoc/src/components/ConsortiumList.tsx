@@ -2,6 +2,7 @@ import { gql } from '@apollo/client';
 import React, { useContext } from 'react';
 import { useQuery } from '@apollo/client';
 import { ApolloClientsContext } from '../contexts/ApolloClientsContext';
+import { Link } from 'react-router-dom';
 
 interface PublicUser {
   id: string;
@@ -49,9 +50,13 @@ const ConsortiumList: React.FC = () => {
     <div>
       <h1>Consortium List</h1>
       {data?.getConsortiumList.map((consortium) => (
-        
+
         <div key={consortium.title}>
-          <h2>{consortium.title}</h2>
+          <h2>
+            <Link to={`/consortia/${consortium.id}/`}>
+              {consortium.title}
+            </Link>
+          </h2>
           <p>{consortium.description}</p>
           <p>Leader: {consortium.leader.username}</p>
           <h3>Members:</h3>
