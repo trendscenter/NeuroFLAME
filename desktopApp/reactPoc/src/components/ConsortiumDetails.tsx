@@ -1,4 +1,4 @@
-import { gql, useLazyQuery, useMutation } from "@apollo/client";
+import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
@@ -36,7 +36,7 @@ const GET_CONSORTIUM_DETAILS = gql`
   }
 `;
 
-export const GET_COMPUTATION_LIST = gql`
+const GET_COMPUTATION_LIST = gql`
   query GetComputationList {
     getComputationList {
       id
@@ -46,27 +46,35 @@ export const GET_COMPUTATION_LIST = gql`
   }
 `;
 
-export const SET_MOUNT_DIR = gql`
-  mutation SetMountDir($consortiumId: String!, $mountDir: String!) {
-    setMountDir(consortiumId: $consortiumId, mountDir: $mountDir)
-  }
-`;
 
-export const STUDY_SET_COMPUTATION = gql`
+
+const STUDY_SET_COMPUTATION = gql`
   mutation StudySetComputation($consortiumId: String!, $computationId: String!) {
     studySetComputation(consortiumId: $consortiumId, computationId: $computationId)
   }
 `;
 
-export const STUDY_SET_PARAMETERS = gql`
+const STUDY_SET_PARAMETERS = gql`
   mutation StudySetParameters($consortiumId: String!, $parameters: String!) {
     studySetParameters(consortiumId: $consortiumId, parameters: $parameters)
   }
 `;
 
-export const STUDY_SET_NOTES = gql`
+const STUDY_SET_NOTES = gql`
   mutation StudySetNotes($consortiumId: String!, $notes: String!) {
     studySetNotes(consortiumId: $consortiumId, notes: $notes)
+  }
+`;
+
+const SET_MOUNT_DIR = gql`
+  mutation SetMountDir($consortiumId: String!, $mountDir: String!) {
+    setMountDir(consortiumId: $consortiumId, mountDir: $mountDir)
+  }
+`;
+
+const GET_MOUNT_DIR = gql`
+  query GetMountDir($consortiumId: String!) {
+    getMountDir(consortiumId: $consortiumId)
   }
 `;
 
@@ -76,23 +84,36 @@ export default function ConsortiumDetails(props: any) {
     const [editableNotes, setEditableNotes] = useState("");
     const [editableParameters, setEditableParameters] = useState("");
     const [selectableComputation, setSelectableComputation] = useState("");
-    const [editableMountDir, setEditableMountDir] = useState("")
+    const [editableMountDir, setEditableMountDir] = useState("");
 
     // Use useLazyQuery for consortium details query
     const [getConsortiumDetails, { loading, error, data }] = useLazyQuery(GET_CONSORTIUM_DETAILS, {
         client: centralApiApolloClient,
     });
 
+    // Use useQuery for computation list query
+    const { loading: computationsLoading, error: computationsError, data: computationsData } = useQuery(GET_COMPUTATION_LIST, {
+        client: centralApiApolloClient,
+    });
+
     // Use useMutation for mutations
-    const [setMountDir] = useMutation(SET_MOUNT_DIR, { client: centralApiApolloClient });
+    const [setMountDir] = useMutation(SET_MOUNT_DIR, { client: edgeClientApolloClient });
+    const [getMountDir] = useLazyQuery(GET_MOUNT_DIR, { client: edgeClientApolloClient })
     const [studySetComputation] = useMutation(STUDY_SET_COMPUTATION, { client: centralApiApolloClient });
     const [studySetParameters] = useMutation(STUDY_SET_PARAMETERS, { client: centralApiApolloClient });
     const [studySetNotes] = useMutation(STUDY_SET_NOTES, { client: centralApiApolloClient });
 
     useEffect(() => {
-        handleGetConsortiumDetails()
-    }, [])
+        handleGetConsortiumDetails();
+        handleGetMountDir()
+    }, [consortiumId]);
 
+    useEffect(() => {
+        if (data && data.getConsortiumDetails) {
+            setEditableNotes(data.getConsortiumDetails.studyConfiguration.consortiumLeaderNotes || "");
+            setEditableParameters(data.getConsortiumDetails.studyConfiguration.computationParameters || "");
+        }
+    }, [data]);
 
     const handleGetConsortiumDetails = () => {
         getConsortiumDetails({ variables: { consortiumId } });
@@ -104,7 +125,7 @@ export default function ConsortiumDetails(props: any) {
                 variables: { consortiumId, computationId: selectableComputation },
             });
             console.log('Computation set successfully');
-            handleGetConsortiumDetails()
+            handleGetConsortiumDetails();
         } catch (e) {
             console.error('Error setting computation:', e);
             console.log('Failed to set computation');
@@ -117,7 +138,7 @@ export default function ConsortiumDetails(props: any) {
                 variables: { consortiumId, parameters: editableParameters },
             });
             console.log('Parameters set successfully');
-            handleGetConsortiumDetails()
+            handleGetConsortiumDetails();
         } catch (e) {
             console.error('Error setting parameters:', e);
             console.log('Failed to set parameters');
@@ -130,18 +151,32 @@ export default function ConsortiumDetails(props: any) {
                 variables: { consortiumId, notes: editableNotes },
             });
             console.log('Notes set successfully');
-            handleGetConsortiumDetails()
+            handleGetConsortiumDetails();
         } catch (e) {
             console.error('Error setting notes:', e);
             console.log('Failed to set notes');
         }
     };
 
+    const handleGetMountDir = async () => {
+        try {
+          const result = await edgeClientApolloClient?.query({
+            query: GET_MOUNT_DIR,
+            variables: { consortiumId }
+          });
+          if (result?.data?.getMountDir) {
+            setEditableMountDir(result.data.getMountDir);
+          }
+        } catch (e) {
+          console.error("Error getting mount dir:", e);
+        }
+      };
+      
+
     const handleSetMountDir = async () => {
         try {
-            const mountDir = "your-mount-directory"; // Set the mount directory value
             await setMountDir({
-                variables: { consortiumId, mountDir },
+                variables: { consortiumId, mountDir: editableMountDir },
             });
             console.log('Mount directory set successfully');
         } catch (e) {
@@ -150,62 +185,120 @@ export default function ConsortiumDetails(props: any) {
         }
     };
 
-    // Handle loading and error states for the query
-    if (loading) return <p>Loading...</p>;
+    // Handle loading and error states for the queries
+    if (loading || computationsLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
+    if (computationsError) return <p>Error: {computationsError.message}</p>;
 
     // Extract data from the query result
     const consortiumDetails = data?.getConsortiumDetails;
+    const computations = computationsData?.getComputationList;
 
     return (
         <div>
-            {/* <button onClick={handleGetConsortiumDetails}>Fetch Consortium Details</button> */}
+            <section>
+                <h2>Consortium Details</h2>
+                {consortiumDetails && (
+                    <div>
+                        <p><strong>Title:</strong> {consortiumDetails.title}</p>
+                        <p><strong>Description:</strong> {consortiumDetails.description}</p>
+                        <p><strong>Leader:</strong> {consortiumDetails.leader.username}</p>
+                    </div>
+                )}
+            </section>
 
-            {consortiumDetails && (
-                <pre>
-                    <code>{JSON.stringify(consortiumDetails, null, 4)}</code>
-                </pre>
-            )}
+            <section>
+                <h2>Members</h2>
+                {consortiumDetails && (
+                    <div>
+                        <h3>Members</h3>
+                        <ul>
+                            {consortiumDetails.members.map((member: any) => (
+                                <li key={member.id}>{member.username}</li>
+                            ))}
+                        </ul>
+                        <h3>Active Members</h3>
+                        <ul>
+                            {consortiumDetails.activeMembers.map((member: any) => (
+                                <li key={member.id}>{member.username}</li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </section>
 
-            <div>
-                <input
-                    type="text"
-                    value={editableNotes}
-                    onChange={(e) => setEditableNotes(e.target.value)}
-                    placeholder="Enter notes"
-                />
-                <button onClick={handleSetNotes}>Set Notes</button>
-            </div>
+            <section>
+                <h2>Study Configuration</h2>
+                {consortiumDetails && (
+                    <div>
+                        <div>
+                            <label>Computation</label>
+                            <select
+                                value={selectableComputation}
+                                onChange={(e) => setSelectableComputation(e.target.value)}
+                            >
+                                <option value="" disabled>Select computation</option>
+                                {computations && computations.map((comp: any) => (
+                                    <option key={comp.id} value={comp.id}>
+                                        {comp.title}
+                                    </option>
+                                ))}
+                            </select>
+                            <button onClick={handleSetComputation}>Set Computation</button>
+                        </div>
 
-            <div>
-                <input
-                    type="text"
-                    value={editableParameters}
-                    onChange={(e) => setEditableParameters(e.target.value)}
-                    placeholder="Enter parameters"
-                />
-                <button onClick={handleSetParameters}>Set Parameters</button>
-            </div>
+                        <div>
+                            <label>Consortium Leader Notes</label>
+                            <input
+                                type="text"
+                                value={editableNotes}
+                                onChange={(e) => setEditableNotes(e.target.value)}
+                                placeholder="Enter notes"
+                            />
+                            <button onClick={handleSetNotes}>Set Notes</button>
+                        </div>
 
-            <div>
-                <input
-                    type="text"
-                    value={selectableComputation}
-                    onChange={(e) => setSelectableComputation(e.target.value)}
-                    placeholder="Enter computation ID"
-                />
-                <button onClick={handleSetComputation}>Set Computation</button>
-            </div>
+                        <div>
+                            <label>Parameters</label>
+                            <input
+                                type="text"
+                                value={editableParameters}
+                                onChange={(e) => setEditableParameters(e.target.value)}
+                                placeholder="Enter parameters"
+                            />
+                            <button onClick={handleSetParameters}>Set Parameters</button>
+                        </div>
 
-            <div>
-                <input
-                    type="text"
-                    value={editableMountDir}
-                    onChange={(e) => setEditableMountDir(e.target.value)}
-                    placeholder="Enter mount directory"
-                ></input>
-                <button onClick={handleSetMountDir}>Set Mount Directory</button>
-            </div>
+
+
+                        {consortiumDetails.studyConfiguration.computation && (
+                            <div>
+                                <h3>Computation Details</h3>
+                                <p><strong>Title:</strong> {consortiumDetails.studyConfiguration.computation.title}</p>
+                                <p><strong>Image Name:</strong> {consortiumDetails.studyConfiguration.computation.imageName}</p>
+                                <p><strong>Image Download URL:</strong> {consortiumDetails.studyConfiguration.computation.imageDownloadUrl}</p>
+                                <p><strong>Computation Notes:</strong> {consortiumDetails.studyConfiguration.computation.notes}</p>
+                                <p><strong>Owner:</strong> {consortiumDetails.studyConfiguration.computation.owner}</p>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </section>
+
+
+            <section>
+                <h2>Member Settings</h2>
+                <div>
+                    <label>Mount Directory</label>
+                    <input
+                        type="text"
+                        value={editableMountDir}
+                        onChange={(e) => setEditableMountDir(e.target.value)}
+                        placeholder="Enter mount directory"
+                    />
+                    <button onClick={handleSetMountDir}>Set Mount Directory</button>
+                </div>
+            </section>
         </div>
     );
 }

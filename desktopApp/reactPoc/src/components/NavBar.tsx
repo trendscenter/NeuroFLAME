@@ -4,13 +4,13 @@ export default function NavBar() {
     return <div>
         <ul>
             <li>
-                <Link to={`/consortia`}>consortia</Link>
+                <Link to={`/login`}>login</Link>
             </li>
             <li>
                 <Link to={`/computations`}>computations</Link>
             </li>
             <li>
-                <Link to={`/login`}>login</Link>
+                <Link to={`/consortia`}>consortia</Link>
             </li>
         </ul>
         <Outlet></Outlet>

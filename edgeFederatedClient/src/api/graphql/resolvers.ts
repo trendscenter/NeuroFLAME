@@ -6,7 +6,35 @@ import fs from 'fs/promises'
 export const resolvers = {
   Query: {
     hello: (): string => 'Hello from the edge federated client!',
+    getMountDir: async (
+      _: any,
+      { consortiumId }: { consortiumId: string },
+      context: any,
+    ): Promise<string> => {
+      // Check if the caller is authorized
+      const { tokenPayload } = context
+      const { userId } = tokenPayload
+      if (!tokenPayload || !userId) {
+        throw new Error('Not authorized')
+      }
+
+      const { path_base_directory } = getConfig()
+      const consortiumDir = path.join(path_base_directory, consortiumId)
+
+      try {
+        // Read the mount_config.json file
+        const configPath = path.join(consortiumDir, 'mount_config.json')
+        const configFile = await fs.readFile(configPath, 'utf-8')
+        const config = JSON.parse(configFile)
+
+        return config.dataPath
+      } catch (error) {
+        console.error('Error reading mount directory:', error)
+        throw new Error('Failed to read mount directory')
+      }
+    },
   },
+
   Mutation: {
     connectAsUser: async (_: any, args: any, context: any): Promise<string> => {
       try {
