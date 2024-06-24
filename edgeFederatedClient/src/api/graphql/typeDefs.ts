@@ -5,5 +5,6 @@ export const typeDefs = `
   
   type Mutation {
    connectAsUser: String
+   setMountDir(consortiumId: String): Boolean
   }
 `
