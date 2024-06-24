@@ -254,7 +254,7 @@ export default {
       {
         consortiumId,
         parameters,
-      }: { consortiumId: String; parameters: String },
+      }: { consortiumId: string; parameters: string },
       context: Context,
     ): Promise<boolean> => {
       try {
@@ -267,6 +267,14 @@ export default {
         // Check if the caller is authorized
         if (consortium.leader.toString() !== context.userId) {
           throw new Error('Not authorized')
+        }
+
+        // see if the string is valid json
+        try{
+          const parametersJson = JSON.parse(parameters)
+        }
+        catch (e: any){
+          throw new Error(`failed to parse parameters into JSON ${e}`)
         }
 
         // Set the computation in the study configuration

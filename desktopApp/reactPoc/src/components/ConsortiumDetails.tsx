@@ -78,6 +78,17 @@ const GET_MOUNT_DIR = gql`
   }
 `;
 
+
+
+const START_RUN = gql`
+  mutation StartRun($input: StartRunInput!) {
+    startRun(input: $input) {
+      runId
+    }
+  }
+`;
+
+
 export default function ConsortiumDetails(props: any) {
     const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext);
     const { consortiumId } = useParams<{ consortiumId: string }>();
@@ -97,8 +108,8 @@ export default function ConsortiumDetails(props: any) {
     });
 
     // Use useMutation for mutations
+    const [startRun] = useMutation(START_RUN, { client: centralApiApolloClient })
     const [setMountDir] = useMutation(SET_MOUNT_DIR, { client: edgeClientApolloClient });
-    const [getMountDir] = useLazyQuery(GET_MOUNT_DIR, { client: edgeClientApolloClient })
     const [studySetComputation] = useMutation(STUDY_SET_COMPUTATION, { client: centralApiApolloClient });
     const [studySetParameters] = useMutation(STUDY_SET_PARAMETERS, { client: centralApiApolloClient });
     const [studySetNotes] = useMutation(STUDY_SET_NOTES, { client: centralApiApolloClient });
@@ -114,6 +125,12 @@ export default function ConsortiumDetails(props: any) {
             setEditableParameters(data.getConsortiumDetails.studyConfiguration.computationParameters || "");
         }
     }, [data]);
+
+    const handleStartRun = async () => {
+        startRun({
+            variables: { input: { consortiumId } }
+        })
+    };
 
     const handleGetConsortiumDetails = () => {
         getConsortiumDetails({ variables: { consortiumId } });
@@ -160,18 +177,18 @@ export default function ConsortiumDetails(props: any) {
 
     const handleGetMountDir = async () => {
         try {
-          const result = await edgeClientApolloClient?.query({
-            query: GET_MOUNT_DIR,
-            variables: { consortiumId }
-          });
-          if (result?.data?.getMountDir) {
-            setEditableMountDir(result.data.getMountDir);
-          }
+            const result = await edgeClientApolloClient?.query({
+                query: GET_MOUNT_DIR,
+                variables: { consortiumId }
+            });
+            if (result?.data?.getMountDir) {
+                setEditableMountDir(result.data.getMountDir);
+            }
         } catch (e) {
-          console.error("Error getting mount dir:", e);
+            console.error("Error getting mount dir:", e);
         }
-      };
-      
+    };
+
 
     const handleSetMountDir = async () => {
         try {
@@ -269,6 +286,9 @@ export default function ConsortiumDetails(props: any) {
                             <button onClick={handleSetParameters}>Set Parameters</button>
                         </div>
 
+                        <div>
+                            <button onClick={handleStartRun}>Start Run</button>
+                        </div>
 
 
                         {consortiumDetails.studyConfiguration.computation && (
