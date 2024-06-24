@@ -8,19 +8,39 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
+export const CONNECT_AS_USER = gql`
+  mutation ConnectAsUser {
+    connectAsUser
+  }
+`;
+
 export default function PageLogin() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [accessToken, setAccessToken] = useState('');
-    const { centralApiApolloClient } = useContext(ApolloClientsContext);
+    const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext);
 
-    const [login, { data, loading, error }] = useMutation(LOGIN_MUTATION, {
-        client: centralApiApolloClient,
-        onCompleted: (data) => {
-            localStorage.setItem('accessToken', data.login);
-            setAccessToken(data.login);
-        },
-    });
+    const connectAsUser = async () => {
+        try {
+            const result = await edgeClientApolloClient?.mutate({
+                mutation: CONNECT_AS_USER
+            })
+        } catch (e: any) {
+            console.error(`error connecting as user ${e}`)
+        }
+    }
+
+    const login = async () => {
+        const result = await centralApiApolloClient?.mutate({
+            mutation: LOGIN_MUTATION,
+            variables: { username, password }
+        })
+
+        const accessToken = result?.data?.login
+
+        localStorage.setItem("accessToken", accessToken)
+        setAccessToken(accessToken)
+    }
 
     useEffect(() => {
         const token = localStorage.getItem('accessToken');
@@ -29,9 +49,12 @@ export default function PageLogin() {
         }
     }, []);
 
+
+
     const handleLogin = (e: any) => {
         e.preventDefault();
-        login({ variables: { username, password } });
+        login()
+        connectAsUser()
     };
 
     return (
@@ -63,11 +86,11 @@ export default function PageLogin() {
                     />
                 </div>
                 <div>
-                    <button type="submit" disabled={loading}>
-                        {loading ? 'Logging in...' : 'Login'}
+                    <button type="submit">
+                        Login
                     </button>
                 </div>
-                {error && <p>Error: {error.message}</p>}
+  
             </form>
             {accessToken && (
                 <div>
