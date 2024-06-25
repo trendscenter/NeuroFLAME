@@ -103,12 +103,12 @@ interface ListItemFuncProps {
 
 const ListItemFunc: React.FC<ListItemFuncProps> = ({ icon, primary, onClick }) => {
   return (
-  <li>
-    <ListItem button component={Link} onClick={e => { onClick() }}>
-      {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
-      <ListItemText primary={primary} />
-    </ListItem>
-  </li>
+    <li>
+      <ListItem button component={Link} onClick={e => { onClick() }}>
+        {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+        <ListItemText primary={primary} />
+      </ListItem>
+    </li>
   )
 }
 
@@ -152,8 +152,8 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const Drawer = styled(MuiDrawer, { 
-  shouldForwardProp: (prop) => prop !== 'open' 
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== 'open'
 })(
   ({ theme, open }) => ({
     '& .MuiDrawer-paper': {
@@ -228,99 +228,99 @@ function App() {
   };
 
   return (
-    <AuthContext.Provider value={{ ...authStateHandler }}>
+    <AuthContext.Provider value={authStateHandler}>
       <Router>
         <ThemeProvider theme={defaultTheme}>
           <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <AppBar position="absolute" open={open}>
-            <Toolbar
-              sx={{
-                pr: '24px', // keep right padding when drawer closed
-                backgroundColor: '#001F70'
-              }}
-            >
-              <Typography
-                sx={{ flexGrow: 1 }}
-              >
-              </Typography>
-              <img 
-                src={logoSM} 
-                alt="Logo" 
-                style={{
-                  marginRight: '2px',
-                  width: '28px', 
-                  height: '28px',
-                }}
-              />
-              <Typography
-                component="h1"
-                variant="h6"
-                color="inherit"
-                sx={{ 
-                  fontFamily: 'Lato',
-                  fontWeight: '600'
-                  }}
-                noWrap
-              >
-                COINSTAC
-              </Typography>
-              {/*<UserAvatar userId={authStateHandler.authData.userId} />*/}
-              <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="open drawer"
-                onClick={toggleDrawer}
+              <Toolbar
                 sx={{
-                  ...(open && { display: 'none' }),
+                  pr: '24px', // keep right padding when drawer closed
+                  backgroundColor: '#001F70'
                 }}
               >
-                <MenuIcon />
-              </IconButton>
-            </Toolbar>
-          </AppBar>
-          <div style={styles.content}>
-            <Routes>
-              <Route index path="/" element={<Login></Login>} />
-              <Route index path="/login" element={<Login></Login>} />
-              <Route path="/consortia" element={<ConsortiaList />} />
-              <Route path="/consortia/:consortiumId" element={<ConsortiumDetails />} />
-              {/* <Route path="/consortia/:consortiumId/admin-computation-configuration" element={<ComputationConfigurationAdmin />} /> */}
-              {/* <Route path="/consortia/:consortiumId/member-computation-configuration" element={<ComputationConfigurationMember />} /> */}
-              <Route path="/runs" element={<RunsList></RunsList>} />
-              <Route path="/runs/:runId" element={<RunDetails></RunDetails>} />
-              <Route path="/computations" element={<ComputationsList />} />
-              <Route path="/computations/:computationId" element={<ComputationDetails />} />
-              <Route path="/invites" element={<div>inviteslist</div>} />
-            </Routes>
-          </div>
-          <Drawer variant="permanent" anchor="right" open={open}>
-            <Toolbar
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                px: [1],
-              }}
-            >
-              <IconButton onClick={toggleDrawer}>
-                <ChevronLeftIcon />
-              </IconButton>
-            </Toolbar>
-            <Divider />
-            <div>
-              <Box sx={{ width: 360 }}>
-                <Paper elevation={0}>
-                  <List aria-label="main mailbox folders">
-                    <ListItemLink to="/consortia" primary="Consortia" />
-                    <ListItemLink to="/computations" primary="Computations" />
-                    <ListItemLink to="/runs" primary="Runs" />
-                    <ListItemFunc onClick={onLogout} primary="Logout" />
-                  </List>
-                </Paper>
-              </Box>
+                <Typography
+                  sx={{ flexGrow: 1 }}
+                >
+                </Typography>
+                <img
+                  src={logoSM}
+                  alt="Logo"
+                  style={{
+                    marginRight: '2px',
+                    width: '28px',
+                    height: '28px',
+                  }}
+                />
+                <Typography
+                  component="h1"
+                  variant="h6"
+                  color="inherit"
+                  sx={{
+                    fontFamily: 'Lato',
+                    fontWeight: '600'
+                  }}
+                  noWrap
+                >
+                  COINSTAC
+                </Typography>
+                {/*<UserAvatar userId={authStateHandler.authData.userId} />*/}
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={toggleDrawer}
+                  sx={{
+                    ...(open && { display: 'none' }),
+                  }}
+                >
+                  <MenuIcon />
+                </IconButton>
+              </Toolbar>
+            </AppBar>
+            <div style={styles.content}>
+              <Routes>
+                <Route index path="/" element={<Login></Login>} />
+                <Route index path="/login" element={<Login></Login>} />
+                <Route path="/consortia" element={<ConsortiaList />} />
+                <Route path="/consortia/:consortiumId" element={<ConsortiumDetails />} />
+                {/* <Route path="/consortia/:consortiumId/admin-computation-configuration" element={<ComputationConfigurationAdmin />} /> */}
+                {/* <Route path="/consortia/:consortiumId/member-computation-configuration" element={<ComputationConfigurationMember />} /> */}
+                <Route path="/runs" element={<RunsList></RunsList>} />
+                <Route path="/runs/:runId" element={<RunDetails></RunDetails>} />
+                <Route path="/computations" element={<ComputationsList />} />
+                <Route path="/computations/:computationId" element={<ComputationDetails />} />
+                <Route path="/invites" element={<div>inviteslist</div>} />
+              </Routes>
             </div>
-          </Drawer>
+            <Drawer variant="permanent" anchor="right" open={open}>
+              <Toolbar
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  px: [1],
+                }}
+              >
+                <IconButton onClick={toggleDrawer}>
+                  <ChevronLeftIcon />
+                </IconButton>
+              </Toolbar>
+              <Divider />
+              <div>
+                <Box sx={{ width: 360 }}>
+                  <Paper elevation={0}>
+                    <List aria-label="main mailbox folders">
+                      <ListItemLink to="/consortia" primary="Consortia" />
+                      <ListItemLink to="/computations" primary="Computations" />
+                      <ListItemLink to="/runs" primary="Runs" />
+                      <ListItemFunc onClick={onLogout} primary="Logout" />
+                    </List>
+                  </Paper>
+                </Box>
+              </div>
+            </Drawer>
           </Box>
         </ThemeProvider>
       </Router>

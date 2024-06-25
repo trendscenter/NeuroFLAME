@@ -1,32 +1,31 @@
 // useLogin.jsx
 import { gql, useMutation } from '@apollo/client';
-import { useApolloClientsContext } from './ApolloClientsContext';
-import { useAuthContext } from './AuthContext';
+import { ApolloClientsContext } from '../contexts/ApolloClientsContext';
+import { useAuthContext } from '../contexts/AuthContext'
+import { useContext } from 'react';
 
-const LOGIN_USER = gql`
+const LOGIN_MUTATION = gql`
   mutation Login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-      accessToken
-      refreshToken
-      id
-    }
+    login(username: $username, password: $password)
   }
 `;
 
-const CONNECT_TO_CENTRAL_API_SERVER = gql`
-  mutation connectAsUser($accessToken: String!, $refreshToken: String!) {
-    connectAsUser(accessToken: $accessToken, refreshToken: $refreshToken)
+const CONNECT_AS_USER = gql`
+  mutation ConnectAsUser {
+    connectAsUser
   }
 `;
 
 export function useLogin(onSuccess, onError) {
     // Get the Apollo clients
-    const { centralServerClient, federatedClientClient } = useApolloClientsContext()
-    const { setAuthInfo} = useAuthContext();
+    const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext)
+    const { setAuthInfo } = useAuthContext();
+
+
 
     // Setup the mutations with their respective clients
-    const [authenticateAsUser, authenticateStatus] = useMutation(LOGIN_USER, { client: centralServerClient });
-    const [connectAsUser, connectStatus] = useMutation(CONNECT_TO_CENTRAL_API_SERVER, { client: federatedClientClient });
+    const [authenticateAsUser, authenticateStatus] = useMutation(LOGIN_MUTATION, { client: centralApiApolloClient });
+    const [connectAsUser, connectStatus] = useMutation(CONNECT_AS_USER, { client: edgeClientApolloClient });
 
     // The login function that orchestrates the login and connect calls
     const login = async (username, password) => {
@@ -40,20 +39,20 @@ export function useLogin(onSuccess, onError) {
             // Store tokens on successful login
             if (authenticateData) {
                 setAuthInfo({
-                    accessToken: authenticateData.login.accessToken,
-                    refreshToken: authenticateData.login.refreshToken,
-                    userId: authenticateData.login.id
+                    accessToken: authenticateData.login,
+                    refreshToken: null,
+                    userId: authenticateData.login
                 });
 
                 // Attempt to connect
                 const { data: connectData } = await connectAsUser({
                     variables: {
-                        accessToken: authenticateData.login.accessToken,
-                        refreshToken: authenticateData.login.refreshToken,
+                        accessToken: authenticateData.login,
+                        refreshToken: authenticateData.login,
                     },
                     context: {
                         headers: {
-                            "x-access-token": authenticateData.login.accessToken,
+                            "x-access-token": authenticateData.login,
                         }
                     }
                 });
@@ -77,6 +76,6 @@ export function useLogin(onSuccess, onError) {
     return {
         login,
         authenticateStatus,
-        connectStatus
+        connectStatus,
     };
 }

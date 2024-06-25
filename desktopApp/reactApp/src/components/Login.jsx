@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-//import { useLogin } from './useLogin';
-//import { useAuthContext } from './AuthContext';
+import { useLogin } from './useLogin';
+// import { useAuthContext } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 import logo from '../components/assets/coinstac-logo.png';
 import { Typography } from '@mui/material';
@@ -119,7 +119,8 @@ function Login() {
   const [value, setValue] = React.useState(0);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  //const { login, authenticateStatus, connectStatus } = useLogin(onSuccess);
+  const { login, authenticateStatus, connectStatus } = useLogin(onSuccess);
+  
   const navigate = useNavigate();
   const [auth, setAuth] = useState(false);
   //const auth = useAuthContext();
@@ -166,23 +167,23 @@ function Login() {
   return (
     <div style={styles.container}>
       <div style={styles.branding}>
-        <img 
-          src={logo} 
-          alt="Logo" 
+        <img
+          src={logo}
+          alt="Logo"
         />
         <Typography style={styles.brandingText}>COINSTAC</Typography>
       </div>
       <Box sx={{ backgroundColor: '#f5f5f5', width: '300px', borderRadius: '0.5rem', marginTop: '1rem' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs 
-          value={value} 
-          onChange={handleChange} 
-          aria-label="basic tabs example"
-          sx={{display: 'flex', justifyContent: 'center' }}
-        >
-          <Tab label="Login" {...a11yProps(0)} sx={{flexGrow: '1' }} />
-          <Tab label="Sign Up" {...a11yProps(1)} sx={{flexGrow: '1' }} />
-        </Tabs>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="basic tabs example"
+            sx={{ display: 'flex', justifyContent: 'center' }}
+          >
+            <Tab label="Login" {...a11yProps(0)} sx={{ flexGrow: '1' }} />
+            <Tab label="Sign Up" {...a11yProps(1)} sx={{ flexGrow: '1' }} />
+          </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
           <InputField
@@ -199,8 +200,10 @@ function Login() {
           />
           <button
             style={styles.button}
+            onClick={() => login(username, password)}
+            disabled={authenticateStatus.loading || connectStatus.loading}
           >
-            {'Submit'}
+            {authenticateStatus.loading || connectStatus.loading ? 'Loading...' : 'Submit'}
           </button>
           {/*renderStatus(authenticateStatus, "Authenticate with Central Server")*/}
           {/*renderStatus(connectStatus, "Connect to Federated Client")*/}
