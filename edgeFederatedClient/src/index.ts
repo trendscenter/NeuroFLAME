@@ -1,9 +1,22 @@
 import * as runCoordinator from './runCoordinator/runCoordinator.js'
-import { loadConfigFile, getConfig } from './config/getConfig.js'
+import {
+  setConfig,
+  getConfig,
+  edgeClientLaunchConfiguration,
+} from './config/config.js'
 import inMemoryStore from './inMemoryStore.js'
+import {start as startApiServer} from './api/index.js'
+import defaultConfig from './config/defaultConfig.js'
 
-export async function connect(): Promise<void> {
-  const { wsUrl, accessToken } = await getConfig()
+
+export function start(config: edgeClientLaunchConfiguration): void {
+  setConfig(config)
+  // launch the api server
+  startApiServer({ port: config.hostingPort })
+}
+
+export async function connect(accessToken: string): Promise<void> {
+  const { wsUrl } = await getConfig()
   inMemoryStore.set('accessToken', accessToken)
 
   await runCoordinator.subscribeToCentralApi({
@@ -13,20 +26,5 @@ export async function connect(): Promise<void> {
 }
 
 ;(async () => {
-  const configFilePath = process.argv[2]
-
-  try {
-    // Conditionally load the configuration file if a path is provided
-
-    console.log(configFilePath)
-    if (configFilePath) {
-      await loadConfigFile(configFilePath)
-    }
-
-    // Execute the main connection logic
-    await connect()
-    console.log('Connected successfully.')
-  } catch (err) {
-    console.error('Failed:', err)
-  }
+  start(defaultConfig)
 })()

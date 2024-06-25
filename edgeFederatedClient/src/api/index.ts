@@ -4,42 +4,17 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import express from 'express'
 import { createServer } from 'http'
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import WebSocket, {WebSocketServer} from 'ws'
+import WebSocket, { WebSocketServer } from 'ws'
 import { useServer } from 'graphql-ws/lib/use/ws'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import mongoose from 'mongoose'
 
-import typeDefs from './graphql/typeDefs.js'
-import resolvers from './graphql/resolvers.js'
+import { typeDefs } from './graphql/typeDefs.js'
+import { resolvers } from './graphql/resolvers.js'
 
 import { httpServerContext, wsServerContext } from './serverContexts.js'
-import { validateAccessToken } from './authentication/authentication.js'
 
-import getConfig from './config/getConfig.js'
-
-const config = await getConfig()
-
-export async function start({
-  port,
-  databaseDetails,
-}: {
-  port: number
-  databaseDetails: {
-    url: string
-    user: string
-    pass: string
-  }
-}) {
-  const { url, user, pass } = databaseDetails
-
-  await mongoose.connect(url, {
-    autoIndex: false,
-    user: user,
-    pass: pass,
-    authSource: 'admin',
-  })
-
+export async function start({ port }: { port: number }) {
   const PORT = port
   // Create schema, which will be used separately by ApolloServer and
   // the WebSocket server.
@@ -95,25 +70,6 @@ export async function start({
     }),
   )
 
-  app.post('/authenticateToken', (req, res) => {
-    const token = req.body.token // assuming the token is sent in the request body
-    if (!token) {
-      res.status(400).send('Token is required')
-      return
-    }
-
-    try {
-      const decodedAccessToken = validateAccessToken(token)
-      if (decodedAccessToken) {
-        res.status(200).json({ decodedAccessToken })
-      } else {
-        res.status(401).send('Token is invalid')
-      }
-    } catch (e) {
-      res.status(401).send('Failed to decode token') // More specific error message
-    }
-  })
-
   // Now that our HTTP server is fully set up, actually listen.
   httpServer.listen(PORT, () => {
     console.log(`🚀 Query endpoint ready at http://localhost:${PORT}/graphql`)
@@ -122,8 +78,3 @@ export async function start({
     )
   })
 }
-
-start({
-  port: config.apolloPort,
-  databaseDetails: config.databaseDetails,
-}).catch(console.error) // Proper error handling

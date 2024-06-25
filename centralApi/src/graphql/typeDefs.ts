@@ -1,34 +1,35 @@
 export interface StartRunInput {
-  consortiumId: string
+  consortiumId: string;
 }
 
 export interface StartRunOutput {
-  runId: string
+  runId: string;
 }
 
-export interface runStartCentralPayload {
-  runId: string
-  imageName: string
-  userIds: string[]
-  consortiumId: string
-  computationParameters: string
+export interface RunStartCentralPayload {
+  runId: string;
+  imageName: string;
+  userIds: string[];
+  consortiumId: string;
+  computationParameters: string;
 }
 
-export interface runStartEdgePayload {
-  runId: string
-  imageName: string
-  consortiumId: string
-  downloadUrl: string
-  downloadToken: string
+export interface RunStartEdgePayload {
+  runId: string;
+  imageName: string;
+  consortiumId: string;
+  downloadUrl: string;
+  downloadToken: string;
 }
 
 export interface PublicUser {
   id: string;
   username: string;
 }
+
 export interface User {
-  id: string
-  username: string
+  id: string;
+  username: string;
 }
 
 export interface ConsortiumListItem {
@@ -42,6 +43,29 @@ export interface ComputationListItem {
   id: string;
   title: string;
   imageName: string;
+}
+
+export interface Computation {
+  title: string;
+  imageName: string;
+  imageDownloadUrl: string;
+  notes: string;
+  owner: string;
+}
+
+export interface StudyConfiguration {
+  consortiumLeaderNotes: string;
+  computationParameters: string;
+  computation: Computation;
+}
+
+export interface ConsortiumDetails {
+  title: string;
+  description: string;
+  leader: PublicUser;
+  members: PublicUser[];
+  activeMembers: PublicUser[];
+  studyConfiguration: StudyConfiguration;
 }
 
 export default `#graphql
@@ -64,7 +88,6 @@ export default `#graphql
     imageName: String
   }
   
-
   input StartRunInput {
     consortiumId: String
   }
@@ -89,9 +112,33 @@ export default `#graphql
     runId: String
   }
 
+  type Computation {
+    title: String
+    imageName: String
+    imageDownloadUrl: String
+    notes: String
+    owner: String
+  }
+
+  type StudyConfiguration {
+    consortiumLeaderNotes: String
+    computationParameters: String
+    computation: Computation
+  }
+
+  type ConsortiumDetails {
+    title: String
+    description: String
+    leader: PublicUser
+    members: [PublicUser]
+    activeMembers: [PublicUser]
+    studyConfiguration: StudyConfiguration
+  }
+
   type Query {
     getConsortiumList: [ConsortiumListItem]
     getComputationList: [ComputationListItem]
+    getConsortiumDetails(consortiumId: String): ConsortiumDetails
   }
 
   type Mutation {
@@ -101,10 +148,13 @@ export default `#graphql
     reportError(runId: String, errorMessage: String): Boolean
     reportComplete(runId: String): Boolean
     reportStatus(runId: String, status: String): Boolean
+    studySetComputation(consortiumId: String, computationId: String): Boolean
+    studySetParameters(consortiumId: String, parameters: String): Boolean
+    studySetNotes(consortiumId: String, notes: String): Boolean
   }
 
   type Subscription {
     runStartCentral: RunStartCentralPayload
     runStartEdge: RunStartEdgePayload
   }
-`
+`;
