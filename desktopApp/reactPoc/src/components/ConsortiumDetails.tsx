@@ -285,7 +285,6 @@ export default function ConsortiumDetails(props: any) {
                             />
                             <button onClick={handleSetParameters}>Set Parameters</button>
                         </div>
-
                         <div>
                             <button onClick={handleStartRun}>Start Run</button>
                         </div>

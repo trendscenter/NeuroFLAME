@@ -8,7 +8,7 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-export const CONNECT_AS_USER = gql`
+const CONNECT_AS_USER = gql`
   mutation ConnectAsUser {
     connectAsUser
   }
