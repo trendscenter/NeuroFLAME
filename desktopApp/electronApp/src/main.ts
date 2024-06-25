@@ -3,7 +3,7 @@ import path from 'path'
 import url, { fileURLToPath } from 'url'
 import fs from 'fs'
 import defaultConfig from './defaultConfig.json' with {type: 'json'}
-import {start as starteEdgeFederatedClient} from 'edgeFederatedClient'
+// import {start as starteEdgeFederatedClient} from 'edgeFederatedClient'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url)) //
 
@@ -36,14 +36,14 @@ function createWindow() {
     mainWindow = null
   })
 
-  starteEdgeFederatedClient({
-    httpUrl: 'http://localhost:4000/graphql',
-    wsUrl: 'ws://localhost:4000/graphql',
-    path_base_directory:
-      'C:\\development\\effective-palm-tree\\_devTestDirectories\\edgeSite1',
-    authenticationEndpoint: 'http://localhost:4000/authenticateToken',
-    hostingPort: 9000
-  })
+  // starteEdgeFederatedClient({
+  //   httpUrl: 'http://localhost:4000/graphql',
+  //   wsUrl: 'ws://localhost:4000/graphql',
+  //   path_base_directory:
+  //     'C:\\development\\effective-palm-tree\\_devTestDirectories\\edgeSite1',
+  //   authenticationEndpoint: 'http://localhost:4000/authenticateToken',
+  //   hostingPort: 9000
+  // })
 }
 
 app.on('ready', createWindow)
