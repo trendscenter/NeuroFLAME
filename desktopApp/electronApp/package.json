@@ -13,7 +13,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+   "edgefederatedclient": "file:../../edgeFederatedClient"
+  },
   "devDependencies": {
     "electron": "^30.0.1",
     "@types/electron": "^1.6.10",
@@ -21,6 +23,9 @@
     "electron-builder": "^24.13.3",
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.5"
+  },
+  "_moduleAliases": {
+    "edgeFederatedClient": "../../edgeFederatedClient/dist"
   },
   "build": {
     "appId": "your.app.id",

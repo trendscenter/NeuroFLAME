@@ -25,6 +25,6 @@ export async function connect(accessToken: string): Promise<void> {
   })
 }
 
-;(async () => {
-  start(defaultConfig)
-})()
+// ;(async () => {
+//   start(defaultConfig)
+// })()

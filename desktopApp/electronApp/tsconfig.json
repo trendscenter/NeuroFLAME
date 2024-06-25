@@ -1,25 +1,26 @@
 {
   "compilerOptions": {
-    "target": "es2020",                     // Target must be at least ES2020 to match Electron's modern JavaScript capabilities.
-    "module": "esnext",                     // Use latest module standards.
-    "moduleResolution": "node",             // Use Node.js-style module resolution.
-    "esModuleInterop": true,                // Allows default imports from modules with no default exports.
-    "allowSyntheticDefaultImports": true,   // Allow default imports from modules with no default exports.
-    "lib": ["dom", "es2020"],               // Include 'dom' for DOM manipulations and standard lib for ES2020.
-    "outDir": "build",                       // Specify the output directory for compiled files.
-    "rootDir": "src",                       // Specify the root directory of input files.
-    "types": ["node", "electron"],          // Specify type definitions to include.
-    "sourceMap": true,                      // Enable source map generation for debugging.
-    "strict": true,                         // Enable all strict type-checking options.
+    "target": "es2020",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": ["dom", "es2020"],
+    "outDir": "./build",
+    "rootDir": "./src",
+    "types": ["node", "electron"],
+    "sourceMap": true,
+    "strict": true,
     "resolveJsonModule": true,
+    "paths": {
+      "edgeFederatedClient": ["../../edgeFederatedClient/dist"]
+    }
   },
-  "include": [
-    "src/**/*"                              // Include all files in the src directory for compilation.
-  ],
+  // "include": ["src/**/*"],
   "exclude": [
     "src/preload.js",
-    "node_modules",                         // Exclude the node_modules directory to speed up the compilation.
-    "**/*.spec.ts",                         // Exclude test files from compilation.
+    "node_modules",
+    "**/*.spec.ts",
     "**/*.test.ts"
   ]
 }
