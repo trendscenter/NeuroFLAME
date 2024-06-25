@@ -51,7 +51,7 @@ export async function start({
   const httpServer = createServer(app)
 
   // Set up WebSocket server.
-  const wsServer = new WebSocketServer({
+  const wsServer = new WebSocket.Server({
     server: httpServer,
     path: '/graphql',
   })
