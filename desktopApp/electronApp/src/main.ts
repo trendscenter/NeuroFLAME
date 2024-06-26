@@ -3,7 +3,7 @@ import path from 'path'
 import url, { fileURLToPath } from 'url'
 import fs from 'fs'
 import {defaultConfig} from './defaultConfig.js'
-// import {start as startEdgeFederatedClient} from 'edgeFederatedClient'
+import {start as startEdgeFederatedClient} from 'edge-federated-client'
 
 
 
@@ -38,14 +38,14 @@ function createWindow() {
     mainWindow = null
   })
 
-  // startEdgeFederatedClient({
-  //   httpUrl: 'http://localhost:4000/graphql',
-  //   wsUrl: 'ws://localhost:4000/graphql',
-  //   path_base_directory:
-  //     'C:\\development\\effective-palm-tree\\_devTestDirectories\\edgeSite1',
-  //   authenticationEndpoint: 'http://localhost:4000/authenticateToken',
-  //   hostingPort: 9000
-  // })
+  startEdgeFederatedClient({
+    httpUrl: 'http://localhost:4000/graphql',
+    wsUrl: 'ws://localhost:4000/graphql',
+    path_base_directory:
+      'C:\\development\\effective-palm-tree\\_devTestDirectories\\edgeSite1',
+    authenticationEndpoint: 'http://localhost:4000/authenticateToken',
+    hostingPort: 9000
+  })
 
 }
 

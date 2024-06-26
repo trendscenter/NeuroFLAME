@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "edgeFederatedClient": "file:../../edgeFederatedClient"
+    "edge-federated-client": "1.0.0"
   },
   "devDependencies": {
     "electron": "^30.0.1",

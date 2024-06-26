@@ -1,0 +1,9 @@
+{
+    "name": "project",
+    "private": true,
+    "workspaces": [
+      "desktopApp/electronApp",
+      "edgeFederatedClient"
+    ]
+  }
+  
