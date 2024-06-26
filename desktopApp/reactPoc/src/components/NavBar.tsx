@@ -12,6 +12,9 @@ export default function NavBar() {
             <li>
                 <Link to={`/consortia`}>consortia</Link>
             </li>
+            <li>
+                <Link to={"/appConfig"}>app config</Link>
+            </li>
         </ul>
         <Outlet></Outlet>
     </div>

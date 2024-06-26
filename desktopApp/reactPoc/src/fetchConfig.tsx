@@ -1,17 +1,26 @@
 export interface Config {
-    centralServerUrl: string;
-    edgeClientUrl: string;
+  centralServerUrl: string;
+  edgeClientUrl: string;
+  startEdgeClientOnLaunch: boolean;
+  edgeClientConfig: {
+    httpUrl: string,
+    wsUrl: string,
+    path_base_directory: string,
+    authenticationEndpoint: string,
+    hostingPort: number
   }
-  
-  interface ElectronAPI {
-    getConfig: () => Promise<Config>;
+}
+
+interface ElectronAPI {
+  getConfig: () => Promise<Config>;
+  saveConfig: (config: string) => Promise<void>;
+}
+
+declare global {
+  interface Window {
+    ElectronAPI: ElectronAPI;
   }
-  
-  declare global {
-    interface Window {
-      ElectronAPI: ElectronAPI;
-    }
-  }
+}
 
 export const fetchConfig = async (): Promise<Config | undefined> => {
   try {

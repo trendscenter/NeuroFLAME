@@ -12,6 +12,7 @@ import ComputationList from './components/ComputationList';
 import ConsortiumDetails from './components/ConsortiumDetails';
 import PageLogin from './components/PageLogin';
 import NavBar from './components/NavBar';
+import { AppConfig } from './components/AppConfig';
 
 const router = createHashRouter([
   {
@@ -34,6 +35,10 @@ const router = createHashRouter([
       {
         path: "computations",
         element: <ComputationList></ComputationList>
+      },
+      {
+        path: "appConfig",
+        element: <AppConfig></AppConfig>
       }
     ]
   }

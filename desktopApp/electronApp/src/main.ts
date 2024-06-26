@@ -1,17 +1,15 @@
-import { app, BrowserWindow, dialog, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import path from 'path'
 import url, { fileURLToPath } from 'url'
 import fs from 'fs'
-import {defaultConfig} from './defaultConfig.js'
-import {start as startEdgeFederatedClient} from 'edge-federated-client'
-
-
+import { defaultConfig } from './defaultConfig.js'
+import { start as startEdgeFederatedClient } from 'edge-federated-client'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url)) //
 
 let mainWindow: BrowserWindow | null
 
-function createWindow() {
+async function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -38,15 +36,12 @@ function createWindow() {
     mainWindow = null
   })
 
-  startEdgeFederatedClient({
-    httpUrl: 'http://localhost:4000/graphql',
-    wsUrl: 'ws://localhost:4000/graphql',
-    path_base_directory:
-      'C:\\development\\effective-palm-tree\\_devTestDirectories\\edgeSite1',
-    authenticationEndpoint: 'http://localhost:4000/authenticateToken',
-    hostingPort: 9000
-  })
-
+  const config = await getConfig()
+  {
+    if (config.startEdgeClientOnLaunch) {
+      startEdgeFederatedClient(config.edgeClientConfig)
+    }
+  }
 }
 
 app.on('ready', createWindow)
@@ -63,7 +58,7 @@ app.on('activate', () => {
   }
 })
 
-ipcMain.handle('getConfig', async () => {
+async function getConfig() {
   const configPath = path.join(app.getPath('userData'), 'config.json')
   console.log('Reading configuration from:', configPath)
 
@@ -86,5 +81,18 @@ ipcMain.handle('getConfig', async () => {
       console.error('Failed to read or parse the configuration file:', error)
       throw new Error('Failed to access the configuration file.')
     }
+  }
+}
+
+ipcMain.handle('getConfig', getConfig)
+
+ipcMain.handle('saveConfig', async (event, newConfig) => {
+  const configPath = path.join(app.getPath('userData'), 'config.json')
+  console.log(newConfig)
+  try {
+    await fs.promises.writeFile(configPath, JSON.stringify(newConfig))
+  } catch (e) {
+    console.error('Failed to write config:', e)
+    throw new Error('Failed to write config')
   }
 })
