@@ -33,7 +33,7 @@
     },
     "extraResources": [
       {
-        "from": "../reactApp/build",
+        "from": "../reactPoc/build",
         "to": "app/build",
         "filter": [
           "**/*"

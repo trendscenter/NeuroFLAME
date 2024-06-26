@@ -4,17 +4,16 @@ import { fetchConfig } from './fetchConfig';
 import ApolloClientsProvider from './contexts/ApolloClientsProvider';
 
 import {
-  createBrowserRouter,
+  createHashRouter,
   RouterProvider,
 } from "react-router-dom";
-import Root from './Root';
 import ConsortiumList from './components/ConsortiumList';
 import ComputationList from './components/ComputationList';
 import ConsortiumDetails from './components/ConsortiumDetails';
 import PageLogin from './components/PageLogin';
 import NavBar from './components/NavBar';
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <NavBar></NavBar>,
@@ -26,7 +25,7 @@ const router = createBrowserRouter([
       {
         path: "consortia",
         element: <ConsortiumList></ConsortiumList>,
-    
+
       },
       {
         path: "consortia/:consortiumId/",
@@ -37,8 +36,7 @@ const router = createBrowserRouter([
         element: <ComputationList></ComputationList>
       }
     ]
-  },
-  
+  }
 ]);
 
 const startApp = async () => {

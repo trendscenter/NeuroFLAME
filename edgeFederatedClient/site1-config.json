@@ -1,6 +1,0 @@
-{
-    "httpUrl": "http://localhost:4000/graphql",
-    "wsUrl": "ws://localhost:4000/graphql",
-    "path_base_directory": "C:\\development\\effective-palm-tree\\_devTestDirectories\\edgeSite1",
-    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjI4OWM3OWFlYmFiNjcwNDBhMjAwNjgiLCJyb2xlcyI6WyJ1c2VyIl0sImlhdCI6MTcxMzkzODM5Mn0.4CfP8Hv_OE0V5n37zDMQ7KZ-Pi712V_z-vewgVFzJHY"
-}
