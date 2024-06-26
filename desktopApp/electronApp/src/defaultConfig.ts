@@ -1,4 +1,4 @@
-{
+export const defaultConfig = {
     "centralServerUrl": "http://localhost:4000/graphql",
     "edgeClientUrl": "http://localhost:4001/graphql"
 }

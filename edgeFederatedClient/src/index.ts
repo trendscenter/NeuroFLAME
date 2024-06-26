@@ -5,9 +5,8 @@ import {
   edgeClientLaunchConfiguration,
 } from './config/config.js'
 import inMemoryStore from './inMemoryStore.js'
-import {start as startApiServer} from './api/index.js'
+import { start as startApiServer } from './api/index.js'
 import defaultConfig from './config/defaultConfig.js'
-
 
 export function start(config: edgeClientLaunchConfiguration): void {
   setConfig(config)
@@ -25,6 +24,6 @@ export async function connect(accessToken: string): Promise<void> {
   })
 }
 
-;(async () => {
-  start(defaultConfig)
-})()
+// ;(async () => {
+//   start(defaultConfig)
+// })()

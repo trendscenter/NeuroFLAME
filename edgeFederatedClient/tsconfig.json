@@ -10,5 +10,9 @@
     "types": ["node"],
     "sourceMap": true,
     "strict": true,
+    "declaration": true
   },
+  "include": [
+    "src/**/*.ts"
+  ]
 }

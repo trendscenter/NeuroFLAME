@@ -12,8 +12,11 @@
     "sourceMap": true,
     "strict": true,
     "resolveJsonModule": true,
+    "paths": {
+      "edgeFederatedClient": ["../../edgeFederatedClient/dist"]
+    }
   },
-  // "include": ["src/**/*"],
+  "include": ["src/**/*"],
   "exclude": [
     "src/preload.js",
     "node_modules",

@@ -2,8 +2,10 @@ import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import path from 'path'
 import url, { fileURLToPath } from 'url'
 import fs from 'fs'
-import defaultConfig from './defaultConfig.json' with {type: 'json'}
-// import {start as starteEdgeFederatedClient} from 'edgeFederatedClient'
+import {defaultConfig} from './defaultConfig.js'
+// import {start as startEdgeFederatedClient} from 'edgeFederatedClient'
+
+
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url)) //
 
@@ -36,7 +38,7 @@ function createWindow() {
     mainWindow = null
   })
 
-  // starteEdgeFederatedClient({
+  // startEdgeFederatedClient({
   //   httpUrl: 'http://localhost:4000/graphql',
   //   wsUrl: 'ws://localhost:4000/graphql',
   //   path_base_directory:
@@ -44,6 +46,7 @@ function createWindow() {
   //   authenticationEndpoint: 'http://localhost:4000/authenticateToken',
   //   hostingPort: 9000
   // })
+
 }
 
 app.on('ready', createWindow)

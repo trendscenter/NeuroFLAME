@@ -13,7 +13,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "edgeFederatedClient": "file:../../edgeFederatedClient"
+  },
   "devDependencies": {
     "electron": "^30.0.1",
     "@types/electron": "^1.6.10",
