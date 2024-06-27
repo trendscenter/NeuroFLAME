@@ -1,7 +1,12 @@
 import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
+
+
+interface ExtendedFile extends File {
+    path: string;
+}
 
 // Define the GraphQL queries and mutations
 const GET_CONSORTIUM_DETAILS = gql`
@@ -96,7 +101,7 @@ export default function ConsortiumDetails(props: any) {
     const [editableParameters, setEditableParameters] = useState("");
     const [selectableComputation, setSelectableComputation] = useState("");
     const [editableMountDir, setEditableMountDir] = useState("");
-
+    const fileInputRef = useRef<HTMLInputElement>(null);
     // Use useLazyQuery for consortium details query
     const [getConsortiumDetails, { loading, error, data }] = useLazyQuery(GET_CONSORTIUM_DETAILS, {
         client: centralApiApolloClient,
@@ -125,6 +130,12 @@ export default function ConsortiumDetails(props: any) {
             setEditableParameters(data.getConsortiumDetails.studyConfiguration.computationParameters || "");
         }
     }, [data]);
+
+    useEffect(() => {
+        if (fileInputRef.current) {
+            fileInputRef.current.setAttribute("webkitdirectory", "true");
+        }
+    }, []);
 
     const handleStartRun = async () => {
         startRun({
@@ -250,52 +261,60 @@ export default function ConsortiumDetails(props: any) {
                     <div>
                         <div>
                             <label>Computation</label>
-                            <select
-                                value={selectableComputation}
-                                onChange={(e) => setSelectableComputation(e.target.value)}
-                            >
-                                <option value="" disabled>Select computation</option>
-                                {computations && computations.map((comp: any) => (
-                                    <option key={comp.id} value={comp.id}>
-                                        {comp.title}
-                                    </option>
-                                ))}
-                            </select>
-                            <button onClick={handleSetComputation}>Set Computation</button>
+                            <div>
+                                <select
+                                    value={selectableComputation}
+                                    onChange={(e) => setSelectableComputation(e.target.value)}
+                                >
+                                    <option value="" disabled>Select computation</option>
+                                    {computations && computations.map((comp: any) => (
+                                        <option key={comp.id} value={comp.id}>
+                                            {comp.title}
+                                        </option>
+                                    ))}
+                                </select>
+                                <button onClick={handleSetComputation}>Set Computation</button>
+                            </div>
                         </div>
 
                         <div>
                             <label>Consortium Leader Notes</label>
-                            <input
-                                type="text"
-                                value={editableNotes}
-                                onChange={(e) => setEditableNotes(e.target.value)}
-                                placeholder="Enter notes"
-                            />
-                            <button onClick={handleSetNotes}>Set Notes</button>
+                            <div>
+                                <textarea
+                                    value={editableNotes}
+                                    onChange={(e) => setEditableNotes(e.target.value)}
+                                    placeholder="Enter notes"
+                                    rows={4}
+                                    cols={50}
+                                />
+                                <button onClick={handleSetNotes}>Set Notes</button>
+                            </div>
                         </div>
 
                         <div>
                             <label>Parameters</label>
-                            <input
-                                type="text"
-                                value={editableParameters}
-                                onChange={(e) => setEditableParameters(e.target.value)}
-                                placeholder="Enter parameters"
-                            />
-                            <button onClick={handleSetParameters}>Set Parameters</button>
+                            <div>
+                                <textarea
+                                    value={editableParameters}
+                                    onChange={(e) => setEditableParameters(e.target.value)}
+                                    placeholder="Enter parameters"
+                                    rows={4}
+                                    cols={50}
+                                />
+                                <button onClick={handleSetParameters}>Set Parameters</button>
+                            </div>
                         </div>
+
                         <div>
                             <button onClick={handleStartRun}>Start Run</button>
                         </div>
-
 
                         {consortiumDetails.studyConfiguration.computation && (
                             <div>
                                 <h3>Computation Details</h3>
                                 <p><strong>Title:</strong> {consortiumDetails.studyConfiguration.computation.title}</p>
                                 <p><strong>Image Name:</strong> {consortiumDetails.studyConfiguration.computation.imageName}</p>
-                                <p><strong>Image Download URL:</strong> {consortiumDetails.studyConfiguration.computation.imageDownloadUrl}</p>
+                                <p><strong>Image Download URL:</strong> <a href={consortiumDetails.studyConfiguration.computation.imageDownloadUrl}>{consortiumDetails.studyConfiguration.computation.imageDownloadUrl}</a></p>
                                 <p><strong>Computation Notes:</strong> {consortiumDetails.studyConfiguration.computation.notes}</p>
                                 <p><strong>Owner:</strong> {consortiumDetails.studyConfiguration.computation.owner}</p>
                             </div>
@@ -305,19 +324,45 @@ export default function ConsortiumDetails(props: any) {
             </section>
 
 
+
             <section>
                 <h2>Member Settings</h2>
-                <div>
-                    <label>Mount Directory</label>
-                    <input
-                        type="text"
-                        value={editableMountDir}
-                        onChange={(e) => setEditableMountDir(e.target.value)}
-                        placeholder="Enter mount directory"
-                    />
-                    <button onClick={handleSetMountDir}>Set Mount Directory</button>
-                </div>
+                <fieldset>
+                    <legend>Mount Directory</legend>
+                    <div>
+                        <label htmlFor="mountDirFilePicker">Select a directory:</label><br />
+                        <input
+                            type="file"
+                            id="mountDirFilePicker"
+                            ref={fileInputRef}
+                            onChange={(e) => {
+                                if (e.target.files && e.target.files.length > 0) {
+                                    const file = e.target.files[0] as ExtendedFile;
+                                    const directoryPath = file.path;
+                                    setEditableMountDir(directoryPath);
+                                }
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="mountDirInput">Or enter a path:</label><br />
+                        <input
+                            type="text"
+                            id="mountDirInput"
+                            value={editableMountDir}
+                            onChange={(e) => setEditableMountDir(e.target.value)}
+                            placeholder="Enter mount directory"
+                            style={{ width: "100%" }}
+                        /><br />
+
+                    </div>
+
+                    <div>
+                        <button onClick={handleSetMountDir}>Save mount directory</button>
+                    </div>
+                </fieldset>
             </section>
+
         </div>
     );
 }

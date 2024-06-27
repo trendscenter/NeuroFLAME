@@ -56,7 +56,7 @@ export async function createRunKits({
     )
     // Create or modify computationParameters.json within the central node's runKit
     await fs.writeFile(
-      path.join(centralNodePath, 'computationParameters.json'),
+      path.join(centralNodePath, 'parameters.json'),
       computationParameters,
     )
 
