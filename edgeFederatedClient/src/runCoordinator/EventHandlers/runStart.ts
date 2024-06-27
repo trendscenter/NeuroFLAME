@@ -1,4 +1,4 @@
-import { getConfig } from '../../config/getConfig.js'
+import { getConfig } from '../../config/config.js'
 import downloadFile from '../downloadFile.js'
 import { launchNode } from '../launchNode.js'
 import path from 'path'

@@ -53,25 +53,28 @@ export default {
     },
     getConsortiumDetails: async (
       _: unknown,
-      { consortiumId }: {consortiumId: String}
+      { consortiumId }: { consortiumId: String },
     ): Promise<ConsortiumDetails | null> => {
       try {
         const consortium = await Consortium.findById(consortiumId)
           .populate('leader', 'id username')
           .populate('members', 'id username')
           .populate('activeMembers', 'id username')
-          .populate('studyConfiguration.computation', 'title imageName imageDownloadUrl notes owner')
-          .exec();
-    
+          .populate(
+            'studyConfiguration.computation',
+            'title imageName imageDownloadUrl notes owner',
+          )
+          .exec()
+
         if (!consortium) {
-          throw new Error('Consortium not found');
+          throw new Error('Consortium not found')
         }
-    
+
         const transformUser = (user: any): PublicUser => ({
           id: user.id,
           username: user.username,
-        });
-    
+        })
+
         return {
           title: consortium.title,
           description: consortium.description,
@@ -79,22 +82,25 @@ export default {
           members: consortium.members.map(transformUser),
           activeMembers: consortium.activeMembers.map(transformUser),
           studyConfiguration: {
-            consortiumLeaderNotes: consortium.studyConfiguration.consortiumLeaderNotes,
-            computationParameters: consortium.studyConfiguration.computationParameters,
+            consortiumLeaderNotes:
+              consortium.studyConfiguration.consortiumLeaderNotes,
+            computationParameters:
+              consortium.studyConfiguration.computationParameters,
             computation: {
               title: consortium.studyConfiguration.computation.title,
               imageName: consortium.studyConfiguration.computation.imageName,
-              imageDownloadUrl: consortium.studyConfiguration.computation.imageDownloadUrl,
+              imageDownloadUrl:
+                consortium.studyConfiguration.computation.imageDownloadUrl,
               notes: consortium.studyConfiguration.computation.notes,
               owner: consortium.studyConfiguration.computation.owner,
             },
           },
-        };
+        }
       } catch (error) {
-        console.error('Error in getConsortiumDetails:', error);
-        throw new Error(`Failed to fetch consortium details: ${error.message}`);
+        console.error('Error in getConsortiumDetails:', error)
+        throw new Error(`Failed to fetch consortium details: ${error.message}`)
       }
-    }
+    },
   },
   Mutation: {
     login: async (
@@ -270,10 +276,9 @@ export default {
         }
 
         // see if the string is valid json
-        try{
+        try {
           const parametersJson = JSON.parse(parameters)
-        }
-        catch (e: any){
+        } catch (e) {
           throw new Error(`failed to parse parameters into JSON ${e}`)
         }
 
@@ -289,10 +294,7 @@ export default {
     },
     studySetNotes: async (
       _: unknown,
-      {
-        consortiumId,
-        notes,
-      }: { consortiumId: String; notes: String },
+      { consortiumId, notes }: { consortiumId: String; notes: String },
       context: Context,
     ): Promise<boolean> => {
       try {
@@ -368,10 +370,29 @@ export default {
       },
       subscribe: withFilter(
         () => pubsub.asyncIterator(['RUN_START_EDGE']),
-        // Placeholder for future filtering logic. Currently returns true for all payloads.
-        (payload: RunStartEdgePayload, variables: unknown, context: Context) => {
-          // if the user is not a part of this run, they should not receive the payload
-          return true
+        async (
+          payload: RunStartEdgePayload,
+          variables: unknown,
+          context: Context,
+        ) => {
+          const { consortiumId } = payload
+          const { userId } = context
+
+          // Check if the user is part of the consortium's active members
+          const consortium = await Consortium.findById(consortiumId).lean()
+          if (!consortium) {
+            throw new Error('Consortium not found')
+          }
+
+          const isActiveMember = consortium.activeMembers.some(
+            (memberObjectId: any) => {
+              return memberObjectId.toString() === userId
+            },
+          )
+
+          console.log({isActiveMember})
+          // return true
+          return isActiveMember
         },
       ),
     },

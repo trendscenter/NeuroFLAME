@@ -1,15 +1,18 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import path from 'path'
 import url, { fileURLToPath } from 'url'
 import fs from 'fs'
 import { defaultConfig } from './defaultConfig.js'
 import { start as startEdgeFederatedClient } from 'edge-federated-client'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url)) //
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-let mainWindow: BrowserWindow | null
+let mainWindow: BrowserWindow | null = null
 
-async function createWindow() {
+// Get the configuration file path based on command-line arguments or default location
+const configPath: string = getConfigPath()
+
+async function createWindow(): Promise<void> {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -22,25 +25,25 @@ async function createWindow() {
   })
 
   // Load the index.html of the app.
-  const packagedUrl = url.format({
+  const packagedUrl: string = url.format({
     pathname: path.join(__dirname, '../../app/build/index.html'),
     protocol: 'file:',
     slashes: true,
   })
 
-  const devUrl = 'http://localhost:3000'
-  const startUrl = app.isPackaged ? packagedUrl : devUrl
+  const devUrl: string = 'http://localhost:3000'
+  const startUrl: string = app.isPackaged ? packagedUrl : devUrl
   mainWindow.loadURL(startUrl)
 
   mainWindow.on('closed', () => {
     mainWindow = null
   })
 
+  // Load configuration
   const config = await getConfig()
-  {
-    if (config.startEdgeClientOnLaunch) {
-      startEdgeFederatedClient(config.edgeClientConfig)
-    }
+
+  if (config.startEdgeClientOnLaunch) {
+    startEdgeFederatedClient(config.edgeClientConfig)
   }
 }
 
@@ -54,20 +57,28 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (mainWindow === null) {
-    createWindow()
+    createWindow().catch(console.error)
   }
 })
 
-async function getConfig() {
-  const configPath = path.join(app.getPath('userData'), 'config.json')
+function getConfigPath(): string {
+  const args: string[] = process.argv.slice(1) // Skip the first argument which is the path to node
+  const configArgIndex: number = args.findIndex((arg) =>
+    arg.startsWith('--config='),
+  )
+  return configArgIndex !== -1
+    ? path.resolve(args[configArgIndex].split('=')[1])
+    : path.join(app.getPath('userData'), 'config.json')
+}
+
+async function getConfig(): Promise<typeof defaultConfig> {
   console.log('Reading configuration from:', configPath)
 
   try {
     const config = await fs.promises.readFile(configPath, 'utf8')
-    return JSON.parse(config) // Parse and return the configuration
+    return JSON.parse(config)
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-      // File does not exist, create it with default configuration
       console.log(
         'Configuration file not found, creating default configuration.',
       )
@@ -77,7 +88,6 @@ async function getConfig() {
       )
       return defaultConfig
     } else {
-      // Handle other errors more specifically
       console.error('Failed to read or parse the configuration file:', error)
       throw new Error('Failed to access the configuration file.')
     }
@@ -86,13 +96,22 @@ async function getConfig() {
 
 ipcMain.handle('getConfig', getConfig)
 
-ipcMain.handle('saveConfig', async (event, newConfig) => {
-  const configPath = path.join(app.getPath('userData'), 'config.json')
-  console.log(newConfig)
+ipcMain.handle('applyDefaultConfig', async () => {
+  await fs.promises.writeFile(
+    configPath,
+    JSON.stringify(defaultConfig, null, 2),
+  )
+})
+
+ipcMain.handle('getConfigPath', () => {
+  return configPath
+})
+
+ipcMain.handle('openConfig', async () => {
   try {
-    await fs.promises.writeFile(configPath, JSON.stringify(newConfig))
+    await shell.openPath(configPath)
   } catch (e) {
-    console.error('Failed to write config:', e)
-    throw new Error('Failed to write config')
+    console.error('Failed to open path:', e)
+    throw new Error('Failed to open path')
   }
 })

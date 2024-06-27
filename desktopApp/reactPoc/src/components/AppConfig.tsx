@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 export function AppConfig() {
+    const [configPath, setConfigPath] = useState("");
     const [persistentConfig, setPersistentConfig] = useState({});
     const [newConfig, setNewConfig] = useState("");
     const [error, setError] = useState("");
@@ -8,6 +9,7 @@ export function AppConfig() {
 
     useEffect(() => {
         fetchConfig();
+        getConfigPath();
     }, []);
 
     const fetchConfig = async () => {
@@ -21,44 +23,37 @@ export function AppConfig() {
         }
     };
 
-    const saveConfig = async () => {
-        setIsSaving(true);
-        try {
-            const parsedConfig = JSON.parse(newConfig);
-            await window.ElectronAPI.saveConfig(parsedConfig);
-            fetchConfig();  // Refresh the config after saving
-            setNewConfig("");  // Clear the input field
-            setError("");  // Clear any previous errors
-        } catch (err) {
-            setError("Failed to save configuration");
-            console.error(err);
-        } finally {
-            setIsSaving(false);
-        }
-    };
+    const handleOpenConfig = () => {
+        window.ElectronAPI.openConfig()
+    }
 
+    const handleApplyDefaultConfig = async () => {
+        await window.ElectronAPI.applyDefaultConfig()
+        fetchConfig()
+    }
+
+    const getConfigPath = async () => {
+        const configPathResult = await window.ElectronAPI.getConfigPath()
+        setConfigPath(configPathResult)
+    }
     return (
         <div>
             <div>
                 <h2>Current Configuration</h2>
+                <div>
+                    Config Path: {configPath}
+                </div>
                 <pre>
                     <code>{JSON.stringify(persistentConfig, null, 4)}</code>
                 </pre>
             </div>
             <div>
-                <h2>Update Configuration</h2>
-                <textarea
-                    rows={10}
-                    cols={50}
-                    onChange={(e) => setNewConfig(e.target.value)}
-                    value={newConfig}
-                    placeholder="Enter new JSON config here"
-                ></textarea>
-                <button onClick={saveConfig} disabled={isSaving}>
-                    {isSaving ? "Saving..." : "Save Config"}
-                </button>
-                {error && <p style={{ color: "red" }}>{error}</p>}
+                <button onClick={handleOpenConfig}>open config</button>
+            </div>
+            <div>
+                <button onClick={handleApplyDefaultConfig}>apply default config</button>
             </div>
         </div>
     );
 }
+

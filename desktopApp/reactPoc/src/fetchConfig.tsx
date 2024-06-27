@@ -13,7 +13,9 @@ export interface Config {
 
 interface ElectronAPI {
   getConfig: () => Promise<Config>;
-  saveConfig: (config: string) => Promise<void>;
+  openConfig: (filePath?: string) => Promise<void>;
+  applyDefaultConfig: () => Promise<void>;
+  getConfigPath: () => Promise<string>;
 }
 
 declare global {

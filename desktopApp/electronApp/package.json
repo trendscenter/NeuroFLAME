@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc && cp src/preload.js build/preload.js",
-    "start": "npm run build && electron .",
+    "start": "npm run build && electron . --",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },

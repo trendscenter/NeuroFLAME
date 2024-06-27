@@ -6,7 +6,7 @@ import {
 } from './config/config.js'
 import inMemoryStore from './inMemoryStore.js'
 import { start as startApiServer } from './api/index.js'
-import defaultConfig from './config/defaultConfig.js'
+// import defaultConfig from './config/defaultConfig.js'
 
 export function start(config: edgeClientLaunchConfiguration): void {
   setConfig(config)

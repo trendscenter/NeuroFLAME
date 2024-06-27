@@ -22,7 +22,7 @@ export default function PageLogin() {
 
     const connectAsUser = async () => {
         try {
-            const result = await edgeClientApolloClient?.mutate({
+            await edgeClientApolloClient?.mutate({
                 mutation: CONNECT_AS_USER
             })
         } catch (e: any) {
@@ -51,10 +51,10 @@ export default function PageLogin() {
 
 
 
-    const handleLogin = (e: any) => {
+    const handleLogin = async (e: any) => {
         e.preventDefault();
-        login()
-        connectAsUser()
+        await login()
+        await connectAsUser()
     };
 
     return (

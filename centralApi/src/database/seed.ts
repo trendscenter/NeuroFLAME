@@ -14,6 +14,7 @@ const saltRounds = 10
 const centralUserId = new mongoose.Types.ObjectId('66289c79aebab67040a20067')
 const user1Id = new mongoose.Types.ObjectId('66289c79aebab67040a20068')
 const user2Id = new mongoose.Types.ObjectId('66289c79aebab67040a20069')
+const user3Id = new mongoose.Types.ObjectId('66289c79aebab67040a20070')
 const computation1Id = new mongoose.Types.ObjectId('66289c79aebab67040a21000')
 const computation2Id = new mongoose.Types.ObjectId('66289c79aebab67040a21001')
 const consortium1Id = new mongoose.Types.ObjectId('66289c79aebab67040a22000')
@@ -43,6 +44,11 @@ const seedDatabase = async () => {
         _id: user2Id,
         username: 'user2',
         hash: await bcrypt.hash('password2', saltRounds),
+      },
+      {
+        _id: user3Id,
+        username: 'user3',
+        hash: await bcrypt.hash('password3', saltRounds),
       },
       {
         _id: centralUserId,
@@ -81,8 +87,8 @@ const seedDatabase = async () => {
         title: 'Consortium One',
         description: 'This is the first consortium',
         leader: user1Id,
-        members: [user1Id],
-        activeMembers: [user1Id, user2Id],
+        members: [user1Id, user2Id, user3Id],
+        activeMembers: [user1Id, user2Id, user3Id],
         studyConfiguration: {
           consortiumLeaderNotes: 'Leader notes for Consortium One',
           computationParameters: JSON.stringify({ parameter: 'value' }),
@@ -99,7 +105,7 @@ const seedDatabase = async () => {
         title: 'Consortium Two',
         description: 'This is the second consortium',
         leader: user2Id,
-        members: [user2Id],
+        members: [user1Id, user2Id],
         activeMembers: [user1Id, user2Id],
         studyConfiguration: {
           consortiumLeaderNotes: 'Leader notes for Consortium Two',
