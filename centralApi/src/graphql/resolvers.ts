@@ -389,9 +389,7 @@ export default {
               return memberObjectId.toString() === userId
             },
           )
-
-          console.log({isActiveMember})
-          // return true
+          
           return isActiveMember
         },
       ),
