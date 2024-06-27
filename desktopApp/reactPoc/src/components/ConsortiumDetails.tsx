@@ -4,9 +4,6 @@ import { useParams } from "react-router-dom";
 import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
 
 
-interface ExtendedFile extends File {
-    path: string;
-}
 
 // Define the GraphQL queries and mutations
 const GET_CONSORTIUM_DETAILS = gql`
@@ -276,7 +273,16 @@ export default function ConsortiumDetails(props: any) {
                                 <button onClick={handleSetComputation}>Set Computation</button>
                             </div>
                         </div>
-
+                        {consortiumDetails.studyConfiguration.computation && (
+                            <div>
+                                <h3>Computation Details</h3>
+                                <p><strong>Title:</strong> {consortiumDetails.studyConfiguration.computation.title}</p>
+                                <p><strong>Image Name:</strong> {consortiumDetails.studyConfiguration.computation.imageName}</p>
+                                <p><strong>Image Download URL:</strong> <a href={consortiumDetails.studyConfiguration.computation.imageDownloadUrl}>{consortiumDetails.studyConfiguration.computation.imageDownloadUrl}</a></p>
+                                <p><strong>Computation Notes:</strong> {consortiumDetails.studyConfiguration.computation.notes}</p>
+                                <p><strong>Owner:</strong> {consortiumDetails.studyConfiguration.computation.owner}</p>
+                            </div>
+                        )}
                         <div>
                             <label>Consortium Leader Notes</label>
                             <div>
@@ -308,17 +314,6 @@ export default function ConsortiumDetails(props: any) {
                         <div>
                             <button onClick={handleStartRun}>Start Run</button>
                         </div>
-
-                        {consortiumDetails.studyConfiguration.computation && (
-                            <div>
-                                <h3>Computation Details</h3>
-                                <p><strong>Title:</strong> {consortiumDetails.studyConfiguration.computation.title}</p>
-                                <p><strong>Image Name:</strong> {consortiumDetails.studyConfiguration.computation.imageName}</p>
-                                <p><strong>Image Download URL:</strong> <a href={consortiumDetails.studyConfiguration.computation.imageDownloadUrl}>{consortiumDetails.studyConfiguration.computation.imageDownloadUrl}</a></p>
-                                <p><strong>Computation Notes:</strong> {consortiumDetails.studyConfiguration.computation.notes}</p>
-                                <p><strong>Owner:</strong> {consortiumDetails.studyConfiguration.computation.owner}</p>
-                            </div>
-                        )}
                     </div>
                 )}
             </section>
@@ -330,22 +325,7 @@ export default function ConsortiumDetails(props: any) {
                 <fieldset>
                     <legend>Mount Directory</legend>
                     <div>
-                        <label htmlFor="mountDirFilePicker">Select a directory:</label><br />
-                        <input
-                            type="file"
-                            id="mountDirFilePicker"
-                            ref={fileInputRef}
-                            onChange={(e) => {
-                                if (e.target.files && e.target.files.length > 0) {
-                                    const file = e.target.files[0] as ExtendedFile;
-                                    const directoryPath = file.path;
-                                    setEditableMountDir(directoryPath);
-                                }
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="mountDirInput">Or enter a path:</label><br />
+                        <label htmlFor="mountDirInput">Enter the path of the directory to mount:</label><br />
                         <input
                             type="text"
                             id="mountDirInput"
