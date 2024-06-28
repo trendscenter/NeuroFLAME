@@ -1,7 +1,17 @@
 import { Link, Outlet } from "react-router-dom";
+import { useUserState } from "../contexts/UserStateContext";
 
 export default function NavBar() {
+    const { username } = useUserState()
     return <div>
+        <div>
+            {
+                username && <div>{username}</div>
+            }
+            {
+                !username && <div>Not logged in</div>
+            }
+        </div>
         <ul>
             <li>
                 <Link to={`/login`}>login</Link>

@@ -1,61 +1,15 @@
-import { gql, useMutation } from '@apollo/client';
-import React, { useContext, useEffect, useState } from 'react';
-import { ApolloClientsContext } from '../contexts/ApolloClientsContext';
+import React, {  useState } from 'react';
 
-const LOGIN_MUTATION = gql`
-  mutation Login($username: String!, $password: String!) {
-    login(username: $username, password: $password)
-  }
-`;
-
-const CONNECT_AS_USER = gql`
-  mutation ConnectAsUser {
-    connectAsUser
-  }
-`;
+import { useUserState } from '../contexts/UserStateContext';
 
 export default function PageLogin() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [accessToken, setAccessToken] = useState('');
-    const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext);
+    const { login, logout, userId, username: loggedInUsername } = useUserState()
 
-    const connectAsUser = async () => {
-        try {
-            await edgeClientApolloClient?.mutate({
-                mutation: CONNECT_AS_USER
-            })
-        } catch (e: any) {
-            console.error(`error connecting as user ${e}`)
-        }
+    const handleLogin = () => {
+        login(username, password)
     }
-
-    const login = async () => {
-        const result = await centralApiApolloClient?.mutate({
-            mutation: LOGIN_MUTATION,
-            variables: { username, password }
-        })
-
-        const accessToken = result?.data?.login
-
-        localStorage.setItem("accessToken", accessToken)
-        setAccessToken(accessToken)
-    }
-
-    useEffect(() => {
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-            setAccessToken(token);
-        }
-    }, []);
-
-
-
-    const handleLogin = async (e: any) => {
-        e.preventDefault();
-        await login()
-        await connectAsUser()
-    };
 
     return (
         <div>
@@ -89,15 +43,11 @@ export default function PageLogin() {
                     <button type="submit">
                         Login
                     </button>
+                    {
+                        userId && <div>Logged in as {loggedInUsername} <button onClick={logout}>logout</button></div>
+                    }
                 </div>
-  
             </form>
-            {accessToken && (
-                <div>
-                    <h2>Access Token</h2>
-                    <pre><code>{accessToken}</code></pre>
-                </div>
-            )}
         </div>
     );
 }

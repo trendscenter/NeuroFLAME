@@ -27,10 +27,6 @@ export interface PublicUser {
   username: string;
 }
 
-export interface User {
-  id: string;
-  username: string;
-}
 
 export interface ConsortiumListItem {
   title: string;
@@ -66,6 +62,12 @@ export interface ConsortiumDetails {
   members: PublicUser[];
   activeMembers: PublicUser[];
   studyConfiguration: StudyConfiguration;
+}
+
+export interface LoginOutput {
+  accessToken: string;
+  userId: string;
+  username: string;
 }
 
 export default `#graphql
@@ -135,6 +137,12 @@ export default `#graphql
     studyConfiguration: StudyConfiguration
   }
 
+  type LoginOutput {
+    accessToken: String
+    userId: String
+    username: String
+  }
+
   type Query {
     getConsortiumList: [ConsortiumListItem]
     getComputationList: [ComputationListItem]
@@ -142,7 +150,7 @@ export default `#graphql
   }
 
   type Mutation {
-    login(username: String, password: String): String
+    login(username: String, password: String): LoginOutput
     startRun(input: StartRunInput): StartRunOutput
     reportRunReady(runId: String): Boolean
     reportError(runId: String, errorMessage: String): Boolean

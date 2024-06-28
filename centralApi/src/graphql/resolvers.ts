@@ -15,6 +15,7 @@ import {
   RunStartEdgePayload,
   PublicUser,
   ConsortiumDetails,
+  LoginOutput,
 } from './typeDefs.js'
 interface Context {
   userId: string
@@ -113,7 +114,7 @@ export default {
         password: string
       },
       context,
-    ): Promise<string> => {
+    ): Promise<LoginOutput> => {
       // get the user from the database
       const user = await User.findOne({ username })
       if (!user) {
@@ -127,7 +128,12 @@ export default {
       // create a token
       const tokens = generateTokens({ userId: user._id })
       const { accessToken } = tokens as { accessToken: string }
-      return accessToken
+      
+      return {
+        accessToken,
+        userId: user._id.toString(),
+        username: user.username,
+      }
     },
     startRun: async (
       _: unknown,
@@ -389,7 +395,7 @@ export default {
               return memberObjectId.toString() === userId
             },
           )
-          
+
           return isActiveMember
         },
       ),

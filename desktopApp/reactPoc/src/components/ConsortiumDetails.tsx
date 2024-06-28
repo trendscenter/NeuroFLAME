@@ -2,6 +2,7 @@ import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
+import { useUserState } from "../contexts/UserStateContext";
 
 
 
@@ -92,6 +93,7 @@ const START_RUN = gql`
 
 
 export default function ConsortiumDetails(props: any) {
+    const { username, userId } = useUserState();
     const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext);
     const { consortiumId } = useParams<{ consortiumId: string }>();
     const [editableNotes, setEditableNotes] = useState("");
@@ -99,6 +101,7 @@ export default function ConsortiumDetails(props: any) {
     const [selectableComputation, setSelectableComputation] = useState("");
     const [editableMountDir, setEditableMountDir] = useState("");
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const [userIsLeader, setUserIsLeader] = useState(false)
     // Use useLazyQuery for consortium details query
     const [getConsortiumDetails, { loading, error, data }] = useLazyQuery(GET_CONSORTIUM_DETAILS, {
         client: centralApiApolloClient,
@@ -127,6 +130,10 @@ export default function ConsortiumDetails(props: any) {
             setEditableParameters(data.getConsortiumDetails.studyConfiguration.computationParameters || "");
         }
     }, [data]);
+
+    useEffect(() => {
+        setUserIsLeader(data?.getConsortiumDetails?.leader?.id === userId)
+    }, [userId, data])
 
     useEffect(() => {
         if (fileInputRef.current) {
@@ -257,8 +264,8 @@ export default function ConsortiumDetails(props: any) {
                 {consortiumDetails && (
                     <div>
                         <div>
-                            <label>Computation</label>
-                            <div>
+                            {userIsLeader && <div>
+                                <label>Computation</label>
                                 <select
                                     value={selectableComputation}
                                     onChange={(e) => setSelectableComputation(e.target.value)}
@@ -272,6 +279,7 @@ export default function ConsortiumDetails(props: any) {
                                 </select>
                                 <button onClick={handleSetComputation}>Set Computation</button>
                             </div>
+                            }
                         </div>
                         {consortiumDetails.studyConfiguration.computation && (
                             <div>
@@ -292,8 +300,11 @@ export default function ConsortiumDetails(props: any) {
                                     placeholder="Enter notes"
                                     rows={4}
                                     cols={50}
+                                    disabled={!userIsLeader}
                                 />
-                                <button onClick={handleSetNotes}>Set Notes</button>
+                                {
+                                    userIsLeader && <button onClick={handleSetNotes}>Set Notes</button>
+                                }
                             </div>
                         </div>
 
@@ -306,20 +317,20 @@ export default function ConsortiumDetails(props: any) {
                                     placeholder="Enter parameters"
                                     rows={4}
                                     cols={50}
+                                    disabled={!userIsLeader}
                                 />
-                                <button onClick={handleSetParameters}>Set Parameters</button>
+                                {
+                                    userIsLeader && <button onClick={handleSetParameters}>Set Parameters</button>
+                                }
                             </div>
                         </div>
-
-                        <div>
+                        {userIsLeader && <div>
                             <button onClick={handleStartRun}>Start Run</button>
                         </div>
+                        }
                     </div>
                 )}
             </section>
-
-
-
             <section>
                 <h2>Member Settings</h2>
                 <fieldset>
@@ -334,9 +345,7 @@ export default function ConsortiumDetails(props: any) {
                             placeholder="Enter mount directory"
                             style={{ width: "100%" }}
                         /><br />
-
                     </div>
-
                     <div>
                         <button onClick={handleSetMountDir}>Save mount directory</button>
                     </div>

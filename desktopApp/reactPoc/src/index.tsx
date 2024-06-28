@@ -13,6 +13,7 @@ import ConsortiumDetails from './components/ConsortiumDetails';
 import PageLogin from './components/PageLogin';
 import NavBar from './components/NavBar';
 import { AppConfig } from './components/AppConfig';
+import { UserStateProvider } from './contexts/UserStateContext';
 
 const router = createHashRouter([
   {
@@ -50,7 +51,9 @@ const startApp = async () => {
   if (config) {
     ReactDOM.render(
       <ApolloClientsProvider config={config}>
-        <RouterProvider router={router}></RouterProvider>
+        <UserStateProvider>
+          <RouterProvider router={router}></RouterProvider>
+        </UserStateProvider>
       </ApolloClientsProvider>,
       document.getElementById('root')
     );
