@@ -163,7 +163,7 @@ export default `#graphql
     consortiumEdit(consortiumId: String, title: String, description: String): Boolean
     consortiumJoin(consortiumId: String): Boolean
     consortiumLeave(consortiumId: String): Boolean
-    consortiumSetMemberActive(consortiumId: String, memberId: String, active: Boolean): Boolean
+    consortiumSetMemberActive(consortiumId: String, active: Boolean): Boolean
   }
 
   type Subscription {

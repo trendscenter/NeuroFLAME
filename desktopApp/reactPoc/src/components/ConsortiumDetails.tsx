@@ -169,14 +169,6 @@ export default function ConsortiumDetails(props: any) {
         })
     };
 
-    const handleJoinConsortium = async (consortiumId: string) => {
-        centralApiApolloClient?.mutate({
-            mutation: JOIN_CONSORTIUM,
-            variables: { consortiumId: consortiumId }
-        })
-        handleGetConsortiumDetails();
-    }
-
     const handleLeaveConsortium = async (consortiumId: string) => {
         centralApiApolloClient?.mutate({
             mutation: LEAVE_CONSORTIUM,
