@@ -1,5 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('ElectronAPI', {
-  getConfig: async () => ipcRenderer.invoke('getConfig')
+  getConfig: async () => ipcRenderer.invoke('getConfig'),
+  openFile: () => ipcRenderer.invoke('dialog:openFile')
 });

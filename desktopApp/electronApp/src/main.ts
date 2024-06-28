@@ -5,20 +5,53 @@ import fs from 'fs'
 import defaultConfig from './defaultConfig.json' with {type: 'json'}
 // import {start as starteEdgeFederatedClient} from 'edgeFederatedClient'
 
+// Import required Node modules
+import { readdir } from 'node:fs/promises'
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url)) //
 
-let mainWindow: BrowserWindow | null
+let mainWindow: BrowserWindow
+
+function filterFiles(f: string[], blacklist: string[]): string[] {
+  return f.filter(u => {
+    return blacklist.every(s => !u.includes(s));
+  });
+}
+
+async function handleFileOpen(): Promise<{ status: string } | { filepath: string; filelist: string[] }> {
+    try {
+      const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {properties: ['openFile', 'openDirectory']});
+
+      if (!canceled && filePaths && filePaths.length > 0) {
+        const files = await readdir(filePaths[0], { recursive: true });
+        const blacklist = ['.DS_Store'];
+        const cleanFiles = filterFiles(files, blacklist);
+        
+        return files.length === 0
+          ? { status: 'empty' }
+          : { filepath: filePaths[0], filelist: cleanFiles };
+          
+      } else {
+        return { status: 'canceled' }; // Handle cancellation
+      }
+    } catch (error) {
+      console.error('Error while handling file open:', error);
+      return { status: 'error' };
+    }
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1000,
+    height: 800,
+    frame: false,
+    titleBarStyle: 'hidden',
+    trafficLightPosition: { x: 25, y: 25 },
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js'),
-      additionalArguments: ['this is a test', 'this is another test'],
-    },
+      preload: path.join(__dirname, 'preload.js')
+    }
   })
 
   // Load the index.html of the app.
@@ -28,12 +61,16 @@ function createWindow() {
     slashes: true,
   })
 
+  mainWindow.once('ready-to-show', () => {
+    mainWindow?.maximize()
+  });
+
   const devUrl = 'http://localhost:3000'
   const startUrl = app.isPackaged ? packagedUrl : devUrl
   mainWindow.loadURL(startUrl)
 
   mainWindow.on('closed', () => {
-    mainWindow = null
+    let mainWindow = null
   })
 
   // starteEdgeFederatedClient({
@@ -47,6 +84,11 @@ function createWindow() {
 }
 
 app.on('ready', createWindow)
+
+app.whenReady().then(() => {
+  ipcMain.handle('dialog:openFile', handleFileOpen)
+  createWindow()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from "react";
 import { useEffect, useReducer, useState } from "react";
 import { Link, useParams, } from 'react-router-dom';
 import parse from 'html-react-parser';
 import { gql, useQuery, useLazyQuery, useMutation, useSubscription } from '@apollo/client';
+import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
 import MemberAvatar from './MemberAvatar';
 import LinkIcon from '@mui/icons-material/Link';
 import EditIcon from '@mui/icons-material/Edit';
@@ -16,23 +17,43 @@ import MarkDownFromURL from './MarkDownFromURL';
 import ComputationContext from "../contexts/ComputationContext";
 import DataChooser from './CompConfigAdmin/DataChooser';
 
+// return {
+//   title: consortium.title,
+//   description: consortium.description,
+//   leader: transformUser(consortium.leader),
+//   members: consortium.members.map(transformUser),
+//   activeMembers: consortium.activeMembers.map(transformUser),
+//   studyConfiguration: {
+//     consortiumLeaderNotes: consortium.studyConfiguration.consortiumLeaderNotes,
+//     computationParameters: consortium.studyConfiguration.computationParameters,
+//     computation: {
+//       title: consortium.studyConfiguration.computation.title,
+//       imageName: consortium.studyConfiguration.computation.imageName,
+//       imageDownloadUrl: consortium.studyConfiguration.computation.imageDownloadUrl,
+//       notes: consortium.studyConfiguration.computation.notes,
+//       owner: consortium.studyConfiguration.computation.owner,
+//     },
+//   },
+// };
+
 const GET_CONSORTIUM_DETAILS = gql`
   query getConsortiumDetails($consortiumId: String!) {
     getConsortiumDetails(consortiumId: $consortiumId) {
-      id
       title
       description
-      administrator {
-        id
-        username
-      }
-      members {
-        id
-        username
-      }
-      activeMembers {
-        id
-        username
+      leader
+      members
+      activeMembers
+      studyConfiguration {
+        consortiumLeaderNotes,
+        computationParameters,
+        computation {
+          title,
+          imageName,
+          imageDownloadUrl,
+          notes,
+          owner
+        }
       }
     }
   }
@@ -112,20 +133,23 @@ const customStyles = {
 
 export default function ConsortiumDetails() {
   const { consortiumId } = useParams();
+  const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext)
   const { loading, error, data } = useQuery(GET_CONSORTIUM_DETAILS, {
     variables: { consortiumId },
-  });
+  }, { client: centralApiApolloClient });
 
-  const { data: subscriptionData, error: subscriptionError, loading: subscriptionLoading } = useSubscription(ON_PING_ACTIVE_MEMBERS_SUBSCRIPTION);
+  //const { data: subscriptionData, error: subscriptionError, loading: subscriptionLoading } = useSubscription(ON_PING_ACTIVE_MEMBERS_SUBSCRIPTION);
+
+  console.log(data);
 
   return (
     <div>
       {loading && <p>Loading...</p>}
       {error && <p>Error: Please try again</p>}
       {data && <ConsortiumDetailContent details={data.getConsortiumDetails} />}
-      <div>
+      {/*<div>
         {subscriptionData && subscriptionData.onPingActiveMembers && subscriptionData.onPingActiveMembers.consortiumId && `ping from consortiumId: ${subscriptionData.onPingActiveMembers.consortiumId}`}
-      </div>
+      </div>*/}
 
     </div>
   );

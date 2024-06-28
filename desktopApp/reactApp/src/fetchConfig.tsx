@@ -2,9 +2,15 @@ export interface Config {
     centralServerUrl: string;
     edgeClientUrl: string;
   }
+
+  interface OpenFile {
+    filepath: string;
+    filelist: object;
+  }
   
   interface ElectronAPI {
     getConfig: () => Promise<Config>;
+    openFile: () => Promise<OpenFile>; 
   }
   
   declare global {

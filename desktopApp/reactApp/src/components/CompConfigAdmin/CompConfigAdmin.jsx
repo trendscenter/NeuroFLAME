@@ -33,7 +33,6 @@ export function CompConfigAdmin({ consortiumId, onChangeCompConfigAdmin }) {
     
 
     const handleSave = (event) => {
-        console.log(event);
         saveEdits(); 
         onChangeCompConfigAdmin(event);
       }

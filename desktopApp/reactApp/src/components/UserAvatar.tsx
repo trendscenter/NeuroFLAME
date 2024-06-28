@@ -1,8 +1,10 @@
 import React from 'react';
+import { useContext } from "react";
 import { useParams } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import Avatar from '@mui/material/Avatar';
-import { gql, useQuery, useMutation, useSubscription } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
+import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
 
 
 const GET_USER_DETAILS = gql`
@@ -14,11 +16,15 @@ const GET_USER_DETAILS = gql`
   }
 `;
 
-export default function UserAvatar(props) {   
+export default function UserAvatar(props: any) {   
     const { userId } = props;
-    const { loading, error, data } = useQuery(GET_USER_DETAILS, {
-      variables: { userId }
+    const { centralApiApolloClient } = useContext(ApolloClientsContext);
+    const { data } = useQuery(GET_USER_DETAILS,  {
+      variables: { userId },
+      client: centralApiApolloClient
     });
+
+    const userDetails = data?.getUserDetails;
 
     return (
       <Avatar 
@@ -29,7 +35,7 @@ export default function UserAvatar(props) {
           marginLeft: '1rem',
           marginRight: '0.5rem'  
         }}
-      >{data ? data.getUserDetails.username.charAt(0).toUpperCase() : ''}
+      >{userDetails && userDetails.username.charAt(0).toUpperCase()}
       </Avatar>
     )
 }

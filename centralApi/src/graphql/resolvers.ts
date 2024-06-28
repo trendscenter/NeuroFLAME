@@ -14,7 +14,7 @@ import {
   RunStartCentralPayload,
   RunStartEdgePayload,
   PublicUser,
-  ConsortiumDetails,
+  ConsortiumDetails
 } from './typeDefs.js'
 interface Context {
   userId: string
@@ -94,7 +94,21 @@ export default {
         console.error('Error in getConsortiumDetails:', error);
         throw new Error(`Failed to fetch consortium details: ${error.message}`);
       }
-    }
+    },
+    getUserDetails: async (
+      _: unknown,
+      { userId }: {userId: String}
+    ): Promise<PublicUser | null> => {
+      const user = await User.findById(userId);
+      if (user) {
+        return {
+          id: user.id,
+          username: user.username
+        };
+      } else {
+        return null;
+      }
+    },
   },
   Mutation: {
     login: async (

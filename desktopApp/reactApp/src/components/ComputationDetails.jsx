@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from "react";
 import { useParams } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
+import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
 
 const GET_COMPUTATION_DETAILS = gql`
   query getComputationDetails($computationId: String!) {
@@ -15,9 +16,10 @@ const GET_COMPUTATION_DETAILS = gql`
 
 export default function ComputationDetails() {
     const { computationId } = useParams();
+    const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext)
     const { loading, error, data, refetch } = useQuery(GET_COMPUTATION_DETAILS, {
         variables: { computationId },
-    });
+    }, { client: centralApiApolloClient });
 
     return (
         <div>
