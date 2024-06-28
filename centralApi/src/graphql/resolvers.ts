@@ -54,7 +54,7 @@ export default {
     },
     getConsortiumDetails: async (
       _: unknown,
-      { consortiumId }: { consortiumId: String },
+      { consortiumId }: { consortiumId: string },
     ): Promise<ConsortiumDetails | null> => {
       try {
         const consortium = await Consortium.findById(consortiumId)
@@ -71,30 +71,42 @@ export default {
           throw new Error('Consortium not found')
         }
 
+        const {
+          title,
+          description,
+          leader,
+          members,
+          activeMembers,
+          studyConfiguration: {
+            consortiumLeaderNotes,
+            computationParameters,
+            computation,
+          },
+        } = consortium
+
         const transformUser = (user: any): PublicUser => ({
           id: user.id,
           username: user.username,
         })
 
         return {
-          title: consortium.title,
-          description: consortium.description,
-          leader: transformUser(consortium.leader),
-          members: consortium.members.map(transformUser),
-          activeMembers: consortium.activeMembers.map(transformUser),
+          title,
+          description,
+          leader: transformUser(leader),
+          members: members.map(transformUser),
+          activeMembers: activeMembers.map(transformUser),
           studyConfiguration: {
-            consortiumLeaderNotes:
-              consortium.studyConfiguration.consortiumLeaderNotes,
-            computationParameters:
-              consortium.studyConfiguration.computationParameters,
-            computation: {
-              title: consortium.studyConfiguration.computation.title,
-              imageName: consortium.studyConfiguration.computation.imageName,
-              imageDownloadUrl:
-                consortium.studyConfiguration.computation.imageDownloadUrl,
-              notes: consortium.studyConfiguration.computation.notes,
-              owner: consortium.studyConfiguration.computation.owner,
-            },
+            consortiumLeaderNotes,
+            computationParameters,
+            computation: computation
+              ? {
+                  title: computation.title,
+                  imageName: computation.imageName,
+                  imageDownloadUrl: computation.imageDownloadUrl,
+                  notes: computation.notes,
+                  owner: computation.owner,
+                }
+              : null,
           },
         }
       } catch (error) {
@@ -128,7 +140,7 @@ export default {
       // create a token
       const tokens = generateTokens({ userId: user._id })
       const { accessToken } = tokens as { accessToken: string }
-      
+
       return {
         accessToken,
         userId: user._id.toString(),
@@ -325,6 +337,132 @@ export default {
         throw new Error(`Failed to set computation: ${error.message}`)
       }
     },
+    consortiumCreate: async (
+      _: unknown,
+      { title, description }: { title: string; description: string },
+      context: Context,
+    ): Promise<boolean> => {
+      await Consortium.create({
+        title,
+        description,
+        leader: context.userId,
+        members: [context.userId],
+        activeMembers: [context.userId],
+        studyConfiguration: {
+          consortiumLeaderNotes: '',
+          computationParameters: '',
+          computation: null,
+        },
+      })
+
+      return true
+    },
+    consortiumEdit: async (
+      _: unknown,
+      {
+        consortiumId,
+        title,
+        description,
+      }: { consortiumId: string; title?: string; description?: string },
+      context: Context,
+    ): Promise<boolean> => {
+      // Check if the title is provided and validate it against existing consortia
+      if (title) {
+        const otherConsortium = await Consortium.findOne({
+          title,
+          _id: { $ne: consortiumId },
+        })
+        if (otherConsortium) {
+          throw new Error('Consortium with that title already exists')
+        }
+      }
+
+      // Ensure at least one field is provided for update
+      if (!title && !description) {
+        throw new Error('No fields provided to update')
+      }
+
+      // Prepare the update payload
+      const updatePayload: { [key: string]: string } = {}
+      if (title) updatePayload.title = title
+      if (description) updatePayload.description = description
+
+      // Perform the update operation
+      try {
+        await Consortium.updateOne(
+          { _id: consortiumId },
+          { $set: updatePayload },
+        )
+        return true
+      } catch (error) {
+        console.error('Error updating consortium:', error)
+        throw new Error('Failed to update consortium')
+      }
+    },
+    consortiumJoin: async (
+      _: unknown,
+      { consortiumId }: { consortiumId: string },
+      context: Context,
+    ): Promise<boolean> => {
+      const { userId } = context
+      if (!userId) {
+        throw new Error('User not authenticated')
+      }
+      await Consortium.findByIdAndUpdate(consortiumId, {
+        $addToSet: { members: userId, activeMembers: userId },
+      })
+
+      return true
+    },
+    consortiumLeave: async (
+      _: unknown,
+      { consortiumId }: { consortiumId: string },
+      context: Context,
+    ): Promise<boolean> => {
+      const { userId } = context
+      if (!userId) {
+        throw new Error('User not authenticated')
+      }
+
+      await Consortium.findByIdAndUpdate(consortiumId, {
+        $pull: { members: userId, activeMembers: userId },
+      })
+
+      return true
+    },
+    consortiumSetMemberActive: async (
+      _: unknown,
+      {
+        consortiumId,
+        active,
+      }: { consortiumId: string; active: boolean },
+      context: Context,
+    ): Promise<boolean> => {
+      const { userId } = context
+
+      const consortium = await Consortium.findById(consortiumId)
+      if (!consortium) {
+        throw new Error('Consortium not found')
+      }
+
+      // Check if the caller is a member of the consortium
+      if (
+        !consortium.members.map((member) => member.toString()).includes(userId)
+      ) {
+        throw new Error('User is not a member of the consortium')
+      }
+
+      // Update the activeMembers array
+      try {
+        await consortium.updateOne({
+          [active ? '$addToSet' : '$pull']: { activeMembers: userId },
+        })
+        return true
+      } catch (error) {
+        console.error('Error updating consortium active members:', error)
+        throw new Error('Failed to update consortium active members')
+      }
+    },
   },
   Subscription: {
     runStartCentral: {
@@ -339,7 +477,6 @@ export default {
           variables: unknown,
           context: Context,
         ) => {
-          console.log(context)
           return context.roles.includes('central')
         },
       ),

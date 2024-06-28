@@ -52,7 +52,7 @@ export interface Computation {
 export interface StudyConfiguration {
   consortiumLeaderNotes: string;
   computationParameters: string;
-  computation: Computation;
+  computation?: Computation;
 }
 
 export interface ConsortiumDetails {
@@ -159,6 +159,11 @@ export default `#graphql
     studySetComputation(consortiumId: String, computationId: String): Boolean
     studySetParameters(consortiumId: String, parameters: String): Boolean
     studySetNotes(consortiumId: String, notes: String): Boolean
+    consortiumCreate(title: String, description: String): Boolean
+    consortiumEdit(consortiumId: String, title: String, description: String): Boolean
+    consortiumJoin(consortiumId: String): Boolean
+    consortiumLeave(consortiumId: String): Boolean
+    consortiumSetMemberActive(consortiumId: String, memberId: String, active: Boolean): Boolean
   }
 
   type Subscription {

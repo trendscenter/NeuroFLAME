@@ -91,9 +91,27 @@ const START_RUN = gql`
   }
 `;
 
+const CONSORTIUM_SET_MEMBER_ACTIVE = gql`
+    mutation consortiumSetmMemberActive($consortiumId: String!, $active: Boolean!) {
+        consortiumSetMemberActive(consortiumId: $consortiumId, active: $active)
+    }
+`;
+
+export const JOIN_CONSORTIUM = gql`
+  mutation consortiumJoin($consortiumId: String!) {
+    consortiumJoin(consortiumId: $consortiumId)
+  }
+`;
+
+export const LEAVE_CONSORTIUM = gql`
+  mutation consortiumLeave($consortiumId: String!) {
+    consortiumLeave(consortiumId: $consortiumId)
+  }
+`;
+
 
 export default function ConsortiumDetails(props: any) {
-    const { username, userId } = useUserState();
+    const { userId } = useUserState();
     const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext);
     const { consortiumId } = useParams<{ consortiumId: string }>();
     const [editableNotes, setEditableNotes] = useState("");
@@ -102,6 +120,8 @@ export default function ConsortiumDetails(props: any) {
     const [editableMountDir, setEditableMountDir] = useState("");
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [userIsLeader, setUserIsLeader] = useState(false)
+    const [userIsActive, setUserIsActive] = useState(false)
+    const [userIsMember, setUserIsMember] = useState(false)
     // Use useLazyQuery for consortium details query
     const [getConsortiumDetails, { loading, error, data }] = useLazyQuery(GET_CONSORTIUM_DETAILS, {
         client: centralApiApolloClient,
@@ -133,6 +153,8 @@ export default function ConsortiumDetails(props: any) {
 
     useEffect(() => {
         setUserIsLeader(data?.getConsortiumDetails?.leader?.id === userId)
+        setUserIsActive(data?.getConsortiumDetails?.activeMembers.some((member: any) => member.id === userId))
+        setUserIsMember(data?.getConsortiumDetails?.members.some((member: any) => member.id === userId))
     }, [userId, data])
 
     useEffect(() => {
@@ -146,6 +168,23 @@ export default function ConsortiumDetails(props: any) {
             variables: { input: { consortiumId } }
         })
     };
+
+    const handleJoinConsortium = async (consortiumId: string) => {
+        centralApiApolloClient?.mutate({
+            mutation: JOIN_CONSORTIUM,
+            variables: { consortiumId: consortiumId }
+        })
+        handleGetConsortiumDetails();
+    }
+
+    const handleLeaveConsortium = async (consortiumId: string) => {
+        centralApiApolloClient?.mutate({
+            mutation: LEAVE_CONSORTIUM,
+            variables: { consortiumId: consortiumId }
+        })
+        handleGetConsortiumDetails();
+    }
+
 
     const handleGetConsortiumDetails = () => {
         getConsortiumDetails({ variables: { consortiumId } });
@@ -217,6 +256,20 @@ export default function ConsortiumDetails(props: any) {
         }
     };
 
+    const handleSetActive = async (newActiveValue: boolean) => {
+        try {
+            await centralApiApolloClient?.mutate({
+                mutation: CONSORTIUM_SET_MEMBER_ACTIVE,
+                variables: { consortiumId, active: newActiveValue }
+            });
+            console.log('Consortium set active successfully');
+            handleGetConsortiumDetails();
+        } catch (e) {
+            console.error('Error setting consortium active:', e);
+            console.log('Failed to set consortium active');
+        }
+    }
+
     // Handle loading and error states for the queries
     if (loading || computationsLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
@@ -249,12 +302,27 @@ export default function ConsortiumDetails(props: any) {
                                 <li key={member.id}>{member.username}</li>
                             ))}
                         </ul>
+                        <div>
+                            {
+                                userIsMember && !userIsLeader && <button onClick={() => { handleLeaveConsortium(consortiumDetails.id) }}>Leave Consortium</button>
+                            }
+
+                        </div>
                         <h3>Active Members</h3>
                         <ul>
                             {consortiumDetails.activeMembers.map((member: any) => (
                                 <li key={member.id}>{member.username}</li>
                             ))}
                         </ul>
+                        <div>
+                            {
+                                userId && userIsActive && <button onClick={() => { handleSetActive(false) }}>set inactive</button>
+                            }
+                            {
+                                userId && !userIsActive && <button onClick={() => { handleSetActive(true) }}>set active</button>
+                            }
+                        </div>
+
                     </div>
                 )}
             </section>
