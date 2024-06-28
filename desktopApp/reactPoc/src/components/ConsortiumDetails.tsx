@@ -311,7 +311,7 @@ export default function ConsortiumDetails(props: any) {
                                 userId && userIsActive && <button onClick={() => { handleSetActive(false) }}>set inactive</button>
                             }
                             {
-                                userId && !userIsActive && <button onClick={() => { handleSetActive(true) }}>set active</button>
+                                userId && userIsMember && !userIsActive && <button onClick={() => { handleSetActive(true) }}>set active</button>
                             }
                         </div>
 
