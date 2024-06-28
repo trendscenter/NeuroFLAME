@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
 import React, { useContext, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
 import { ApolloClientsContext } from '../contexts/ApolloClientsContext';
 import { Link } from 'react-router-dom';
 import { useUserState } from '../contexts/UserStateContext';
