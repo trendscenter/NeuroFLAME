@@ -8,6 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from  '@mui/icons-material/Save';
 import parse from 'html-react-parser';
 import DataChooser from './CompConfigAdmin/DataChooser';
+import { CompConfigAdmin } from "./CompConfigAdmin/CompConfigAdmin";
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -318,15 +319,7 @@ export default function ConsortiumDetails(props: any) {
 
                 <section>
                     <h3 style={customStyles.h3}>Settings</h3>
-                    <div>
-                        <textarea
-                          value={editableParameters}
-                          onChange={(e) => setEditableParameters(e.target.value)}
-                          placeholder="Enter parameters"
-                        />
-                        <button onClick={handleSetParameters}>Set Parameters</button>
-                    </div>
-   
+                    <CompConfigAdmin consortiumId={consortiumId} parameters={editableParameters} setEditableParams={setEditableParameters} setParameters={handleSetParameters} /> 
                 </section>
 
                 <section>
