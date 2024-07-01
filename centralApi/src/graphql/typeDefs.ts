@@ -55,6 +55,7 @@ export interface StudyConfiguration {
 }
 
 export interface ConsortiumDetails {
+  id: string
   title: string
   description: string
   leader: PublicUser
@@ -135,6 +136,7 @@ export default `#graphql
   }
 
   type ConsortiumDetails {
+    id: String
     title: String
     description: String
     leader: PublicUser

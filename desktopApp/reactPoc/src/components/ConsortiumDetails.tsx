@@ -10,6 +10,7 @@ import { useUserState } from "../contexts/UserStateContext";
 const GET_CONSORTIUM_DETAILS = gql`
   query GetConsortiumDetails($consortiumId: String!) {
     getConsortiumDetails(consortiumId: $consortiumId) {
+      id
       title
       description
       leader {
@@ -170,6 +171,7 @@ export default function ConsortiumDetails(props: any) {
     };
 
     const handleLeaveConsortium = async (consortiumId: string) => {
+        console.log({ consortiumId })
         centralApiApolloClient?.mutate({
             mutation: LEAVE_CONSORTIUM,
             variables: { consortiumId: consortiumId }

@@ -40,7 +40,7 @@ export const runStartHandler = {
     await fs.mkdir(runPath, { recursive: true })
     await fs.mkdir(runKitPath, { recursive: true })
     await fs.mkdir(resultsPath, { recursive: true })
-    
+
     const mountConfigPath = path.join(consortiumPath, 'mount_config.json')
 
     // download the runkit to the appropriate directory
@@ -52,7 +52,11 @@ export const runStartHandler = {
     })
 
     // unzip the file
-    await unzipFile(runKitPath, 'kit.zip')
+    try {
+      await unzipFile(runKitPath, 'kit.zip')
+    } catch (e: any) {
+      throw new Error(`Error unzipping the file: ${e.message || e.toString()}`)
+    }
 
     const directoriesToMount = []
     // mount the runkit directory

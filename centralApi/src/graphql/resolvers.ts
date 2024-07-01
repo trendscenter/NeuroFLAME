@@ -74,6 +74,7 @@ export default {
         }
 
         const {
+          _id: consortiumObjectId,
           title,
           description,
           leader,
@@ -83,7 +84,7 @@ export default {
             consortiumLeaderNotes,
             computationParameters,
             computation,
-          },
+          } = {},
         } = consortium
 
         const transformUser = (user: any): PublicUser => ({
@@ -92,11 +93,12 @@ export default {
         })
 
         return {
+          id: consortiumObjectId.toString(),
           title,
           description,
-          leader: transformUser(leader),
-          members: members.map(transformUser),
-          activeMembers: activeMembers.map(transformUser),
+          leader: leader ? transformUser(leader) : null,
+          members: members ? members.map(transformUser) : [],
+          activeMembers: activeMembers ? activeMembers.map(transformUser) : [],
           studyConfiguration: {
             consortiumLeaderNotes,
             computationParameters,
@@ -275,7 +277,35 @@ export default {
 
       return true
     },
-    reportRunComplete: async (_: unknown, { runId }): Promise<boolean> => {
+    reportRunComplete: async (
+      _: unknown,
+      { runId },
+      context: Context,
+    ): Promise<boolean> => {
+      console.log('reportRunError', runId)
+      // authenticate the user
+      // is the token valid?
+      if (!context.userId) {
+        throw new Error('User not authenticated')
+      }
+
+      // authorize the user
+      if (!context.roles.includes('central')) {
+        throw new Error('User not authorized')
+      }
+
+      // get the run's details from the database
+      const run = await Run.findById(runId)
+      const result = await Run.updateOne({ _id: runId }, { status: 'Complete' })
+
+      const consortium = await Consortium.findById(run.consortium._id)
+
+      pubsub.publish('RUN_EVENT', {
+        consortiumId: consortium._id.toString(),
+        consortiumTitle: consortium.title,
+        runId: run._id.toString(),
+        status: 'Complete',
+      })
       return true
     },
     reportRunStatus: async (
