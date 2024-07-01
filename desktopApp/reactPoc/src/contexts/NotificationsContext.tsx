@@ -4,7 +4,6 @@ import { ApolloClientsContext } from "./ApolloClientsContext";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-
 const RUN_EVENT_SUBSCRIPTION = gql`
   subscription OnRunEvent {
     runEvent {
@@ -18,8 +17,8 @@ const RUN_EVENT_SUBSCRIPTION = gql`
 
 interface NotificationsContextType {
     events: RunEvent[];
-    subscribe: () => void;
-    unsubscribe: () => void;
+    subscribe: () => Promise<void>;
+    unsubscribe: () => Promise<void>;
 }
 
 interface RunEvent {
@@ -31,8 +30,8 @@ interface RunEvent {
 
 export const NotificationsContext = React.createContext<NotificationsContextType>({
     events: [],
-    subscribe: () => { },
-    unsubscribe: () => { },
+    subscribe: async () => {},
+    unsubscribe: async () => {},
 });
 
 export const NotificationsProvider = ({ children }: { children: ReactNode }) => {
@@ -40,45 +39,49 @@ export const NotificationsProvider = ({ children }: { children: ReactNode }) => 
     const [events, setEvents] = useState<RunEvent[]>([]);
     const subscriptionRef = useRef<any>(null);
 
-    const subscribe = () => {
+    const subscribe = async (): Promise<void> => {
         if (subscriptionRef.current) {
             return; // Already subscribed
         }
 
-        const observable = centralApiApolloClient?.subscribe({
-            query: RUN_EVENT_SUBSCRIPTION,
-        });
+        return new Promise((resolve, reject) => {
+            const observable = centralApiApolloClient?.subscribe({
+                query: RUN_EVENT_SUBSCRIPTION,
+            });
 
-        subscriptionRef.current = observable?.subscribe({
-            next: ({ data }: any) => {
-                console.log("Subscription data:", data)
-                if (data) {
-                    const newEvent: RunEvent = data.runEvent;
-                    setEvents(prevEvents => [newEvent, ...prevEvents]);
-                    toast.info(
-                        <div>
-                            <h2>Notification</h2>
+            subscriptionRef.current = observable?.subscribe({
+                next: ({ data }: any) => {
+                    console.log("Subscription data:", data)
+                    if (data) {
+                        const newEvent: RunEvent = data.runEvent;
+                        setEvents(prevEvents => [newEvent, ...prevEvents]);
+                        toast.info(
                             <div>
-                                Consortium: {newEvent.consortiumTitle}
+                                <h2>Notification</h2>
+                                <div>
+                                    Consortium: {newEvent.consortiumTitle}
+                                </div>
+                                <div>
+                                    Status: {newEvent.status}
+                                </div>
+                                <div>
+                                    Run ID: {newEvent.runId}
+                                </div>
                             </div>
-                            <div>
-                                Status: {newEvent.status}
-                            </div>
-                            <div>
-                                Run ID: {newEvent.runId}
-                            </div>
-                        </div>
-                    );
+                        );
+                    }
+                    resolve();
+                },
+                error: (err: any) => {
+                    console.error("Subscription error:", err.message);
+                    toast.error(`Subscription error: ${err.message}`);
+                    reject(err);
                 }
-            },
-            error: (err: any) => {
-                console.error("Subscription error:", err.message);
-                toast.error(`Subscription error: ${err.message}`);
-            }
+            });
         });
     };
 
-    const unsubscribe = () => {
+    const unsubscribe = async (): Promise<void> => {
         if (subscriptionRef.current) {
             subscriptionRef.current.unsubscribe();
             subscriptionRef.current = null;
@@ -86,10 +89,14 @@ export const NotificationsProvider = ({ children }: { children: ReactNode }) => 
     };
 
     useEffect(() => {
-        subscribe(); // Automatically subscribe on mount
+        (async () => {
+            await subscribe(); // Automatically subscribe on mount
+        })();
 
         return () => {
-            unsubscribe(); // Cleanup subscription on unmount
+            (async () => {
+                await unsubscribe(); // Cleanup subscription on unmount
+            })();
         };
     }, []);
 
@@ -103,4 +110,4 @@ export const NotificationsProvider = ({ children }: { children: ReactNode }) => 
 
 export const useNotifications = () => {
     return useContext(NotificationsContext);
-}
+};

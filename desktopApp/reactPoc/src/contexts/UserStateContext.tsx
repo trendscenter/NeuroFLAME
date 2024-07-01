@@ -7,7 +7,7 @@ interface UserStateContextType {
     userId: string;
     username: string;
     login: (username: string, password: string) => Promise<{ success: boolean; message?: string }>;
-    logout: () => void;
+    logout: () => Promise<void>;
 }
 
 const UserStateContext = createContext<UserStateContextType | undefined>(undefined);
@@ -70,18 +70,18 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
                 return centralLoginResult;
             }
             await connectAsUser();
-            subscribe();
+            await subscribe();
             return { success: true };
         } catch (error: any) {
             return { success: false, message: error.message };
         }
     };
 
-    const logout = () => {
+    const logout = async () => {
         localStorage.removeItem("accessToken");
         setUserId('');
         set_Username('');
-        unsubscribe();
+        await unsubscribe();
     };
 
     return (
