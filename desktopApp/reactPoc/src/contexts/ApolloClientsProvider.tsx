@@ -5,8 +5,10 @@ import { ApolloClientsContext } from './ApolloClientsContext' // Ensure this pat
 
 interface Props {
   config: {
-    centralServerUrl: string
-    edgeClientUrl: string
+    centralServerQueryUrl: string;
+    centralServerSubscriptionUrl: string;
+    edgeClientQueryUrl: string;
+    edgeClientSubscriptionUrl: string;
   }
   children: ReactNode
 }
@@ -20,19 +22,20 @@ const ApolloClientsProvider: React.FC<Props> = ({ children, config }) => {
   >()
 
   useEffect(() => {
-    console.log("creating centralApiApolloClient", config.centralServerUrl)
+    console.log(config)
+    console.log("creating centralApiApolloClient", config.centralServerQueryUrl)
     setCentralApiApolloClient(
       createApolloClient({
-        httpUrl: config.centralServerUrl,
-        wsUrl: config.centralServerUrl,
+        httpUrl: config.centralServerQueryUrl,
+        wsUrl: config.centralServerSubscriptionUrl,
         getAccessToken: () => localStorage.getItem('accessToken') || '',
       }),
     )
-    console.log("creating edgeClientApolloClient", config.edgeClientUrl)
+    console.log("creating edgeClientApolloClient", config.edgeClientQueryUrl)
     setEdgeClientApolloClient(
       createApolloClient({
-        httpUrl: config.edgeClientUrl,
-        wsUrl: config.edgeClientUrl,
+        httpUrl: config.edgeClientQueryUrl,
+        wsUrl: config.edgeClientSubscriptionUrl,
         getAccessToken: () => localStorage.getItem('accessToken') || '',
       }),
     )

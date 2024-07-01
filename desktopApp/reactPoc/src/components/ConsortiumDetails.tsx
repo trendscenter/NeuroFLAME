@@ -391,26 +391,28 @@ export default function ConsortiumDetails(props: any) {
                     </div>
                 )}
             </section>
-            <section>
-                <h2>Member Settings</h2>
-                <fieldset>
-                    <legend>Mount Directory</legend>
-                    <div>
-                        <label htmlFor="mountDirInput">Enter the path of the directory to mount:</label><br />
-                        <input
-                            type="text"
-                            id="mountDirInput"
-                            value={editableMountDir}
-                            onChange={(e) => setEditableMountDir(e.target.value)}
-                            placeholder="Enter mount directory"
-                            style={{ width: "100%" }}
-                        /><br />
-                    </div>
-                    <div>
-                        <button onClick={handleSetMountDir}>Save mount directory</button>
-                    </div>
-                </fieldset>
-            </section>
+            {userIsMember && userIsActive &&
+                <section>
+                    <h2>Member Settings</h2>
+                    <fieldset>
+                        <legend>Mount Directory</legend>
+                        <div>
+                            <label htmlFor="mountDirInput">Enter the path of the directory to mount:</label><br />
+                            <input
+                                type="text"
+                                id="mountDirInput"
+                                value={editableMountDir}
+                                onChange={(e) => setEditableMountDir(e.target.value)}
+                                placeholder="Enter mount directory"
+                                style={{ width: "100%" }}
+                            /><br />
+                        </div>
+                        <div>
+                            <button onClick={handleSetMountDir}>Save mount directory</button>
+                        </div>
+                    </fieldset>
+                </section>
+            }
 
         </div>
     );

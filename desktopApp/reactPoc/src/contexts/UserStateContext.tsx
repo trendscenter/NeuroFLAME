@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client';
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { ApolloClientsContext } from './ApolloClientsContext';
+import { useNotifications } from './NotificationsContext';
 
 interface UserStateContextType {
     userId: string;
@@ -31,6 +32,7 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
     const [userId, setUserId] = useState<string>('');
     const [_username, set_Username] = useState<string>('');
     const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext);
+    const {subscribe, unsubscribe} = useNotifications()
 
     const loginToCentral = async (username: string, password: string) => {
         const result = await centralApiApolloClient?.mutate({
@@ -58,12 +60,14 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
     const login = async (username: string, password: string) => {
         await loginToCentral(username, password)
         await connectAsUser()
+        subscribe()
     }
 
     const logout = () => {
         localStorage.removeItem("accessToken")
         setUserId('')
         set_Username('')
+        unsubscribe()
     }
 
     return (

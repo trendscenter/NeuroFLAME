@@ -16,7 +16,9 @@ import {
   PublicUser,
   ConsortiumDetails,
   LoginOutput,
+  RunEventPayload,
 } from './typeDefs.js'
+import { subscribe } from 'diagnostics_channel'
 interface Context {
   userId: string
   roles: string[]
@@ -187,6 +189,13 @@ export default {
         consortiumId: consortium._id.toString(),
         computationParameters:
           consortium.studyConfiguration.computationParameters,
+      })
+
+      pubsub.publish('RUN_EVENT', {
+        consortiumId: consortium._id.toString(),
+        consortiumTitle: consortium.title,
+        runId: run._id.toString(),
+        status: 'Provisioning',
       })
 
       return { runId: run._id.toString() }
@@ -432,10 +441,7 @@ export default {
     },
     consortiumSetMemberActive: async (
       _: unknown,
-      {
-        consortiumId,
-        active,
-      }: { consortiumId: string; active: boolean },
+      { consortiumId, active }: { consortiumId: string; active: boolean },
       context: Context,
     ): Promise<boolean> => {
       const { userId } = context
@@ -533,6 +539,38 @@ export default {
             },
           )
 
+          return isActiveMember
+        },
+      ),
+    },
+    runEvent: {
+      resolve: (payload: any): any => {
+        const { consortiumId, consortiumName, runId, status } = payload
+        return payload
+      },
+      subscribe: withFilter(
+        () => {
+          return pubsub.asyncIterator(['RUN_EVENT'])
+        },
+        async (
+          payload: RunEventPayload,
+          variables: unknown,
+          context: Context,
+        ) => {
+          const { consortiumId } = payload
+          const { userId } = context
+
+          // Check if the user is part of the consortium's active members
+          const consortium = await Consortium.findById(consortiumId).lean()
+          if (!consortium) {
+            throw new Error('Consortium not found')
+          }
+
+          const isActiveMember = consortium.activeMembers.some(
+            (memberObjectId: any) => {
+              return memberObjectId.toString() === userId
+            },
+          )
           return isActiveMember
         },
       ),

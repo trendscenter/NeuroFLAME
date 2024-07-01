@@ -14,6 +14,8 @@ import PageLogin from './components/PageLogin';
 import NavBar from './components/NavBar';
 import { AppConfig } from './components/AppConfig';
 import { UserStateProvider } from './contexts/UserStateContext';
+import { NotificationsProvider } from './contexts/NotificationsContext';
+import NotificationList from './components/NotificationList';
 
 const router = createHashRouter([
   {
@@ -40,6 +42,10 @@ const router = createHashRouter([
       {
         path: "appConfig",
         element: <AppConfig></AppConfig>
+      },
+      {
+        path: "notifications",
+        element: <NotificationList></NotificationList>
       }
     ]
   }
@@ -52,7 +58,9 @@ const startApp = async () => {
     ReactDOM.render(
       <ApolloClientsProvider config={config}>
         <UserStateProvider>
-          <RouterProvider router={router}></RouterProvider>
+          <NotificationsProvider>
+            <RouterProvider router={router}></RouterProvider>
+          </NotificationsProvider>
         </UserStateProvider>
       </ApolloClientsProvider>,
       document.getElementById('root')

@@ -1,73 +1,79 @@
 export interface StartRunInput {
-  consortiumId: string;
+  consortiumId: string
 }
 
 export interface StartRunOutput {
-  runId: string;
+  runId: string
 }
 
 export interface RunStartCentralPayload {
-  runId: string;
-  imageName: string;
-  userIds: string[];
-  consortiumId: string;
-  computationParameters: string;
+  runId: string
+  imageName: string
+  userIds: string[]
+  consortiumId: string
+  computationParameters: string
 }
 
 export interface RunStartEdgePayload {
-  runId: string;
-  imageName: string;
-  consortiumId: string;
-  downloadUrl: string;
-  downloadToken: string;
+  runId: string
+  imageName: string
+  consortiumId: string
+  downloadUrl: string
+  downloadToken: string
 }
 
 export interface PublicUser {
-  id: string;
-  username: string;
+  id: string
+  username: string
 }
 
-
 export interface ConsortiumListItem {
-  title: string;
-  description: string;
-  leader: PublicUser;
-  members: PublicUser[];
+  title: string
+  description: string
+  leader: PublicUser
+  members: PublicUser[]
 }
 
 export interface ComputationListItem {
-  id: string;
-  title: string;
-  imageName: string;
+  id: string
+  title: string
+  imageName: string
 }
 
 export interface Computation {
-  title: string;
-  imageName: string;
-  imageDownloadUrl: string;
-  notes: string;
-  owner: string;
+  title: string
+  imageName: string
+  imageDownloadUrl: string
+  notes: string
+  owner: string
 }
 
 export interface StudyConfiguration {
-  consortiumLeaderNotes: string;
-  computationParameters: string;
-  computation?: Computation;
+  consortiumLeaderNotes: string
+  computationParameters: string
+  computation?: Computation
 }
 
 export interface ConsortiumDetails {
-  title: string;
-  description: string;
-  leader: PublicUser;
-  members: PublicUser[];
-  activeMembers: PublicUser[];
-  studyConfiguration: StudyConfiguration;
+  title: string
+  description: string
+  leader: PublicUser
+  members: PublicUser[]
+  activeMembers: PublicUser[]
+  studyConfiguration: StudyConfiguration
 }
 
 export interface LoginOutput {
-  accessToken: string;
-  userId: string;
-  username: string;
+  accessToken: string
+  userId: string
+  username: string
+}
+
+export interface RunEventPayload {
+  consortiumId: string
+  consortiumTitle: string
+  runId: string
+  status: string
 }
 
 export default `#graphql
@@ -143,6 +149,13 @@ export default `#graphql
     username: String
   }
 
+  type RunEventPayload {
+    consortiumId: String
+    consortiumTitle: String
+    runId: String
+    status: String
+  }
+
   type Query {
     getConsortiumList: [ConsortiumListItem]
     getComputationList: [ComputationListItem]
@@ -169,5 +182,6 @@ export default `#graphql
   type Subscription {
     runStartCentral: RunStartCentralPayload
     runStartEdge: RunStartEdgePayload
+    runEvent: RunEventPayload
   }
-`;
+`
