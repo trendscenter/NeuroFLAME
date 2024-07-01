@@ -44,8 +44,8 @@ export function CompConfigAdmin({ consortiumId, parameters, setEditableParams, s
     }
 
     const saveParameters = () => {
-        setParameters();
         setEditMode(!editMode);
+        setParameters();
     }
 
     return (

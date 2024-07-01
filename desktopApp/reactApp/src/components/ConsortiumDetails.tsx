@@ -8,6 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from  '@mui/icons-material/Save';
 import parse from 'html-react-parser';
 import DataChooser from './CompConfigAdmin/DataChooser';
+import MarkDownFromURL from './MarkDownFromURL';
 import { CompConfigAdmin } from "./CompConfigAdmin/CompConfigAdmin";
 
 import ReactQuill from 'react-quill';
@@ -126,6 +127,13 @@ const customStyles = {
       padding: '1rem',
       marginBottom: '1rem',
     },
+    containerSelfHeight: {
+      background: '#ffffff',
+      borderRadius: '1rem',
+      padding: '1rem',
+      marginBottom: '1rem',
+      height: 'fit-content',
+    },
     labelBetween: {
       whiteSpace: 'nowrap',
       display: 'flex',
@@ -211,11 +219,11 @@ export default function ConsortiumDetails(props: any) {
 
     const handleSetNotes = async () => {
         try {
+            setEditMode(!editMode);
             await studySetNotes({
                 variables: { consortiumId, notes: editableNotes },
             });
             console.log('Notes set successfully');
-            setEditMode(!editMode);
             handleGetConsortiumDetails();
         } catch (e) {
             console.error('Error setting notes:', e);
@@ -303,14 +311,16 @@ export default function ConsortiumDetails(props: any) {
                 </div>
             </div>
             <div style={customStyles.rowStyleThreeCols}>
-                <section style={customStyles.container}>
+                <section style={customStyles.containerSelfHeight}>
                     <h3>Computation Description</h3>
                     {consortiumDetails && (
                         <div>
                             {consortiumDetails.studyConfiguration.computation && (
-                                <div>
-                                    <p>{consortiumDetails.studyConfiguration.computation.notes}</p>
-                                </div>
+                              <div>
+                              {consortiumDetails.studyConfiguration.computation.imageDownloadUrl.includes("github") ?
+                              <div>{<MarkDownFromURL url={consortiumDetails.studyConfiguration.computation.imageDownloadUrl} />}</div> :
+                              <div><p>{consortiumDetails.studyConfiguration.computation.notes}</p></div>}
+                              </div>
                             )}
                         </div>
                     )}

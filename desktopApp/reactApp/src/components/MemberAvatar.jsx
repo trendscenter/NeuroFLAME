@@ -19,32 +19,26 @@ const GET_USER_DETAILS = gql`
 
 const UserAvatar = styled(Avatar, {
   shouldForwardProp: (prop) => prop !== 'admin',
-})
-(({ theme, admin }) => ({
-...(!admin && {
+})(({ admin }) => ({
     width: '45px',
     height: '45px',
-    background: '#0066FF',
-}),
-...(admin && {
-  width: '45px',
-  height: '45px',
-  background: 'none',
-}),
+    background: !admin ? 'red' : 'none'
 }));
 
 export default function MemberAvatar(props) {   
     const { username, admin, active } = props;
 
+    console.log(username, admin, active);
+
     return (
       <div style={{
         position: 'relative',
-        display: 'block',
+        display: 'inline-block',
         marginRight: '8px',
         width: '45px',
         textAlign: 'center'
       }}>
-        <UserAvatar admin>
+        <UserAvatar admin={admin}>
           <span
             style={{ 
               position: 'absolute',
@@ -54,7 +48,7 @@ export default function MemberAvatar(props) {
               top: '25%',
             }}
           >
-          {username ? username.charAt(0).toUpperCase() : ''}
+          {username.charAt(0).toUpperCase()}
           </span>
           {admin ? 
           <img 
@@ -70,7 +64,7 @@ export default function MemberAvatar(props) {
          ''}
         </UserAvatar>
         <b style={{fontSize: '14px'}}>{username}</b>
-        {active ? 
+        {active.username === username ? 
           <CheckCircleIcon 
             sx={{ 
               position: 'absolute',
