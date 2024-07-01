@@ -1,3 +1,4 @@
+import reportRunError from './reportRunError.js'
 import reportRunReady from './reportRunReady.js'
 import startRun from './startRun.js'
 
@@ -25,13 +26,18 @@ export const runStartHandler = {
       imageName,
     } = data.runStartCentral
 
-    await startRun({
-      imageName,
-      userIds,
-      consortiumId,
-      runId,
-      computationParameters,
-    })
+    try {
+      await startRun({
+        imageName,
+        userIds,
+        consortiumId,
+        runId,
+        computationParameters,
+      })
+    } catch (e: any) {
+      console.error('Run Start Central - Error:', e)
+      await reportRunError({ runId, errorMessage: e.toString() })
+    }
 
     // report to the central api that the run is ready
     await reportRunReady({ runId })

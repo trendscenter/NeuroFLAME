@@ -223,24 +223,62 @@ export default {
       const imageName = run.studyConfiguration.computation.imageName
       const consortiumId = run.consortium._id
 
+      const consortium = await Consortium.findById(consortiumId)
+
       pubsub.publish('RUN_START_EDGE', {
         runId,
         imageName: imageName,
         consortiumId: consortiumId,
       })
 
+      pubsub.publish('RUN_EVENT', {
+        consortiumId: consortium._id.toString(),
+        consortiumTitle: consortium.title,
+        runId: run._id.toString(),
+        status: 'Starting',
+      })
+
       return true
     },
-    reportError: async (
+    reportRunError: async (
       _: unknown,
       { runId, errorMessage }: { runId: string; errorMessage: string },
+      context: Context,
     ): Promise<boolean> => {
+      console.log('reportRunError', runId)
+      // authenticate the user
+      // is the token valid?
+      if (!context.userId) {
+        throw new Error('User not authenticated')
+      }
+
+      // authorize the user
+      if (!context.roles.includes('central')) {
+        throw new Error('User not authorized')
+      }
+
+      // get the run's details from the database
+      const run = await Run.findById(runId)
+      const result = await Run.updateOne(
+        { _id: runId },
+        { status: errorMessage },
+      )
+
+      const consortium = await Consortium.findById(run.consortium._id)
+
+      pubsub.publish('RUN_EVENT', {
+        consortiumId: consortium._id.toString(),
+        consortiumTitle: consortium.title,
+        runId: run._id.toString(),
+        status: 'Error',
+      })
+
       return true
     },
-    reportComplete: async (_: unknown, { runId }): Promise<boolean> => {
+    reportRunComplete: async (_: unknown, { runId }): Promise<boolean> => {
       return true
     },
-    reportStatus: async (
+    reportRunStatus: async (
       _: unknown,
       { runId, statusMessage }: { runId: string; statusMessage: string },
     ): Promise<boolean> => {

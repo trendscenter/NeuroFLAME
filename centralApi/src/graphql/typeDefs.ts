@@ -166,9 +166,9 @@ export default `#graphql
     login(username: String, password: String): LoginOutput
     startRun(input: StartRunInput): StartRunOutput
     reportRunReady(runId: String): Boolean
-    reportError(runId: String, errorMessage: String): Boolean
-    reportComplete(runId: String): Boolean
-    reportStatus(runId: String, status: String): Boolean
+    reportRunError(runId: String, errorMessage: String): Boolean
+    reportRunComplete(runId: String): Boolean
+    reportRunStatus(runId: String, status: String): Boolean
     studySetComputation(consortiumId: String, computationId: String): Boolean
     studySetParameters(consortiumId: String, parameters: String): Boolean
     studySetNotes(consortiumId: String, notes: String): Boolean
