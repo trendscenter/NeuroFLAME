@@ -126,13 +126,16 @@
     }
   }
   
-  pre, code {
+  pre, code, .pre {
+    display: inline-block;
     background-color: #1A2948; /* Light grey background */
     border-radius: 8px; /* Rounded corners */
     padding: 16px; /* Padding inside the code block */
+    padding-bottom: 2rem;
     overflow-x: auto; /* Horizontal scroll for long lines */
     color: #ffffff;
     margin-bottom: 1rem;
+    height: auto;
   }
   
   pre {

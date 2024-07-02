@@ -6,6 +6,7 @@ import MemberAvatar from './MemberAvatar';
 import LinkIcon from '@mui/icons-material/Link';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from  '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Cancel';
 import parse from 'html-react-parser';
 import DataChooser from './CompConfigAdmin/DataChooser';
 import MarkDownFromURL from './MarkDownFromURL';
@@ -150,6 +151,7 @@ export default function ConsortiumDetails(props: any) {
     const [editableParameters, setEditableParameters] = useState("");
     const [selectableComputation, setSelectableComputation] = useState("");
     const [editableMountDir, setEditableMountDir] = useState("");
+    const [selectComputation, setSelectComputation] = useState(false);
 
     // Use useLazyQuery for consortium details query
     const [getConsortiumDetails, { loading, error, data }] = useLazyQuery(GET_CONSORTIUM_DETAILS, {
@@ -286,6 +288,7 @@ export default function ConsortiumDetails(props: any) {
         return( 
             <MemberAvatar 
                 key={index}
+                index={index}
                 username={member.username} 
                 admin={member.username === admin} 
                 active={active.find(el => el['username'] === member.username)} />
@@ -297,15 +300,35 @@ export default function ConsortiumDetails(props: any) {
             <div style={customStyles.rowStyleTwoCols}>
                 <div>
                     <h1 style={{marginBottom: '0'}}>{consortiumDetails.title}</h1>
-                    {consortiumDetails && consortiumDetails.studyConfiguration.computation && <h3 style={{color: '#000000'}}>
-                        {consortiumDetails.studyConfiguration.computation.title}
-                    </h3>}
+                    {consortiumDetails && consortiumDetails.studyConfiguration.computation && 
+                    <div style={{display: 'flex', alignItems: 'center', width: '34svw', marginBottom: '1rem'}}>
+                      <h3 style={{color: '#000000', marginBottom: '0', marginRight: '0.5rem'}}>
+                          {consortiumDetails.studyConfiguration.computation.title}
+                      </h3>
+                      {!selectComputation ? 
+                      <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setSelectComputation(!selectComputation)}} /> :
+                      <CancelIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setSelectComputation(!selectComputation)}} />}
+                    </div>} 
+                    {selectComputation && <div style={{display: 'flex', alignItems: 'center', width: '34svw', marginBottom: '1rem'}}>
+                        <select
+                            value={selectableComputation}
+                            onChange={(e) => setSelectableComputation(e.target.value)}
+                            style={{marginRight: '1rem', height: '2.5rem'}}
+                        >
+                            <option value="" disabled>Select computation</option>
+                            {computations && computations.map((comp: any) => (
+                                <option key={comp.id} value={comp.id}>
+                                    {comp.title}
+                                </option>
+                            ))}
+                        </select>
+                        <button style={{height: '2.5rem'}} onClick={handleSetComputation}>Set</button>
+                    </div>}
                 </div>
                 <div>
                 {consortiumDetails && <h3 style={{color: '#000000'}}>
                     <a href={consortiumDetails.studyConfiguration.computation.imageDownloadUrl} style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <LinkIcon />
-                    {consortiumDetails.studyConfiguration.computation.imageDownloadUrl}
+                    <LinkIcon style={{color: 'black'}} /> {consortiumDetails.studyConfiguration.computation.imageDownloadUrl}
                     </a>
                 </h3>}
                 </div>
