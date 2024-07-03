@@ -8,9 +8,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from  '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import parse from 'html-react-parser';
-import DataChooser from './CompConfigAdmin/DataChooser';
-import MarkDownFromURL from './MarkDownFromURL';
-import { CompConfigAdmin } from "./CompConfigAdmin/CompConfigAdmin";
+import DataChooser from './ComputationDetailsElements/DataChooser';
+import MarkDownFromURL from './ComputationDetailsElements/MarkDownFromURL';
+import { CompConfigAdmin } from "./ComputationDetailsElements/CompConfig";
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';

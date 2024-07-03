@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState, useCallback } from "react";
-import { ConfigurationForm } from './ConfigurationForm'
+import { ConfigurationForm } from './ConfigurationForm.jsx'
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
@@ -73,15 +73,8 @@ export function CompConfigAdmin({ consortiumId, parameters, setEditableParams, s
     }
 
     const handleParamChange = (parameters) => {
-        console.log(parameters);
         validateParameters(parameters);
     }
-
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         validateParameters(parameters);
-    //     }, 1000);
-    // });
 
     return (
             <div style={{position: 'relative'}}>
