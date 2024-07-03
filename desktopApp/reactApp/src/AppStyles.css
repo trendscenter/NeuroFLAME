@@ -77,6 +77,7 @@
   }
   
   /* Forms and Input fields */
+
   input[type="text"],
   input[type="password"],
   input[type="email"],
@@ -89,6 +90,11 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+  }
+
+  input.MuiInput-input,
+  input.MuiInputBase-input {
+    border: none !important;
   }
   
   input[type="submit"],

@@ -6,8 +6,10 @@ import IconButton from '@mui/material/IconButton';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FolderIcon from '@mui/icons-material/Folder';
+import SaveIcon from  '@mui/icons-material/Save';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import TextField from '@mui/material/TextField';
 
 // Define custom styles
 const customStyles = {
@@ -46,6 +48,7 @@ export default function OpenDialog(props: any) {
 
     const [directory, setDirectory] = useState(null);
     const [files, setFiles] = useState(null);
+    const [editDirManually, setEditDirManually] = useState(false);
 
     const handleClick = (path) => {
         window.ElectronAPI.openFile().then((result) => {
@@ -55,10 +58,13 @@ export default function OpenDialog(props: any) {
     };
 
     const handleSetMount = () => {
-        setDirectory(null);
-        setFiles(null);
-        props.setMount(directory);
-        props.handleSetMount();
+        if(directory){
+            setDirectory(null);
+            setFiles(null);
+            setEditDirManually(false);
+            props.setMount(directory);
+            props.handleSetMount();
+        }
     }
 
     const unsetMount = () => {
@@ -75,19 +81,32 @@ export default function OpenDialog(props: any) {
 
     return(
     <div>
-        {!directory && !props.mountDir && <button onClick={handleClick} style={{width: '100%', borderRadius: '2rem'}}>
-            Select Data Directory
-        </button>}
+        {!directory && !props.mountDir && !editDirManually && 
+        <div>
+            <button onClick={handleClick} style={{width: '100%', borderRadius: '2rem'}}>
+                Select Data Directory
+            </button>
+            <div style={{marginTop: '0.5rem', textAlign: 'center'}}>
+                <a style={{fontSize: '0.8rem', cursor: 'pointer'}} onClick={() => setEditDirManually(!editDirManually)}>Enter Data Directory Manually</a>
+            </div>
+        </div>}
+        {editDirManually && 
+        <div style={{display: 'flex', justifyContent: 'middle', alignItems: 'center'}}>
+            <TextField style={{width: '85%'}} id="standard-basic" label="Enter Directory Path" variant="standard" onChange={(e) => setDirectory(e.target.value)} />
+            <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)', marginRight: '0.25rem' }} onClick={handleSetMount} />
+            <CancelIcon style={{ color: 'rgba(255, 87, 51, 0.5)' }} onClick={() => {setEditDirManually(!editDirManually)}} />
+        </div>
+        }
         {props.mountDir && <div style={customStyles.container}>
             <label style={customStyles.labelBetween}>
-                <h3 style={customStyles.h3}>Mounted Directory</h3>
+                <h3 style={customStyles.h3}>Data Directory</h3>
                 <IconButton aria-label="delete" size="medium" onClick={(event) => unsetMount()}>
                     <DeleteIcon fontSize="inherit" />
                 </IconButton>
             </label>
             <div style={{fontSize: '0.9rem', marginBottom: '1rem'}}>{props.mountDir}</div>           
         </div>}
-        {!props.mountDir && directory && <div style={customStyles.container}>
+        {!props.mountDir && directory && !editDirManually && <div style={customStyles.container}>
             <label style={customStyles.labelBetween}>
                 <h3 style={customStyles.h3}>Selected Directory</h3>
                 <IconButton aria-label="delete" size="medium" onClick={(event) => setDirectory(null)}>
@@ -101,7 +120,7 @@ export default function OpenDialog(props: any) {
                 </label>
                 <label style={customStyles.label}><FolderIcon sx={{fontSize: '18px', margin: '0.4rem'}} /> &nbsp;{'...'+filePathTrail(directory)}</label>
                 <FileTree files={files} />
-                <button style={{width: '100%', borderRadius: '2rem', marginBottom: '1rem'}} onClick={() => handleSetMount()}>Mount Directory</button>
+                <button style={{width: '100%', borderRadius: '2rem', marginBottom: '1rem'}} onClick={() => handleSetMount()}>Set Mount Directory</button>
             </div>}            
         </div>}
     </div>

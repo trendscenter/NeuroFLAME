@@ -76,6 +76,12 @@ export function CompConfigAdmin({ consortiumId, parameters, setEditableParams, s
         validateParameters(parameters);
     }
 
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         validateParameters(parameters);
+    //     }, 1000);
+    // });
+
     return (
             <div style={{position: 'relative'}}>
                 {!editMode && <IconButton style={{position: 'absolute', top: '-2.5rem', right: '0'}} onClick={enableEditor}><TerminalIcon fontSize="inherit" /></IconButton>}
