@@ -17,8 +17,6 @@ export default function ConsortiaListItem({ consortium }) {
         marginTop: '10px'
     };
 
-    console.log(consortium);
-
     return (
         <div style={style}>
             <h3>{consortium.title}</h3>

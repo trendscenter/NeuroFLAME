@@ -38,21 +38,20 @@ export function useLogin(onSuccess, onError) {
 
             // Store tokens on successful login
             if (authenticateData) {
+
                 setAuthInfo({
-                    accessToken: authenticateData.login,
-                    refreshToken: null,
-                    userId: authenticateData.login
+                    accessToken: authenticateData.accessToken,
+                    userId: authenticateData.userId
                 });
 
                 // Attempt to connect
                 const { data: connectData } = await connectAsUser({
                     variables: {
-                        accessToken: authenticateData.login,
-                        refreshToken: authenticateData.login,
+                        accessToken: authenticateData.accessToken,
                     },
                     context: {
                         headers: {
-                            "x-access-token": authenticateData.login,
+                            "x-access-token": authenticateData.accessToken,
                         }
                     }
                 });

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, shell, dialog } from 'electron'
 import path from 'path'
 import url, { fileURLToPath } from 'url'
 import fs from 'fs'
@@ -7,15 +7,18 @@ import { start as startEdgeFederatedClient } from 'edge-federated-client'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-let mainWindow: BrowserWindow | null = null
+let mainWindow: BrowserWindow
 
 // Get the configuration file path based on command-line arguments or default location
 const configPath: string = getConfigPath()
 
 async function createWindow(): Promise<void> {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1000,
+    height: 800,
+    frame: false,
+    titleBarStyle: 'hidden',
+    trafficLightPosition: { x: 25, y: 25 },
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -34,10 +37,6 @@ async function createWindow(): Promise<void> {
   const devUrl: string = 'http://localhost:3000'
   const startUrl: string = app.isPackaged ? packagedUrl : devUrl
   mainWindow.loadURL(startUrl)
-
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
 
   // Load configuration
   const config = await getConfig()
@@ -94,7 +93,41 @@ async function getConfig(): Promise<typeof defaultConfig> {
   }
 }
 
+function filterFiles(f: string[], blacklist: string[]): string[] {
+  return f.filter((u) => {
+    return blacklist.every((s) => !u.includes(s))
+  })
+}
+
+async function useDirectoryDialog(
+  event: Electron.IpcMainInvokeEvent,
+  pathString?: string,
+): Promise<{ status: string } | { filepath: string; filelist: string[] }> {
+  try {
+    const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+      properties: ['openFile', 'openDirectory'],
+    })
+
+    if (!canceled && filePaths && filePaths.length > 0) {
+      const files = await fs.promises.readdir(filePaths[0], { recursive: true })
+      const blacklist = ['.DS_Store']
+      const cleanFiles = filterFiles(files, blacklist)
+
+      return files.length === 0
+        ? { status: 'empty' }
+        : { filepath: filePaths[0], filelist: cleanFiles }
+    } else {
+      return { status: 'canceled' } // Handle cancellation
+    }
+  } catch (error) {
+    console.error('Error while handling file open:', error)
+    return { status: 'error' }
+  }
+}
+
 ipcMain.handle('getConfig', getConfig)
+
+ipcMain.handle('useDirectoryDialog', useDirectoryDialog)
 
 ipcMain.handle('applyDefaultConfig', async () => {
   await fs.promises.writeFile(

@@ -17,34 +17,39 @@ const GET_USER_DETAILS = gql`
   }
 `;
 
+const UserColor = [
+  "#FFBA08",
+  "#F25919",
+  "#B91372",
+  "#440381",
+  "#016572",
+  "#6EC2C0"
+]
+
+const GetUserColor = (index) => {
+  index = +index < UserColor.length ? index : 0;
+  return UserColor[index];
+}
+
 const UserAvatar = styled(Avatar, {
-  shouldForwardProp: (prop) => prop !== 'admin',
-})
-(({ theme, admin }) => ({
-...(!admin && {
+  shouldForwardProp: (prop) => prop !== 'admin'
+})(({ admin, index }) => ({
     width: '45px',
     height: '45px',
-    background: '#0066FF',
-}),
-...(admin && {
-  width: '45px',
-  height: '45px',
-  background: 'none',
-}),
+    background: !admin ? GetUserColor(index) : 'none'
 }));
 
 export default function MemberAvatar(props) {   
-    const { username, admin, active } = props;
-
+    const { index, username, admin, active } = props;
     return (
       <div style={{
         position: 'relative',
-        display: 'block',
+        display: 'inline-block',
         marginRight: '8px',
         width: '45px',
         textAlign: 'center'
       }}>
-        <UserAvatar admin>
+        <UserAvatar admin={admin} index={index}>
           <span
             style={{ 
               position: 'absolute',
@@ -54,7 +59,7 @@ export default function MemberAvatar(props) {
               top: '25%',
             }}
           >
-          {username ? username.charAt(0).toUpperCase() : ''}
+          {username.charAt(0).toUpperCase()}
           </span>
           {admin ? 
           <img 

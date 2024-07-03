@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { gql, useQuery } from '@apollo/client';
-import ConsortiaListItem from "./ConsortiaListItem";
 import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
+import ConsortiaListItem from "./ConsortiaListItem";
 
 const GET_CONSORTIA = gql`
     query getConsortiumList {
