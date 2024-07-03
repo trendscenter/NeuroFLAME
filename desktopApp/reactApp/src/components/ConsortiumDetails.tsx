@@ -179,7 +179,7 @@ export default function ConsortiumDetails(props: any) {
     useEffect(() => {
         if (data && data.getConsortiumDetails) {
             setEditableNotes(data.getConsortiumDetails.studyConfiguration.consortiumLeaderNotes || "");
-            setEditableParameters(data.getConsortiumDetails.studyConfiguration.computationParameters || "");
+            setEditableParameters(data.getConsortiumDetails.studyConfiguration.computationParameters || editableParameters);
         }
     }, [data]);
 
