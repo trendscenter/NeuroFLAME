@@ -39,6 +39,7 @@ export const useAuthStateHandler = (): AuthContextType => {
   // Function to update the auth data
   const setAuthInfo = ({ accessToken, refreshToken, userId }: AuthData) => {
     setAuthData({ accessToken, refreshToken, userId });
+    localStorage.setItem('accessToken', accessToken);
   };
 
   // Function to clear the auth data
