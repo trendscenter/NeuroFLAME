@@ -58,8 +58,6 @@ const GET_COMPUTATION_LIST = gql`
   }
 `;
 
-
-
 const STUDY_SET_COMPUTATION = gql`
   mutation StudySetComputation($consortiumId: String!, $computationId: String!) {
     studySetComputation(consortiumId: $consortiumId, computationId: $computationId)
