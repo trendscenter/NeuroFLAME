@@ -6,7 +6,11 @@ import { useContext } from 'react';
 
 const LOGIN_MUTATION = gql`
   mutation Login($username: String!, $password: String!) {
-    login(username: $username, password: $password)
+    login(username: $username, password: $password) {
+      accessToken
+      userId
+      username
+    }
   }
 `;
 
@@ -39,19 +43,22 @@ export function useLogin(onSuccess, onError) {
             // Store tokens on successful login
             if (authenticateData) {
 
+                console.log(authenticateData.login);
+
                 setAuthInfo({
-                    accessToken: authenticateData.accessToken,
-                    userId: authenticateData.userId
+                    accessToken: authenticateData.login.accessToken,
+                    userId: authenticateData.login.userId,
+                    username: authenticateData.login.username,
                 });
 
                 // Attempt to connect
                 const { data: connectData } = await connectAsUser({
                     variables: {
-                        accessToken: authenticateData.accessToken,
+                        accessToken: authenticateData.login.accessToken,
                     },
                     context: {
                         headers: {
-                            "x-access-token": authenticateData.accessToken,
+                            "x-access-token": authenticateData.login.accessToken,
                         }
                     }
                 });
