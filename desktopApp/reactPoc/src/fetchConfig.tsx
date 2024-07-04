@@ -14,10 +14,11 @@ export interface Config {
 }
 
 interface ElectronAPI {
+  getConfigPath: () => Promise<string>;
   getConfig: () => Promise<Config>;
   openConfig: (filePath?: string) => Promise<void>;
   applyDefaultConfig: () => Promise<void>;
-  getConfigPath: () => Promise<string>;
+  useDirectoryDialog: (pathString?: string) => Promise<{ directoryPath: undefined | string, canceled: boolean, error: string | null }>;
 }
 
 declare global {

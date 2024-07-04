@@ -264,6 +264,16 @@ export default function ConsortiumDetails(props: any) {
         }
     }
 
+    const handleUseDirectoryDialog = async () => {
+        const { directoryPath, error, canceled } = await window.ElectronAPI.useDirectoryDialog(editableMountDir)
+        if(directoryPath) {
+            setEditableMountDir(directoryPath)
+        }
+        if(error) {
+            console.error(error)
+        }
+    }
+
     // Handle loading and error states for the queries
     if (loading || computationsLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
@@ -410,12 +420,14 @@ export default function ConsortiumDetails(props: any) {
                             /><br />
                         </div>
                         <div>
+                            <button onClick={handleUseDirectoryDialog}>use directory dialog</button>
+                        </div>
+                        <div>
                             <button onClick={handleSetMountDir}>Save mount directory</button>
                         </div>
                     </fieldset>
                 </section>
             }
-
         </div>
     );
 }
