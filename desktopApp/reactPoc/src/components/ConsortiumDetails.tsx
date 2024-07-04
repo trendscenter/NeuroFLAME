@@ -266,10 +266,10 @@ export default function ConsortiumDetails(props: any) {
 
     const handleUseDirectoryDialog = async () => {
         const { directoryPath, error, canceled } = await window.ElectronAPI.useDirectoryDialog(editableMountDir)
-        if(directoryPath) {
+        if (directoryPath) {
             setEditableMountDir(directoryPath)
         }
-        if(error) {
+        if (error) {
             console.error(error)
         }
     }

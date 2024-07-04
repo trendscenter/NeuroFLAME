@@ -5,5 +5,5 @@ contextBridge.exposeInMainWorld('ElectronAPI', {
   openConfig: async (filePath) => ipcRenderer.invoke("openConfig"),
   applyDefaultConfig: async () => ipcRenderer.invoke("applyDefaultConfig"),
   getConfigPath: async () => ipcRenderer.invoke("getConfigPath"),
-  useDirectoryDialog: async () => ipcRenderer.invoke("useDirectoryDialog"),
+  useDirectoryDialog: async (pathString) => ipcRenderer.invoke("useDirectoryDialog", pathString),
 });

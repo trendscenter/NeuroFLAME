@@ -10,7 +10,7 @@ export async function createMainWindow(
     // frame: false,
     // titleBarStyle: 'hidden',
     // trafficLightPosition: { x: 25, y: 25 },
-    fullscreen: true,
+    // fullscreen: true,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
