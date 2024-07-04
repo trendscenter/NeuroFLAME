@@ -1,7 +1,9 @@
-import { BrowserWindow } from 'electron';
-import path from 'path';
+import { BrowserWindow } from 'electron'
+import path from 'path'
 
-export async function createMainWindow(__dirname: string): Promise<BrowserWindow> {
+export async function createMainWindow(
+  __dirname: string,
+): Promise<BrowserWindow> {
   const mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
@@ -13,9 +15,8 @@ export async function createMainWindow(__dirname: string): Promise<BrowserWindow
       nodeIntegration: false,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js'),
-      additionalArguments: ['this is a test', 'this is another test'],
     },
-  });
+  })
 
-  return mainWindow;
+  return mainWindow
 }
