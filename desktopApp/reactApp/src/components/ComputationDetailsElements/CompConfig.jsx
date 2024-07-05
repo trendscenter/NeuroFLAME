@@ -4,6 +4,7 @@ import { ConfigurationForm } from './ConfigurationForm.jsx'
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from  '@mui/icons-material/Save';
 import TerminalIcon from '@mui/icons-material/Terminal';
 import CheckCircleIcon from '@mui/icons-material/CheckCircleOutline';
 import WarningIcon from '@mui/icons-material/Warning';
@@ -20,7 +21,7 @@ const customStyles = {
     }
   };
 
-export function CompConfigAdmin({ consortiumId, parameters, setEditableParams, setParameters }) {
+export function CompConfigAdmin({ parameters, setEditableParams, setParameters }) {
 
     const [editMode, setEditMode] = useState(false);
     const [valid, setValid] = useState(false);
@@ -51,36 +52,22 @@ export function CompConfigAdmin({ consortiumId, parameters, setEditableParams, s
         setParameters();
     }
 
-    const validateParameters = (str) => {
+    const validateParameters = (parameters) => {
         try {
-            JSON.parse(str);
+            JSON.parse(parameters);
             setValid(true);
         } catch (e) {
             setValid(false);
         }
     }
 
-    const getPrettyParameters = (parameters) => {
-        let newParameters = "";
-        if(parameters && typeof parameters === 'string'){
-            newParameters = JSON.stringify(JSON.parse(parameters), null, 2)
-        }else{
-            newParameters = JSON.stringify(parameters, null, 2)
-        }
-        if(newParameters){
-            return newParameters;
-        }
-    }
-
     const handleParamChange = (parameters) => {
-        validateParameters(parameters);
+        setEditableParams(parameters);
     }
 
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         validateParameters(parameters);
-    //     }, 1000);
-    // });
+    useEffect(() => {
+        validateParameters(parameters);
+    });
 
     return (
             <div style={{position: 'relative'}}>
@@ -88,8 +75,8 @@ export function CompConfigAdmin({ consortiumId, parameters, setEditableParams, s
                 <div>
                     {editMode && parameters ? 
                     <JSONEditorPanel content={content} onChange={handler} /> :
-                    <TextareaAutosize className="pre" contenteditable='true' style={{width: '100%'}} onChange={(e) => handleParamChange(e.target.value)}>{getPrettyParameters(parameters)}</TextareaAutosize>}
-                    <div style={{position: 'absolute', bottom: '1.5rem', right: '0.5rem' }}>{valid ? <CheckCircleIcon style={{color: 'lightgreen'}} /> : <WarningIcon style={{color: 'pink'}} />}</div>
+                    <TextareaAutosize className="pre" contenteditable='true' style={{width: '100%'}} onChange={(e) => handleParamChange(e.target.value)}>{valid ? JSON.stringify(parameters, null, 2) : parameters}</TextareaAutosize>}
+                    <div style={{position: 'absolute', bottom: '1.5rem', right: '0.5rem' }}>{valid ? <div><SaveIcon style={{color: 'white'}} onClick={() => setParameters} /> <CheckCircleIcon style={{color: 'lightgreen'}} /></div> : <WarningIcon style={{color: 'pink'}} />}</div>
                 </div>
                 <div>
                     {editMode && <Button variant="contained" color="warning" style={{margin: '0.5rem', marginLeft: '0', marginTop: '1rem'}} onClick={() => { setEditMode(!editMode) }}>Cancel</Button>}

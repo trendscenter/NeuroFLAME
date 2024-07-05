@@ -177,7 +177,7 @@ export default function ConsortiumDetails(props: any) {
     useEffect(() => {
         if (data && data.getConsortiumDetails) {
             setEditableNotes(data.getConsortiumDetails.studyConfiguration.consortiumLeaderNotes || "");
-            setEditableParameters(data.getConsortiumDetails.studyConfiguration.computationParameters || editableParameters);
+            setEditableParameters(data.getConsortiumDetails.studyConfiguration.computationParameters || "");
         }
     }, [data]);
 
@@ -350,7 +350,7 @@ export default function ConsortiumDetails(props: any) {
 
                 <section>
                     <h3 style={customStyles.h3}>Settings</h3>
-                    <CompConfigAdmin consortiumId={consortiumId} parameters={editableParameters} setEditableParams={setEditableParameters} setParameters={handleSetParameters} /> 
+                    {editableParameters && <CompConfigAdmin parameters={editableParameters} setEditableParams={setEditableParameters} setParameters={handleSetParameters} />} 
                 </section>
 
                 <section>
