@@ -5,12 +5,12 @@ export async function createMainWindow(
   __dirname: string,
 ): Promise<BrowserWindow> {
   const mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 800,
-    // frame: false,
-    // titleBarStyle: 'hidden',
-    // trafficLightPosition: { x: 25, y: 25 },
-    // fullscreen: true,
+    width: 1200,
+    height: 1000,
+    frame: false,
+    titleBarStyle: 'hidden',
+    trafficLightPosition: { x: 25, y: 25 },
+    //fullscreen: true,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
