@@ -162,7 +162,6 @@ export default `#graphql
     getConsortiumList: [ConsortiumListItem]
     getComputationList: [ComputationListItem]
     getConsortiumDetails(consortiumId: String): ConsortiumDetails
-    getUserDetails(userId: String): PublicUser
   }
 
   type Mutation {
