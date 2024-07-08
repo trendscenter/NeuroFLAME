@@ -26,7 +26,7 @@ export function CompConfig({ parameters, setEditableParams, setParameters }) {
 
     const [editMode, setEditMode] = useState(false);
     const [valid, setValid] = useState(false);
-    const [content, setContent] = useState({ json: null });
+    const [content, setContent] = useState({ json: JSON.parse(parameters) });
 
     const saveParameters = () => {
         setEditMode(!editMode);
