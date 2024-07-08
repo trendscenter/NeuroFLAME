@@ -207,7 +207,7 @@ export default function ConsortiumDetails(props: any) {
     const handleSetParameters = async () => {
         try {
             await studySetParameters({
-                variables: { consortiumId, parameters: JSON.parse(editableParameters) },
+                variables: { consortiumId, parameters: editableParameters },
             });
             console.log('Parameters set successfully');
             handleGetConsortiumDetails();

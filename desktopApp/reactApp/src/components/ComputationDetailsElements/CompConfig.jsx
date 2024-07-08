@@ -26,16 +26,18 @@ export function CompConfig({ parameters, setEditableParams, setParameters }) {
 
     const [editMode, setEditMode] = useState(false);
     const [valid, setValid] = useState(false);
-    const [content, setContent] = useState({ json: JSON.parse(parameters) });
+    const [content, setContent] = useState({ json: null });
+    const [ogParameters, setOGParameters] = useState(parameters);
+    const [paramChange, setParamChange] = useState(false);
 
     const saveParameters = () => {
-        setEditMode(!editMode);
         setParameters();
     }
 
     const validateParameters = (parameters) => {
         try {
             JSON.parse(parameters);
+            setContent({json: JSON.parse(parameters)});
             setValid(true);
         } catch (e) {
             setValid(false);
@@ -62,7 +64,12 @@ export function CompConfig({ parameters, setEditableParams, setParameters }) {
 
     useEffect(() => {
         validateParameters(parameters);
-    });
+        if(parameters === ogParameters){
+            setParamChange(false);
+        }else{
+            setParamChange(true);
+        }
+    },[parameters]);
 
     return (
             <div style={{position: 'relative'}}>
@@ -78,13 +85,11 @@ export function CompConfig({ parameters, setEditableParams, setParameters }) {
                     <div>
                         <JSONEditorPanel content={content} onChange={JSONHandler} />
                         <div style={{position: 'absolute', bottom: '0.5rem', right: '0.5rem' }}>
-                            <SaveIcon style={{color: 'grey', marginRight: '0.24rem'}} onClick={saveParameters} /> 
+                            {paramChange && <SaveIcon style={{color: 'grey', marginRight: '0.24rem'}} onClick={saveParameters} />} 
                         </div>
                     </div> :
                     <div>
-                    <TextareaAutosize minRows="5" className="pre" contenteditable='true' style={{width: '100%'}} onChange={(e) => handleParamChange(e.target.value)}>
-                        {parameters}
-                    </TextareaAutosize>
+                    <TextareaAutosize minRows="5" className="pre" contenteditable='true' style={{width: '100%'}} defaultValue={parameters} onChange={(e) => handleParamChange(e.target.value)} />
                     <div style={{position: 'absolute', top: '1rem', right: '0.5rem' }}>
                         {valid ? 
                             <CheckCircleIcon style={{color: 'lightgreen'}} /> : 
@@ -92,7 +97,7 @@ export function CompConfig({ parameters, setEditableParams, setParameters }) {
                         }
                     </div>
                     <div style={{position: 'absolute', bottom: '1.5rem', right: '0.5rem' }}>
-                        {valid && <SaveIcon style={{color: 'lightgrey'}} onClick={saveParameters} />} 
+                        {valid && paramChange && <SaveIcon style={{color: 'lightgrey'}} onClick={saveParameters} />} 
                     </div>
                     </div>}
                 </div>
