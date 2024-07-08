@@ -63,7 +63,6 @@ ipcMain.handle('getConfig', getConfig)
 ipcMain.handle('openConfig', openConfig)
 ipcMain.handle('applyDefaultConfig', applyDefaultConfig)
 ipcMain.handle('useDirectoryDialog', (event, pathString, ) => {
-  console.log('useDirectoryDialog', {pathString})
   if (mainWindow) {
     return useDirectoryDialog({ mainWindow, pathString })
   }
