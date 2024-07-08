@@ -15,4 +15,6 @@
   - [ ] update computation
 - [ ] consider subscription for live changes to consortium details
 - [ ] Organize state and contexts in the UI
+- [ ] further decouple COINSTAC and NVFLARE
+  - [ ] provision inside the container
 
