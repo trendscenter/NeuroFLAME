@@ -62,6 +62,15 @@ export function CompConfig({ parameters, setEditableParams, setParameters }) {
         [content]
     )
 
+    const handleRenderMenu = ((items) => {
+        //Remove all other JSON ui handling. Using only 'Tree' mode.
+        console.log(items);
+        items.splice(0, 4);
+        return [
+          ...items
+        ]
+    });
+
     useEffect(() => {
         validateParameters(parameters);
         if(parameters === ogParameters){
@@ -83,13 +92,13 @@ export function CompConfig({ parameters, setEditableParams, setParameters }) {
                 <div>
                     {editMode && parameters ? 
                     <div>
-                        <JSONEditorPanel content={content} onChange={JSONHandler} />
+                        <JSONEditorPanel mode={'tree'} content={content} onChange={JSONHandler} onRenderMenu={handleRenderMenu} />
                         <div style={{position: 'absolute', bottom: '0.5rem', right: '0.5rem' }}>
                             {paramChange && <SaveIcon style={{color: 'grey', marginRight: '0.24rem'}} onClick={saveParameters} />} 
                         </div>
                     </div> :
                     <div>
-                    <TextareaAutosize minRows="5" className="pre" contenteditable='true' style={{width: '100%'}} defaultValue={parameters} onChange={(e) => handleParamChange(e.target.value)} />
+                    <TextareaAutosize minRows="3" className="pre" contenteditable='true' style={{width: '100%'}} defaultValue={valid ? JSON.stringify(JSON.parse(parameters),null,2) : parameters} onChange={(e) => handleParamChange(e.target.value)} />
                     <div style={{position: 'absolute', top: '1rem', right: '0.5rem' }}>
                         {valid ? 
                             <CheckCircleIcon style={{color: 'lightgreen'}} /> : 
