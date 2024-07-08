@@ -25,8 +25,6 @@ export function useLogin(onSuccess, onError) {
     const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext)
     const { setAuthInfo } = useAuthContext();
 
-
-
     // Setup the mutations with their respective clients
     const [authenticateAsUser, authenticateStatus] = useMutation(LOGIN_MUTATION, { client: centralApiApolloClient });
     const [connectAsUser, connectStatus] = useMutation(CONNECT_AS_USER, { client: edgeClientApolloClient });
@@ -42,8 +40,6 @@ export function useLogin(onSuccess, onError) {
 
             // Store tokens on successful login
             if (authenticateData) {
-
-                console.log(authenticateData.login);
 
                 setAuthInfo({
                     accessToken: authenticateData.login.accessToken,

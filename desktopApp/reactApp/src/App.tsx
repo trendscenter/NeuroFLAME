@@ -265,7 +265,7 @@ function App() {
               >
                 COINSTAC
               </Typography>
-              <UserAvatar userId={authStateHandler.authData.accessToken} />
+              <UserAvatar username={authStateHandler.authData.username} />
               <IconButton
                 edge="end"
                 color="inherit"

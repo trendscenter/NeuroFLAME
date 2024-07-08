@@ -115,9 +115,14 @@ export default function OpenDialog(props: any) {
                     <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} fontSize="medium" onClick={(event) => setEditDirManually(!editDirManually)} />
                 </div> 
             </label>
-            <div style={{fontSize: '0.9rem', marginBottom: '1rem', position: 'relative', display: 'inline-block'}}>
-                {props.mountDir} 
-                <CancelIcon style={{ color: 'rgba(255, 87, 51, 0.5)', position: 'absolute', right: '5px' }} fontSize="small" onClick={(event) => unsetMount()} />
+            <div style={{
+                width: '100%',
+                fontSize: '0.8rem', 
+                marginBottom: '0.25rem', 
+                position: 'relative', 
+                display: 'inline-block'
+                }}>
+                {props.mountDir} <CancelIcon style={{ color: 'rgba(255, 87, 51, 0.5)', position: 'absolute'}} fontSize="small" onClick={(event) => unsetMount()} />
             </div>          
         </div>}
     </div>

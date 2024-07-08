@@ -10,7 +10,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import parse from 'html-react-parser';
 import DataChooser from './ComputationDetailsElements/DataChooser';
 import MarkDownFromURL from './ComputationDetailsElements/MarkDownFromURL';
-import { CompConfigAdmin } from "./ComputationDetailsElements/CompConfig";
+import { CompConfig } from "./ComputationDetailsElements/CompConfig";
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -207,7 +207,7 @@ export default function ConsortiumDetails(props: any) {
     const handleSetParameters = async () => {
         try {
             await studySetParameters({
-                variables: { consortiumId, parameters: editableParameters },
+                variables: { consortiumId, parameters: JSON.parse(editableParameters) },
             });
             console.log('Parameters set successfully');
             handleGetConsortiumDetails();
@@ -350,7 +350,7 @@ export default function ConsortiumDetails(props: any) {
 
                 <section>
                     <h3 style={customStyles.h3}>Settings</h3>
-                    {editableParameters && <CompConfigAdmin parameters={editableParameters} setEditableParams={setEditableParameters} setParameters={handleSetParameters} />} 
+                    {editableParameters && <CompConfig parameters={editableParameters} setEditableParams={setEditableParameters} setParameters={handleSetParameters} />} 
                 </section>
 
                 <section>
