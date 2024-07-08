@@ -1,24 +1,18 @@
-- [ ] deployment-ready handling of setting and loading configuration for each component
-- [ ] Do proper authorization for subscriptions and other resolvers
-- [x] Report to the central server when the provisioning step is complete
-- [x] Handle computation parameters in the boilerplate app
-- [ ] Host the platform across multiple machines
+- [ ] Create public repo
+- [ ] Execute a run between clients on different machines
 - [ ] Monitor events from runs
-- [ ] Contemplate image distribution
-- [ ] Make the entire platform easy to deploy
-- [ ] Make the platform easy to install and configure
-- [ ] Make the client easy to install and configure
+- [ ] Host the platform across multiple machines
+- [ ] Make the platform easy to install, configure, and deploy
 - [ ] Display results in the UI
-- [ ] UI for    
-  - [ ] setting computation parameters
-  - [ ] selecting image
-  - [ ] managing members
-- [ ] document the system architecture in more abstract conceptual terms so its clear what is implementation and what is intentional design
-- [ ] Implement computation schema
+- [ ] Implement Endpoints for
+  - [ ] create consortium
+  - [ ] update consortium
+  - [ ] create user
+  - [ ] list runs
+  - [ ] get run details
+  - [ ] subscribe to run
+  - [ ] create computation
+  - [ ] update computation
+- [ ] consider subscription for live changes to consortium details
+- [ ] Organize state and contexts in the UI
 
-Simple routing
-Some api design
-Keeping the types all synchronized
-Making the schemas simple
-Reporting errors
-State machine
