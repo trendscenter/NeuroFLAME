@@ -1,9 +1,3 @@
-- [ ] Create public repo
-- [ ] Execute a run between clients on different machines
-- [ ] Monitor events from runs
-- [ ] Host the platform across multiple machines
-- [ ] Make the platform easy to install, configure, and deploy
-- [ ] Display results in the UI
 - [ ] Implement Endpoints for
   - [ ] create consortium
   - [ ] update consortium
@@ -17,4 +11,9 @@
 - [ ] Organize state and contexts in the UI
 - [ ] further decouple COINSTAC and NVFLARE
   - [ ] provision inside the container
-
+- [ ] Execute a run between clients on different machines
+- [ ] Monitor events from runs
+- [ ] Host the platform across multiple machines
+- [ ] Make the platform easy to install, configure, and deploy
+- [ ] Display results in the UI
+- [ ] Create public repo
