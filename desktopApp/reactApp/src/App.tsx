@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -15,27 +14,20 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import InboxIcon from '@mui/icons-material/Inbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import Badge from '@mui/material/Badge';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import ConsortiaList from './components/ConsortiaList';
 import Login from './components/Login';
-import NavBar from './components/NavBar';
 import styles from './components/styles';
 import ConsortiumDetails from './components/ConsortiumDetails';
 import ComputationsList from './components/ComputationsList';
 import ComputationDetails from './components/ComputationDetails';
-//import ComputationConfigurationAdmin from './components/ComputationConfigurationAdmin';
-//import ComputationConfigurationMember from './components/ComputationConfigurationMember';
+import NotificationList from './components/NotificationList';
 import RunsList from './components/RunsList';
 import RunDetails from './components/RunDetails';
 import UserAvatar from './components/UserAvatar';
 import { AuthContext, useAuthStateHandler, useAuthContext } from './contexts/AuthContext.tsx';
+import { NotificationsProvider } from './contexts/NotificationsContext';
 import logoSM from './components/assets/coinstac-logo-sm.png';
 import './AppStyles.css';
 
@@ -77,11 +69,11 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(itemPr
 });
 
 function ListItemLink(props) {
-  const { icon, primary, to } = props;
+  const { icon, primary, to, onClick } = props;
 
   return (
     <li>
-      <ListItem button component={Link} to={to}>
+      <ListItem button component={Link} to={to} onClick={onClick}>
         {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
         <ListItemText primary={primary} />
       </ListItem>
@@ -93,6 +85,7 @@ ListItemLink.propTypes = {
   icon: PropTypes.element,
   primary: PropTypes.string.isRequired,
   to: PropTypes.string.isRequired,
+  onClick: PropTypes.func,
 };
 
 interface ListItemFuncProps {
@@ -229,101 +222,103 @@ function App() {
 
   return (
     <AuthContext.Provider value={authStateHandler}>
-      <Router>
-        <ThemeProvider theme={defaultTheme}>
-          <Box sx={{ display: 'flex' }}>
-            <CssBaseline />
-            {isLoggedIn && <AppBar position="absolute" open={open}>
-            <Toolbar
-              sx={{
-                pr: '24px', // keep right padding when drawer closed
-                backgroundColor: '#001F70'
-              }}
-            >
-              <Typography
-                sx={{ flexGrow: 1 }}
-              >
-              </Typography>
-              <img 
-                src={logoSM} 
-                alt="Logo" 
-                style={{
-                  marginRight: '2px',
-                  width: '28px', 
-                  height: '28px',
-                }}
-              />
-              <Typography
-                component="h1"
-                variant="h6"
-                color="inherit"
-                sx={{ 
-                  fontFamily: 'Lato',
-                  fontWeight: '600'
-                  }}
-                noWrap
-              >
-                COINSTAC
-              </Typography>
-              <UserAvatar username={authStateHandler.authData.username} />
-              <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="open drawer"
-                onClick={toggleDrawer}
+      <NotificationsProvider>
+        <Router>
+          <ThemeProvider theme={defaultTheme}>
+            <Box sx={{ display: 'flex' }}>
+              <CssBaseline />
+              {isLoggedIn && <AppBar position="absolute" open={open}>
+              <Toolbar
                 sx={{
-                  ...(open && { display: 'none' }),
+                  pr: '24px', // keep right padding when drawer closed
+                  backgroundColor: '#001F70'
                 }}
               >
-                <MenuIcon />
-              </IconButton>
-            </Toolbar>
-          </AppBar>}
-          <div style={styles.content}>
-            <Routes>
-              <Route index path="/" element={<Login></Login>} />
-              <Route index path="/login" element={<Login></Login>} />
-              <Route path="/consortia" element={<ConsortiaList />} />
-              <Route path="/consortia/:consortiumId" element={<ConsortiumDetails />} />
-              {/* <Route path="/consortia/:consortiumId/admin-computation-configuration" element={<ComputationConfigurationAdmin />} /> */}
-              {/* <Route path="/consortia/:consortiumId/member-computation-configuration" element={<ComputationConfigurationMember />} /> */}
-              <Route path="/runs" element={<RunsList></RunsList>} />
-              <Route path="/runs/:runId" element={<RunDetails></RunDetails>} />
-              <Route path="/computations" element={<ComputationsList />} />
-              <Route path="/computations/:computationId" element={<ComputationDetails />} />
-              <Route path="/invites" element={<div>inviteslist</div>} />
-            </Routes>
-          </div>
-          <Drawer variant="permanent" anchor="right" open={open}>
-            <Toolbar
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                px: [1],
-              }}
-            >
-              <IconButton onClick={toggleDrawer}>
-                <ChevronLeftIcon />
-              </IconButton>
-            </Toolbar>
-            <Divider />
-            <div>
-              <Box sx={{ width: 360 }}>
-                <Paper elevation={0}>
-                  <List aria-label="main mailbox folders">
-                    <ListItemLink to="/consortia" primary="Consortia" />
-                    <ListItemLink to="/computations" primary="Computations" />
-                    <ListItemLink to="/runs" primary="Runs" />
-                    <ListItemFunc onClick={onLogout} primary="Logout" />
-                  </List>
-                </Paper>
-              </Box>
+                <Typography
+                  sx={{ flexGrow: 1 }}
+                >
+                </Typography>
+                <img 
+                  src={logoSM} 
+                  alt="Logo" 
+                  style={{
+                    marginRight: '2px',
+                    width: '28px', 
+                    height: '28px',
+                  }}
+                />
+                <Typography
+                  component="h1"
+                  variant="h6"
+                  color="inherit"
+                  sx={{ 
+                    fontFamily: 'Lato',
+                    fontWeight: '600'
+                    }}
+                  noWrap
+                >
+                  COINSTAC
+                </Typography>
+                <UserAvatar username={authStateHandler.authData.username} />
+                <IconButton
+                  edge="end"
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={toggleDrawer}
+                  sx={{
+                    ...(open && { display: 'none' }),
+                  }}
+                >
+                  <MenuIcon />
+                </IconButton>
+              </Toolbar>
+            </AppBar>}
+            <div style={styles.content}>
+              <Routes>
+                <Route index path="/" element={<Login></Login>} />
+                <Route index path="/login" element={<Login></Login>} />
+                <Route path="/consortia" element={<ConsortiaList />} />
+                <Route path="/consortia/:consortiumId" element={<ConsortiumDetails />} />
+                <Route path="/runs" element={<RunsList></RunsList>} />
+                <Route path="/runs/:runId" element={<RunDetails></RunDetails>} />
+                <Route path="/computations" element={<ComputationsList />} />
+                <Route path="/computations/:computationId" element={<ComputationDetails />} />
+                <Route path="/invites" element={<div>inviteslist</div>} />
+                <Route path="/notifications" element={<NotificationList />} />
+              </Routes>
             </div>
-          </Drawer>
-          </Box>
-        </ThemeProvider>
-      </Router>
+            <Drawer variant="permanent" anchor="right" open={open}>
+              <Toolbar
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  px: [1],
+                }}
+              >
+                <IconButton onClick={toggleDrawer}>
+                  <ChevronLeftIcon />
+                </IconButton>
+              </Toolbar>
+              <Divider />
+              <div>
+                <Box sx={{ width: 360 }}>
+                  <Paper elevation={0}>
+                    <List aria-label="main mailbox folders">
+                      <ListItemLink onClick={() => setOpen(!open)} to="/consortia" primary="Consortia" />
+                      <ListItemLink onClick={() => setOpen(!open)} to="/computations" primary="Computations" />
+                      {/*<ListItemLink onClick={() => setOpen(!open)} to="/runs" primary="Runs" />*/}
+                      <ListItemLink onClick={() => setOpen(!open)} to="/notifications" primary="Notifications" />
+                      <ListItemFunc onClick={onLogout} primary="Logout" />
+                    </List>
+                  </Paper>
+                </Box>
+              </div>
+            </Drawer>
+            </Box>
+          </ThemeProvider>
+        </Router>
+      </NotificationsProvider>
     </AuthContext.Provider>
   );
 }

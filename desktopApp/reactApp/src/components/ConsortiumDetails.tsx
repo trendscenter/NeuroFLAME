@@ -362,8 +362,15 @@ export default function ConsortiumDetails(props: any) {
                         {renderMembers(consortiumDetails.members, consortiumDetails.leader.username, consortiumDetails.activeMembers)}
                     </div>
                     <div style={customStyles.container}>
-                        <div style={customStyles.labelBetween}><h3 style={customStyles.h3}>Leader Notes</h3>
-                        {editMode ? <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={handleSetNotes} /> : <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setEditMode(!editMode)}} />}</div>
+                        <div style={customStyles.labelBetween}>
+                          <h3 style={customStyles.h3}>Leader Notes</h3>
+                          {editMode ? 
+                          <div>
+                          <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={handleSetNotes} />
+                          <CancelIcon style={{ color: 'lightpink' }} onClick={() => {setEditMode(!editMode)}} />
+                          </div> : 
+                          <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setEditMode(!editMode)}} />}
+                        </div>
                         {editMode ? <ReactQuill theme="snow" value={editableNotes} onChange={setEditableNotes} modules={modules} formats={formats}></ReactQuill> : <div>{parse(editableNotes)}</div>}
                     </div>
                     <DataChooser setMount={setEditableMountDir} handleSetMount={handleSetMountDir} mountDir={editableMountDir} />

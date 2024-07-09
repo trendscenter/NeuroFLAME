@@ -191,3 +191,11 @@
     line-height: 1.2;
     margin-bottom: 0.5rem;
   }
+
+  .toast-container > div {
+    background-color: #001f70 !important; 
+  }
+
+  .toast-container h2 {
+    color: white;
+  }
