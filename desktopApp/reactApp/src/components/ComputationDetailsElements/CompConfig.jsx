@@ -98,7 +98,7 @@ export function CompConfig({ parameters, setEditableParams, setParameters }) {
                         </div>
                     </div> :
                     <div>
-                    <TextareaAutosize minRows="3" className="pre" contenteditable='true' style={{width: '100%'}} defaultValue={valid ? JSON.stringify(JSON.parse(parameters),null,2) : parameters} onChange={(e) => handleParamChange(e.target.value)} />
+                    <TextareaAutosize minRows="3" className="pre" style={{width: '100%'}} defaultValue={valid ? JSON.stringify(JSON.parse(parameters),null,2) : parameters} onChange={(e) => handleParamChange(e.target.value)} />
                     <div style={{position: 'absolute', top: '1rem', right: '0.5rem' }}>
                         {valid ? 
                             <CheckCircleIcon style={{color: 'lightgreen'}} /> : 

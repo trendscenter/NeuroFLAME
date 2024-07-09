@@ -152,6 +152,7 @@ const Drawer = styled(MuiDrawer, {
     '& .MuiDrawer-paper': {
       position: 'absolute',
       whiteSpace: 'nowrap',
+      backgroundColor: 'rgba(0,31,112, 0.9)',
       right: '0',
       width: drawerWidth,
       transition: theme.transitions.create('width', {
@@ -231,7 +232,7 @@ function App() {
               <Toolbar
                 sx={{
                   pr: '24px', // keep right padding when drawer closed
-                  backgroundColor: '#001F70'
+                  backgroundColor: '#001f70'
                 }}
               >
                 <Typography
@@ -297,21 +298,19 @@ function App() {
                 }}
               >
                 <IconButton onClick={toggleDrawer}>
-                  <ChevronLeftIcon />
+                  <ChevronLeftIcon sx={{color: '#ffffff'}} />
                 </IconButton>
               </Toolbar>
               <Divider />
               <div>
                 <Box sx={{ width: 360 }}>
-                  <Paper elevation={0}>
-                    <List aria-label="main mailbox folders">
-                      <ListItemLink onClick={() => setOpen(!open)} to="/consortia" primary="Consortia" />
-                      <ListItemLink onClick={() => setOpen(!open)} to="/computations" primary="Computations" />
-                      {/*<ListItemLink onClick={() => setOpen(!open)} to="/runs" primary="Runs" />*/}
-                      <ListItemLink onClick={() => setOpen(!open)} to="/notifications" primary="Notifications" />
-                      <ListItemFunc onClick={onLogout} primary="Logout" />
-                    </List>
-                  </Paper>
+                  <List aria-label="main mailbox folders" sx={{color: '#ffffff'}}>
+                    <ListItemLink onClick={() => setOpen(!open)} to="/consortia" primary="Consortia" />
+                    <ListItemLink onClick={() => setOpen(!open)} to="/computations" primary="Computations" />
+                    {/*<ListItemLink onClick={() => setOpen(!open)} to="/runs" primary="Runs" />*/}
+                    <ListItemLink onClick={() => setOpen(!open)} to="/notifications" primary="Notifications" />
+                    <ListItemFunc onClick={onLogout} primary="Logout" />
+                  </List>
                 </Box>
               </div>
             </Drawer>
