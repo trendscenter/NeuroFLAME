@@ -304,7 +304,7 @@ function App() {
               <Divider />
               <div>
                 <Box sx={{ width: 360 }}>
-                  <List aria-label="main mailbox folders" sx={{color: '#ffffff'}}>
+                  <List aria-label="main mailbox folders" sx={{color: '#ffffff', borderTop: '1px solid rgba(255,255,255,0.33)'}}>
                     <ListItemLink onClick={() => setOpen(!open)} to="/consortia" primary="Consortia" />
                     <ListItemLink onClick={() => setOpen(!open)} to="/computations" primary="Computations" />
                     {/*<ListItemLink onClick={() => setOpen(!open)} to="/runs" primary="Runs" />*/}
