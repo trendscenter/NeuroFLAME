@@ -118,6 +118,36 @@ export default {
         throw new Error(`Failed to fetch consortium details: ${error.message}`)
       }
     },
+    getComputationDetails: async (
+      _: unknown,
+      { computationId }: { computationId: string },
+    ): Promise<{
+      title: string
+      imageName: string
+      imageDownloadUrl: string
+      notes: string
+      owner: string
+    }> => {
+      try {
+        const computation = await Computation.findById(computationId)
+        if (!computation) {
+          throw new Error('Computation not found')
+        }
+
+        const { title, imageName, imageDownloadUrl, notes, owner } = computation
+
+        return {
+          title,
+          imageName,
+          imageDownloadUrl,
+          notes,
+          owner,
+        }
+      } catch (error) {
+        console.error('Error in getComputationDetails:', error)
+        throw new Error(`Failed to fetch computation details: ${error.message}`)
+      }
+    },
   },
   Mutation: {
     login: async (
@@ -446,6 +476,106 @@ export default {
       })
 
       return true
+    },
+    computationCreate: async (
+      _: unknown,
+      {
+        title,
+        imageName,
+        imageDownloadUrl,
+        notes,
+      }: {
+        title: string
+        imageName: string
+        imageDownloadUrl: string
+        notes: string
+      },
+      context: Context,
+    ): Promise<boolean> => {
+      if (!title || !imageName || !imageDownloadUrl || !notes) {
+        throw new Error(
+          'Title, imageName, imageDownloadUrl, and notes are required',
+        )
+      }
+
+      const existingComputation = await Computation.findOne({ title })
+
+      if (existingComputation) {
+        throw new Error('Computation with that title already exists')
+      }
+
+      await Computation.create({
+        title,
+        imageName,
+        imageDownloadUrl,
+        notes,
+        owner: context.userId,
+      })
+
+      return true
+    },
+    computationEdit: async (
+      _: unknown,
+      {
+        computationId,
+        title,
+        imageName,
+        imageDownloadUrl,
+        notes,
+      }: {
+        computationId: string
+        title?: string
+        imageName?: string
+        imageDownloadUrl?: string
+        notes?: string
+      },
+      context: Context,
+    ): Promise<boolean> => {
+      // Ensure the computation exists
+      const computation = await Computation.findById(computationId)
+      if (!computation) {
+        throw new Error('Computation not found')
+      }
+
+      // Verify that the user is the owner of the computation
+      if (computation.owner.toString() !== context.userId) {
+        throw new Error('User not authorized to edit this computation')
+      }
+
+      // Ensure at least one field is provided for update
+      if (!title && !imageName && !imageDownloadUrl && !notes) {
+        throw new Error('No fields provided to update')
+      }
+
+      // Check if the title is provided and validate it against existing computations
+      if (title) {
+        const otherComputation = await Computation.findOne({
+          title,
+          _id: { $ne: computationId },
+        })
+        if (otherComputation) {
+          throw new Error('Computation with that title already exists')
+        }
+      }
+
+      // Prepare the update payload
+      const updatePayload: { [key: string]: string } = {}
+      if (title) updatePayload.title = title
+      if (imageName) updatePayload.imageName = imageName
+      if (imageDownloadUrl) updatePayload.imageDownloadUrl = imageDownloadUrl
+      if (notes) updatePayload.notes = notes
+
+      // Perform the update operation
+      try {
+        await Computation.updateOne(
+          { _id: computationId, owner: context.userId },
+          { $set: updatePayload },
+        )
+        return true
+      } catch (error) {
+        console.error('Error updating computation:', error)
+        throw new Error('Failed to update computation')
+      }
     },
     consortiumEdit: async (
       _: unknown,

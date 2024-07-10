@@ -17,6 +17,8 @@ import { UserStateProvider } from './contexts/UserStateContext';
 import { NotificationsProvider } from './contexts/NotificationsContext';
 import NotificationList from './components/NotificationList';
 import ConsortiumCreate from './components/ConsortiumCreate';
+import ComputationDetails from './components/ComputationDetails';
+import ComputationCreate from './components/ComputationsCreate';
 
 const router = createHashRouter([
   {
@@ -42,6 +44,14 @@ const router = createHashRouter([
       {
         path: "computations",
         element: <ComputationList></ComputationList>
+      },
+      {
+        path: "computations/create",
+        element: <ComputationCreate></ComputationCreate>
+      },
+      {
+        path: "computations/details/:computationId",
+        element: <ComputationDetails></ComputationDetails>
       },
       {
         path: "appConfig",

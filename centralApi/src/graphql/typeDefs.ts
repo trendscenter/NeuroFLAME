@@ -162,6 +162,7 @@ export default `#graphql
     getConsortiumList: [ConsortiumListItem]
     getComputationList: [ComputationListItem]
     getConsortiumDetails(consortiumId: String): ConsortiumDetails
+    getComputationDetails(computationId: String): Computation
   }
 
   type Mutation {
@@ -179,6 +180,8 @@ export default `#graphql
     consortiumJoin(consortiumId: String): Boolean
     consortiumLeave(consortiumId: String): Boolean
     consortiumSetMemberActive(consortiumId: String, active: Boolean): Boolean
+    computationCreate(title: String, imageName: String, imageDownloadUrl: String, notes: String): Boolean
+    computationEdit(computationId: String, title: String, imageName: String, imageDownloadUrl: String, notes: String): Boolean
   }
 
   type Subscription {
