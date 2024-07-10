@@ -68,6 +68,7 @@ const seedDatabase = async () => {
         imageName: 'boilerplate_average_app',
         imageDownloadUrl: 'https://example.com/boilerplate_average_app',
         notes: 'This is the boilerplate average app',
+        owner: user1Id.toString(),
       },
       {
         _id: computation2Id,
@@ -75,6 +76,7 @@ const seedDatabase = async () => {
         imageName: 'boilerplate_average_app',
         imageDownloadUrl: 'https://example.com/boilerplate_average_app',
         notes: 'Notes for Computation B',
+        owner: user2Id.toString(),
       },
     ]
     await Computation.insertMany(computations)
