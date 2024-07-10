@@ -109,39 +109,46 @@ export default function ComputationDetails() {
     return (
         <div>
             <h1>Computation Details</h1>
-            <div>
-                <label>Title:</label>
+            <div className="form-group">
+                <div><label>Title:</label></div>
                 <input
+                    style={{ width: "100%" }}
+
                     disabled={!isOwner}
                     type="text"
                     value={editableTitle}
                     onChange={(e) => setEditableTitle(e.target.value)}
                 />
             </div>
-            <div>
-                <label>Image Name:</label>
+            <div className="form-group">
+                <div><label>Image Name:</label></div>
                 <input
+                    style={{ width: "100%" }}
                     disabled={!isOwner}
                     type="text"
                     value={editableImageName}
                     onChange={(e) => setEditableImageName(e.target.value)}
                 />
             </div>
-            <div>
-                <label>Image Download URL:</label>
+            <div className="form-group">
+                <div><label>Image Download URL:</label></div>
                 <input
+                    style={{ width: "100%" }}
                     disabled={!isOwner}
                     type="text"
                     value={editableImageDownloadUrl}
                     onChange={(e) => setEditableImageDownloadUrl(e.target.value)}
                 />
             </div>
-            <div>
-                <label>Notes:</label>
+            <div className="form-group">
+                <div><label>Notes:</label></div>
                 <textarea
                     disabled={!isOwner}
                     value={editableNotes}
                     onChange={(e) => setEditableNotes(e.target.value)}
+                    style={{ width: "100%" }}
+                    rows={10} // Adjust the number of rows as needed to make the textarea larger
+                    cols={50} // Adjust the number of columns as needed to make the textarea wider
                 />
             </div>
             {isOwner && (
@@ -149,9 +156,9 @@ export default function ComputationDetails() {
                     {loading ? "Updating..." : "Update"}
                 </button>
             )}
-            <div>
-                <label>Owner: </label>
-                {computationOwnerId}
+            <div className="form-group">
+                <div><label>Owner: </label></div>
+                <span>{computationOwnerId}</span>
             </div>
         </div>
     );

@@ -70,13 +70,13 @@ const startApp = async () => {
 
   if (config) {
     ReactDOM.render(
-      <ApolloClientsProvider config={config}>
-        <UserStateProvider>
+      <UserStateProvider>
+        <ApolloClientsProvider config={config}>
           <NotificationsProvider>
             <RouterProvider router={router}></RouterProvider>
           </NotificationsProvider>
-        </UserStateProvider>
-      </ApolloClientsProvider>,
+        </ApolloClientsProvider>
+      </UserStateProvider>,
       document.getElementById('root')
     );
   } else {

@@ -2,6 +2,7 @@ import React, { useState, useEffect, ReactNode } from 'react'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { createApolloClient } from '../createApolloClient'
 import { ApolloClientsContext } from './ApolloClientsContext' // Ensure this path is correct
+import { useUserState } from './UserStateContext'
 
 interface Props {
   config: {
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const ApolloClientsProvider: React.FC<Props> = ({ children, config }) => {
+  const { getAccessToken } = useUserState()
   const [centralApiApolloClient, setCentralApiApolloClient] = useState<
     ApolloClient<NormalizedCacheObject>
   >()
@@ -28,7 +30,7 @@ const ApolloClientsProvider: React.FC<Props> = ({ children, config }) => {
       createApolloClient({
         httpUrl: config.centralServerQueryUrl,
         wsUrl: config.centralServerSubscriptionUrl,
-        getAccessToken: () => localStorage.getItem('accessToken') || '',
+        getAccessToken: getAccessToken
       }),
     )
     console.log("creating edgeClientApolloClient", config.edgeClientQueryUrl)
@@ -36,12 +38,12 @@ const ApolloClientsProvider: React.FC<Props> = ({ children, config }) => {
       createApolloClient({
         httpUrl: config.edgeClientQueryUrl,
         wsUrl: config.edgeClientSubscriptionUrl,
-        getAccessToken: () => localStorage.getItem('accessToken') || '',
+        getAccessToken: getAccessToken
       }),
     )
-  }, [config])
+  }, [config, getAccessToken])
 
-  if(!centralApiApolloClient || !edgeClientApolloClient) {
+  if (!centralApiApolloClient || !edgeClientApolloClient) {
     return <div>Loading...</div>
   }
 

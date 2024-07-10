@@ -30,8 +30,8 @@ interface RunEvent {
 
 export const NotificationsContext = React.createContext<NotificationsContextType>({
     events: [],
-    subscribe: async () => {},
-    unsubscribe: async () => {},
+    subscribe: async () => { },
+    unsubscribe: async () => { },
 });
 
 export const NotificationsProvider = ({ children }: { children: ReactNode }) => {
@@ -40,45 +40,45 @@ export const NotificationsProvider = ({ children }: { children: ReactNode }) => 
     const subscriptionRef = useRef<any>(null);
 
     const subscribe = async (): Promise<void> => {
+        console.log("Subscribing to run events")
         if (subscriptionRef.current) {
             return; // Already subscribed
         }
 
-        return new Promise((resolve, reject) => {
-            const observable = centralApiApolloClient?.subscribe({
-                query: RUN_EVENT_SUBSCRIPTION,
-            });
-
-            subscriptionRef.current = observable?.subscribe({
-                next: ({ data }: any) => {
-                    console.log("Subscription data:", data)
-                    if (data) {
-                        const newEvent: RunEvent = data.runEvent;
-                        setEvents(prevEvents => [newEvent, ...prevEvents]);
-                        toast.info(
-                            <div>
-                                <h2>Notification</h2>
-                                <div>
-                                    Consortium: {newEvent.consortiumTitle}
-                                </div>
-                                <div>
-                                    Status: {newEvent.status}
-                                </div>
-                                <div>
-                                    Run ID: {newEvent.runId}
-                                </div>
-                            </div>
-                        );
-                    }
-                    resolve();
-                },
-                error: (err: any) => {
-                    console.error("Subscription error:", err.message);
-                    toast.error(`Subscription error: ${err.message}`);
-                    reject(err);
-                }
-            });
+        const observable = centralApiApolloClient?.subscribe({
+            query: RUN_EVENT_SUBSCRIPTION,
         });
+
+        subscriptionRef.current = observable?.subscribe({
+            next: ({ data }: any) => {
+                console.log("Subscription data:", data)
+                if (data) {
+                    const newEvent: RunEvent = data.runEvent;
+                    setEvents(prevEvents => [newEvent, ...prevEvents]);
+                    toast.info(
+                        <div>
+                            <h2>Notification</h2>
+                            <div>
+                                Consortium: {newEvent.consortiumTitle}
+                            </div>
+                            <div>
+                                Status: {newEvent.status}
+                            </div>
+                            <div>
+                                Run ID: {newEvent.runId}
+                            </div>
+                        </div>
+                    );
+                }
+
+            },
+            error: (err: any) => {
+                console.error("Subscription error:", err.message);
+                toast.error(`Subscription error: ${err.message}`);
+
+            }
+        });
+
     };
 
     const unsubscribe = async (): Promise<void> => {

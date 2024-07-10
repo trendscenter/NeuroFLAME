@@ -68,6 +68,7 @@ export interface LoginOutput {
   accessToken: string
   userId: string
   username: string
+  roles: string[]
 }
 
 export interface RunEventPayload {
@@ -149,6 +150,7 @@ export default `#graphql
     accessToken: String
     userId: String
     username: String
+    roles: [String]
   }
 
   type RunEventPayload {
@@ -182,6 +184,9 @@ export default `#graphql
     consortiumSetMemberActive(consortiumId: String, active: Boolean): Boolean
     computationCreate(title: String, imageName: String, imageDownloadUrl: String, notes: String): Boolean
     computationEdit(computationId: String, title: String, imageName: String, imageDownloadUrl: String, notes: String): Boolean
+    userCreate(username: String, password: String): Boolean
+    userChangePassword(userId: String, password: String): Boolean
+    userChangeRoles(userId: String, roles: [String]): Boolean
   }
 
   type Subscription {

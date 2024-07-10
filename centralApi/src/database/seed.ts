@@ -15,6 +15,7 @@ const centralUserId = new mongoose.Types.ObjectId('66289c79aebab67040a20067')
 const user1Id = new mongoose.Types.ObjectId('66289c79aebab67040a20068')
 const user2Id = new mongoose.Types.ObjectId('66289c79aebab67040a20069')
 const user3Id = new mongoose.Types.ObjectId('66289c79aebab67040a20070')
+const user4Id = new mongoose.Types.ObjectId('66289c79aebab67040a20071')
 const computation1Id = new mongoose.Types.ObjectId('66289c79aebab67040a21000')
 const computation2Id = new mongoose.Types.ObjectId('66289c79aebab67040a21001')
 const consortium1Id = new mongoose.Types.ObjectId('66289c79aebab67040a22000')
@@ -51,6 +52,12 @@ const seedDatabase = async () => {
         hash: await bcrypt.hash('password3', saltRounds),
       },
       {
+        _id: user3Id,
+        username: 'user4',
+        hash: await bcrypt.hash('password3', saltRounds),
+        roles: ['admin'],
+      },
+      {
         _id: centralUserId,
         username: 'centralUser',
         hash: await bcrypt.hash('centralPassword', saltRounds),
@@ -64,10 +71,16 @@ const seedDatabase = async () => {
     const computations = [
       {
         _id: computation1Id,
-        title: 'Computation A',
+        title: 'NVFLARE boilerplate average',
         imageName: 'boilerplate_average_app',
         imageDownloadUrl: 'https://example.com/boilerplate_average_app',
-        notes: 'This is the boilerplate average app',
+        notes: `
+Repository: https://github.com/dylanmartin/nvflare_app_boilerplate
+Parameters example:
+{
+  "decimal_places": 2
+}
+`,
         owner: user1Id.toString(),
       },
       {

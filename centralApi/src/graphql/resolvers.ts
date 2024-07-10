@@ -1,4 +1,8 @@
-import { generateTokens, compare } from '../authentication/authentication.js'
+import {
+  generateTokens,
+  compare,
+  hashPassword,
+} from '../authentication/authentication.js'
 import getConfig from '../config/getConfig.js'
 import Consortium from '../database/models/Consortium.js'
 import Run from '../database/models/Run.js'
@@ -179,6 +183,7 @@ export default {
         accessToken,
         userId: user._id.toString(),
         username: user.username,
+        roles: user.roles,
       }
     },
     startRun: async (
@@ -680,7 +685,68 @@ export default {
         throw new Error('Failed to update consortium active members')
       }
     },
+    userCreate: async (
+      _: unknown,
+      { username, password }: { username: string; password: string },
+    ): Promise<boolean> => {
+      try {
+        const existingUser = await User.findOne({ username })
+        if (existingUser) {
+          throw new Error('User already exists')
+        }
+
+        const hashedPassword = await hashPassword(password)
+        await User.create({
+          username,
+          password: hashedPassword,
+        })
+        return true
+      } catch (error) {
+        console.error('Error creating user:', error)
+        throw new Error('Failed to create user')
+      }
+    },
+
+    userChangePassword: async (
+      _: unknown,
+      { userId, password }: { userId: string; password: string },
+      context: any,
+    ): Promise<boolean> => {
+      const isSameUser = context.user.userId === userId
+      const isAdmin = context.user.roles.includes('admin')
+      if (!isSameUser && !isAdmin) {
+        throw new Error('Unauthorized')
+      }
+
+      try {
+        const hashedPassword = await hashPassword(password)
+        await User.updateOne({ _id: userId }, { password: hashedPassword })
+        return true
+      } catch (error) {
+        console.error('Error changing password:', error)
+        throw new Error('Failed to change password')
+      }
+    },
+    userChangeRoles: async (
+      _: unknown,
+      { userId, roles }: { userId: string; roles: string[] },
+      context: any,
+    ): Promise<boolean> => {
+      const isAdmin = context.user.roles.includes('admin')
+      if (!isAdmin) {
+        throw new Error('Unauthorized')
+      }
+
+      try {
+        await User.updateOne({ _id: userId }, { roles })
+        return true
+      } catch (error) {
+        console.error('Error changing roles:', error)
+        throw new Error('Failed to change roles')
+      }
+    },
   },
+
   Subscription: {
     runStartCentral: {
       resolve: (payload: RunStartCentralPayload): RunStartCentralPayload => {
