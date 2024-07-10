@@ -419,6 +419,19 @@ export default {
       { title, description }: { title: string; description: string },
       context: Context,
     ): Promise<boolean> => {
+      if (!title || !description) {
+        throw new Error('Title and description are required')
+      }
+
+      if (title) {
+        const otherConsortium = await Consortium.findOne({
+          title,
+        })
+        if (otherConsortium) {
+          throw new Error('Consortium with that title already exists')
+        }
+      }
+
       await Consortium.create({
         title,
         description,

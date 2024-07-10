@@ -90,6 +90,7 @@ const ConsortiumList: React.FC = () => {
   return (
     <div>
       <h1>Consortium List</h1>
+      <Link to="/consortia/create">Create Consortium</Link>
       {data?.getConsortiumList.map((consortium) => {
         return <ConsortiumListItem key={consortium.id} consortium={consortium} handleJoinConsortium={handleJoinConsortium} handleLeaveConsortium={handleLeaveConsortium}></ConsortiumListItem>
       }
@@ -119,7 +120,7 @@ const ConsortiumListItem = ({ consortium, handleJoinConsortium, handleLeaveConso
 
   return <div key={consortium.title}>
     <h2>
-      <Link to={`/consortia/${consortium.id}/`}>
+      <Link to={`/consortia/details/${consortium.id}/`}>
         {consortium.title}
       </Link>
     </h2>

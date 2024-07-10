@@ -16,6 +16,7 @@ import { AppConfig } from './components/AppConfig';
 import { UserStateProvider } from './contexts/UserStateContext';
 import { NotificationsProvider } from './contexts/NotificationsContext';
 import NotificationList from './components/NotificationList';
+import ConsortiumCreate from './components/ConsortiumCreate';
 
 const router = createHashRouter([
   {
@@ -29,10 +30,13 @@ const router = createHashRouter([
       {
         path: "consortia",
         element: <ConsortiumList></ConsortiumList>,
-
       },
       {
-        path: "consortia/:consortiumId/",
+        path: "consortia/create",
+        element: <ConsortiumCreate></ConsortiumCreate>,
+      },
+      {
+        path: "consortia/details/:consortiumId/",
         element: <ConsortiumDetails></ConsortiumDetails>
       },
       {

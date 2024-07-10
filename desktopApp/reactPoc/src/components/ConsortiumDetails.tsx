@@ -110,6 +110,12 @@ export const LEAVE_CONSORTIUM = gql`
   }
 `;
 
+const CONSORTIUM_EDIT_MUTATION = gql`
+  mutation ConsortiumEdit($consortiumId: String!, $title: String!, $description: String!) {
+    consortiumEdit(consortiumId: $consortiumId, title: $title, description: $description)
+  }
+`;
+
 
 export default function ConsortiumDetails(props: any) {
     const { userId } = useUserState();
@@ -123,6 +129,8 @@ export default function ConsortiumDetails(props: any) {
     const [userIsLeader, setUserIsLeader] = useState(false)
     const [userIsActive, setUserIsActive] = useState(false)
     const [userIsMember, setUserIsMember] = useState(false)
+    const [editableTitle, setEditableTitle] = useState("");
+    const [editableDescription, setEditableDescription] = useState("");
     // Use useLazyQuery for consortium details query
     const [getConsortiumDetails, { loading, error, data }] = useLazyQuery(GET_CONSORTIUM_DETAILS, {
         client: centralApiApolloClient,
@@ -149,6 +157,8 @@ export default function ConsortiumDetails(props: any) {
         if (data && data.getConsortiumDetails) {
             setEditableNotes(data.getConsortiumDetails.studyConfiguration.consortiumLeaderNotes || "");
             setEditableParameters(data.getConsortiumDetails.studyConfiguration.computationParameters || "");
+            setEditableTitle(data.getConsortiumDetails.title || "");
+            setEditableDescription(data.getConsortiumDetails.description || "");
         }
     }, [data]);
 
@@ -169,6 +179,14 @@ export default function ConsortiumDetails(props: any) {
             variables: { input: { consortiumId } }
         })
     };
+
+    const handleEditConsortium = async () => {
+        await centralApiApolloClient?.mutate({
+            mutation: CONSORTIUM_EDIT_MUTATION,
+            variables: { consortiumId, title: editableTitle, description: editableDescription }
+        })
+        handleGetConsortiumDetails();
+    }
 
     const handleLeaveConsortium = async (consortiumId: string) => {
         console.log({ consortiumId })
@@ -289,8 +307,19 @@ export default function ConsortiumDetails(props: any) {
                 <h2>Consortium Details</h2>
                 {consortiumDetails && (
                     <div>
-                        <p><strong>Title:</strong> {consortiumDetails.title}</p>
-                        <p><strong>Description:</strong> {consortiumDetails.description}</p>
+                        <p><strong>Title:</strong> <input type="text" disabled={!userIsLeader} value={editableTitle} onChange={(e) => {
+                            setEditableTitle(e.target.value)
+                        }}></input>
+                            {
+                                userIsLeader && <button onClick={handleEditConsortium}>set title</button>
+                            }
+                        </p>
+                        <p><strong>Description:</strong>
+                            <input disabled={!userIsLeader} type="text" value={editableDescription} onChange={(e) => { setEditableDescription(e.target.value) }}></input>
+                            {
+                                userIsLeader && <button onClick={handleEditConsortium}>set description</button>
+                            }
+                        </p>
                         <p><strong>Leader:</strong> {consortiumDetails.leader.username}</p>
                     </div>
                 )}
