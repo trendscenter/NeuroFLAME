@@ -1,19 +1,11 @@
-- [ ] Implement Endpoints for
-  - [ ] create consortium
-  - [ ] update consortium
-  - [ ] create user
-  - [ ] list runs
-  - [ ] get run details
-  - [ ] subscribe to run
-  - [ ] create computation
-  - [ ] update computation
-- [ ] consider subscription for live changes to consortium details
+- [ ] Report error and complete from nodes
 - [ ] Organize state and contexts in the UI
+- [ ] consider subscription for live changes to consortium details
 - [ ] further decouple COINSTAC and NVFLARE
   - [ ] provision inside the container
 - [ ] Execute a run between clients on different machines
-- [ ] Monitor events from runs
 - [ ] Host the platform across multiple machines
 - [ ] Make the platform easy to install, configure, and deploy
 - [ ] Display results in the UI
 - [ ] Create public repo
+- [ ] Make subscriptions from multiple desktop apps on the same machine reliable
