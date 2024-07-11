@@ -1,3 +1,4 @@
+import { Document, Types } from 'mongoose'
 import {
   generateTokens,
   compare,
@@ -5,7 +6,7 @@ import {
 } from '../authentication/authentication.js'
 import getConfig from '../config/getConfig.js'
 import Consortium from '../database/models/Consortium.js'
-import Run from '../database/models/Run.js'
+import Run, { IRun } from '../database/models/Run.js'
 import User from '../database/models/User.js'
 import Computation from '../database/models/Computation.js'
 import pubsub from './pubSubService.js'
@@ -21,6 +22,8 @@ import {
   ConsortiumDetails,
   LoginOutput,
   RunEventPayload,
+  RunListItem,
+  RunDetails,
 } from './typeDefs.js'
 
 interface Context {
@@ -153,6 +156,107 @@ export default {
         throw new Error(`Failed to fetch computation details: ${error.message}`)
       }
     },
+    getRunList: async (
+      _: unknown,
+      __: unknown,
+      context: Context,
+    ): Promise<RunListItem[]> => {
+      const { userId } = context
+
+      try {
+        const runs = await Run.find({ members: userId })
+          .populate('consortium', 'title')
+          .populate('members', 'id username')
+          .sort({ lastUpdated: -1 })
+          .lean()
+          .exec()
+
+        return runs.map((run) => {
+          if (!('title' in run.consortium)) {
+            throw new Error('Consortium data is missing or incomplete')
+          }
+
+          return {
+            consortiumId: run.consortium._id.toString(),
+            consortiumTitle: run.consortium.title as string,
+            runId: run._id.toString(),
+            status: run.status,
+            lastUpdated: run.lastUpdated,
+          }
+        })
+      } catch (error) {
+        console.error('Error fetching run list:', error)
+        throw new Error('Failed to fetch run list')
+      }
+    },
+
+    getRunDetails: async (
+      _: unknown,
+
+      { runId }: { runId: string },
+      context: Context,
+    ): Promise<RunDetails> => {
+      const { userId } = context
+      if (!userId) {
+        throw new Error('User not authenticated')
+      }
+
+      try {
+        const run: IRun = await Run.findById(runId)
+          .populate('consortium', 'title')
+          .populate({
+            path: 'members',
+            select: 'id username',
+            model: User,
+          })
+          .populate(
+            'studyConfiguration.computation',
+            'title imageName imageDownloadUrl notes owner',
+          )
+          .lean()
+          .exec()
+
+        // if the userId is not in the members array, throw an error
+        if (
+          !run.members
+            .map((member: any) => member._id.toString())
+            .includes(userId)
+        ) {
+          throw new Error('User not authorized to view this run')
+        }
+
+        if (!('title' in run.consortium)) {
+          throw new Error('Consortium data is missing or incomplete')
+        }
+
+        return {
+          runId: run._id.toString(),
+          consortiumId: run.consortium._id.toString(),
+          consortiumTitle: run.consortium.title as string,
+          status: run.status,
+          lastUpdated: run.lastUpdated,
+          members: run.members.map((member: any) => ({
+            id: member._id.toString(),
+            username: member.username,
+          })),
+          studyConfiguration: {
+            consortiumLeaderNotes: run.studyConfiguration.consortiumLeaderNotes,
+            computationParameters: run.studyConfiguration.computationParameters,
+            computation: {
+              title: run.studyConfiguration.computation.title,
+              imageName: run.studyConfiguration.computation.imageName,
+              imageDownloadUrl:
+                run.studyConfiguration.computation.imageDownloadUrl,
+              notes: run.studyConfiguration.computation.notes,
+              owner: run.studyConfiguration.computation.owner,
+            },
+          },
+        }
+      } catch (e) {
+        console.error('Error fetching run details:', e)
+        throw new Error('Failed to fetch run details')
+      }
+    },
   },
   Mutation: {
     login: async (
@@ -218,6 +322,7 @@ export default {
         members: consortium.activeMembers,
         status: 'Provisioning',
         runErrors: [],
+        lastUpdated: Date.now(),
       })
 
       pubsub.publish('RUN_START_CENTRAL', {
@@ -257,7 +362,10 @@ export default {
 
       // get the run's details from the database
       const run = await Run.findById(runId)
-      const result = await Run.updateOne({ _id: runId }, { status: 'Ready' })
+      const result = await Run.updateOne(
+        { _id: runId },
+        { status: 'Ready', lastUpdated: Date.now() },
+      )
       const imageName = run.studyConfiguration.computation.imageName
       const consortiumId = run.consortium._id
 
@@ -299,7 +407,7 @@ export default {
       const run = await Run.findById(runId)
       const result = await Run.updateOne(
         { _id: runId },
-        { status: errorMessage },
+        { status: errorMessage, lastUpdated: Date.now() },
       )
 
       const consortium = await Consortium.findById(run.consortium._id)
@@ -332,7 +440,10 @@ export default {
 
       // get the run's details from the database
       const run = await Run.findById(runId)
-      const result = await Run.updateOne({ _id: runId }, { status: 'Complete' })
+      const result = await Run.updateOne(
+        { _id: runId },
+        { status: 'Complete', lastUpdated: Date.now() },
+      )
 
       const consortium = await Consortium.findById(run.consortium._id)
 
@@ -764,7 +875,6 @@ export default {
       { username, roles }: { username: string; roles: string[] },
       context: any,
     ): Promise<boolean> => {
-
       if (!context.userId) {
         throw new Error('User not authenticated')
       }

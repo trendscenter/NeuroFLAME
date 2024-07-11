@@ -78,6 +78,24 @@ export interface RunEventPayload {
   status: string
 }
 
+export interface RunListItem {
+  consortiumId: string
+  consortiumTitle: string
+  runId: string
+  status: string
+  lastUpdated: string
+}
+
+export interface RunDetails {
+  runId: string
+  consortiumId: string
+  consortiumTitle: string
+  status: string
+  lastUpdated: string
+  members: PublicUser[]
+  studyConfiguration: StudyConfiguration
+}
+
 export default `#graphql
   type PublicUser {
     id: String
@@ -160,11 +178,31 @@ export default `#graphql
     status: String
   }
 
+  type RunListItem {
+    consortiumId: String
+    consortiumTitle: String
+    runId: String
+    status: String
+    lastUpdated: String
+  }
+
+  type RunDetails {
+    runId: String
+    consortiumId: String
+    consortiumTitle: String
+    status: String
+    lastUpdated: String
+    members: [PublicUser]
+    studyConfiguration: StudyConfiguration
+  }
+
   type Query {
     getConsortiumList: [ConsortiumListItem]
     getComputationList: [ComputationListItem]
     getConsortiumDetails(consortiumId: String): ConsortiumDetails
     getComputationDetails(computationId: String): Computation
+    getRunList: [RunListItem]
+    getRunDetails(runId: String): RunDetails
   }
 
   type Mutation {

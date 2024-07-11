@@ -28,6 +28,9 @@ const NavBar: React.FC<NavBarProps> = ({ style }) => {
                 <Link to={`/computations`}>computations</Link>
             </li>
             <li>
+                <Link to={`/runs`}>runs</Link>
+            </li>
+            <li>
                 <Link to={"/appConfig"}>app config</Link>
             </li>
             <li>

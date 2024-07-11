@@ -106,7 +106,7 @@ Parameters example:
         activeMembers: [user1Id, user2Id, user3Id],
         studyConfiguration: {
           consortiumLeaderNotes: 'Leader notes for Consortium One',
-          computationParameters: JSON.stringify({ parameter: 'value' }),
+          computationParameters: JSON.stringify({ decimal_places: 2 }),
           computation: {
             title: computations[0].title,
             imageName: computations[0].imageName,
@@ -124,7 +124,7 @@ Parameters example:
         activeMembers: [user1Id, user2Id],
         studyConfiguration: {
           consortiumLeaderNotes: 'Leader notes for Consortium Two',
-          computationParameters: JSON.stringify({ parameter: 'value' }),
+          computationParameters: JSON.stringify({ decimal_places: 10 }),
           computation: {
             title: computations[1].title,
             imageName: computations[1].imageName,
@@ -147,6 +147,7 @@ Parameters example:
         members: consortia[0].members,
         status: 'Active',
         runErrors: ['Error encountered during processing Run 1.'],
+        lastUpdated: Date.now(),
       },
       {
         _id: run2Id,
@@ -156,6 +157,7 @@ Parameters example:
         members: consortia[1].members,
         status: 'Pending',
         runErrors: [],
+        lastUpdated: Date.now(),
       },
     ]
     await Run.insertMany(runs)

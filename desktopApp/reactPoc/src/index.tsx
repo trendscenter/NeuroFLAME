@@ -21,6 +21,8 @@ import ComputationDetails from './components/ComputationDetails';
 import ComputationCreate from './components/ComputationsCreate';
 import ChangePassword from './components/ChangePassword';
 import AdminEditUser from './components/AdminEditUser';
+import RunList from './components/RunList';
+import RunDetails from './components/RunDetails';
 
 const router = createHashRouter([
   {
@@ -54,6 +56,14 @@ const router = createHashRouter([
       {
         path: "computations/details/:computationId",
         element: <ComputationDetails></ComputationDetails>
+      },
+      {
+        path: "runs",
+        element: <RunList></RunList>
+      },
+      {
+        path: "runs/details/:runId",
+        element: <RunDetails></RunDetails>
       },
       {
         path: "appConfig",
