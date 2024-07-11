@@ -33,7 +33,7 @@ export async function useDirectoryDialog({
 
   try {
     const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
-      properties: ['openDirectory'],
+      properties: ['openDirectory', 'openFile'],
       defaultPath,
     });
 
