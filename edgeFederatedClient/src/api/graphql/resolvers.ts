@@ -5,7 +5,6 @@ import fs from 'fs/promises'
 
 export const resolvers = {
   Query: {
-    hello: (): string => 'Hello from the edge federated client!',
     getMountDir: async (
       _: any,
       { consortiumId }: { consortiumId: string },
@@ -37,7 +36,7 @@ export const resolvers = {
 
   Mutation: {
     connectAsUser: async (_: any, args: any, context: any): Promise<string> => {
-      console.log('connectAsUser:', context)
+      console.log('connectAsUser')
       try {
         // Make the runCoordinator connect to the centralApi
         const { wsUrl } = getConfig()

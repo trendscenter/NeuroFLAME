@@ -24,7 +24,9 @@ export const httpServerContext = async ({
   req: any
   res: any
 }): Promise<BaseContext> => {
+  // Extract the access token from the request headers
   const accessToken = req.headers['x-access-token']?.replace(/^null$/, '')
+  // hit the authentication endpoint to validate and decode the access token
   const tokenPayload = await validateToken(accessToken)
   return {
     accessToken,
@@ -46,8 +48,7 @@ const validateToken = async (accessToken: string): Promise<tokenPayload> => {
       decodedAccessToken: tokenPayload
     }
     return decodedAccessToken
-  } catch (e: any) {
-    console.error('Failed to validate access token:', e.message)
-    return {}
+  } catch (e) {
+    throw new Error(`Error fetching decoded token: ${e}`) // More specific error message
   }
 }

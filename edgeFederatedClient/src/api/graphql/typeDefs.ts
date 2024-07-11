@@ -1,6 +1,5 @@
 export const typeDefs = `
   type Query {
-    hello: String
     getMountDir(consortiumId: String): String
   }
   

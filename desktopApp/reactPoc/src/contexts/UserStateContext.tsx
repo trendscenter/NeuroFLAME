@@ -4,7 +4,6 @@ interface UserStateContextType {
     userId: string;
     username: string;
     roles: string[];
-    getAccessToken: () => string;
     setUserData: (userData: { accessToken: string, userId: string, username: string, roles: string[] }, persist: boolean) => void;
     clearUserData: () => void;
 }
@@ -84,12 +83,10 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
         }
     }
 
-    const getAccessToken = () => {
-        return localStorage.getItem("accessToken") || ""
-    }
+
 
     return (
-        <UserStateContext.Provider value={{ userId: userData.userId, username: userData.username, roles: userData.roles, getAccessToken, setUserData, clearUserData }}>
+        <UserStateContext.Provider value={{ userId: userData.userId, username: userData.username, roles: userData.roles,  setUserData, clearUserData }}>
             {children}
         </UserStateContext.Provider>
     );

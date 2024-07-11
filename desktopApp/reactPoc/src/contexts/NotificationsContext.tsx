@@ -40,7 +40,6 @@ export const NotificationsProvider = ({ children }: { children: ReactNode }) => 
     const subscriptionRef = useRef<any>(null);
 
     const subscribe = async (): Promise<void> => {
-        console.log("Subscribing to run events")
         if (subscriptionRef.current) {
             return; // Already subscribed
         }
@@ -51,7 +50,6 @@ export const NotificationsProvider = ({ children }: { children: ReactNode }) => 
 
         subscriptionRef.current = observable?.subscribe({
             next: ({ data }: any) => {
-                console.log("Subscription data:", data)
                 if (data) {
                     const newEvent: RunEvent = data.runEvent;
                     setEvents(prevEvents => [newEvent, ...prevEvents]);

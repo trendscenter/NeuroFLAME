@@ -22,10 +22,11 @@ import {
   LoginOutput,
   RunEventPayload,
 } from './typeDefs.js'
-import { subscribe } from 'diagnostics_channel'
+
 interface Context {
   userId: string
   roles: string[]
+  error: string
 }
 
 export default {
@@ -821,36 +822,36 @@ export default {
       ),
     },
     runEvent: {
-      resolve: (payload: any): any => {
-        const { consortiumId, consortiumName, runId, status } = payload
+      resolve: (payload: RunEventPayload): RunEventPayload => {
         return payload
       },
       subscribe: withFilter(
-        () => {
-          return pubsub.asyncIterator(['RUN_EVENT'])
-        },
+        () => pubsub.asyncIterator(['RUN_EVENT']),
         async (
           payload: RunEventPayload,
           variables: unknown,
           context: Context,
         ) => {
+          if (context.error) {
+            throw new Error(`Error subscribing to runEvent: ${context.error}`)
+          }
           const { consortiumId } = payload
           const { userId } = context
 
           // Check if the user is part of the consortium's active members
-          console.log(`checking if user is active member of consortiumId: ${consortiumId}, userId: ${userId}`)
           const consortium = await Consortium.findById(consortiumId).lean()
           if (!consortium) {
             throw new Error('Consortium not found')
           }
 
-          const isActiveMember = consortium.activeMembers.some(
+          const activeMemberIds = consortium.activeMembers.map(
             (memberObjectId: any) => {
-              return memberObjectId.toString() === userId
+              return memberObjectId.toString()
             },
           )
+          const isActiveMember = activeMemberIds.includes(userId)
 
-          console.log(`emitting a run event to userId: ${userId}, isActiveMember: ${isActiveMember}`)
+          console.log(`Emitting a run event to userId:`, { userId })
           return isActiveMember
         },
       ),

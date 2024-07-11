@@ -24,11 +24,7 @@ export const generateTokens = (
 }
 
 export const validateAccessToken = (token: string) => {
-  try {
     return verify(token, ACCESS_TOKEN_SECRET)
-  } catch (error) {
-    console.error(`Access token error: ${error.message}`)
-  }
 }
 
 export const hashPassword = async (password) => {

@@ -1,41 +1,51 @@
-import { validateAccessToken } from './authentication/authentication.js'
+import { validateAccessToken } from './authentication/authentication.js';
+import { IncomingHttpHeaders } from 'http';
 
-/**
- * Generate context from an access token.
- * @param {string} accessToken - Access token
- * @returns {object|null} - Context containing the user
- */
-const getContextFromToken = (accessToken) => {
+interface ServerContext {
+  userId?: string;
+  roles?: string[];
+  error?: string;
+}
+
+interface WebSocketContext {
+  connectionParams: {
+    accessToken: string;
+  };
+}
+
+interface HttpRequest {
+  headers: IncomingHttpHeaders;
+}
+
+interface HttpResponse {}
+
+interface HttpContext {
+  req: HttpRequest;
+  res: HttpResponse;
+}
+
+const wsServerContext = (ctx: WebSocketContext): ServerContext => {
   try {
-    const decodedAccessToken = validateAccessToken(accessToken)
-    return decodedAccessToken
+    const { accessToken } = ctx.connectionParams;
+    const context = { ...validateAccessToken(accessToken) };
+    return context;
   } catch (e) {
-    console.error('Failed to validate access token:', e.message)
-    return null
+    return {
+      error: (e as Error).message,
+    };
   }
-}
+};
 
-/**
- * Generate WebSocket server context.
- * @param {object} ctx - Context
- * @returns {object|null} - Context containing the user
- */
-const wsServerContext = (ctx) => {
-  const { accessToken } = ctx.connectionParams
-  const context = getContextFromToken(accessToken)
-  return context
-}
+const httpServerContext = async ({ req, res }: HttpContext): Promise<ServerContext> => {
+  try {
+    const accessToken = (Array.isArray(req.headers['x-access-token']) ? req.headers['x-access-token'][0] : req.headers['x-access-token'])?.replace(/^null$/, '') || '';
+    const context = { ...validateAccessToken(accessToken) };
+    return context;
+  } catch (e) {
+    return {
+      error: (e as Error).message,
+    };
+  }
+};
 
-/**
- * Generate HTTP server context.
- * @param {object} req - Request object
- * @param {object} res - Response object
- * @returns {object|null} - Context containing the user
- */
-const httpServerContext = async ({ req, res }) => {
-  const accessToken = req.headers['x-access-token']?.replace(/^null$/, '')
-  const context = getContextFromToken(accessToken)
-  return context
-}
-
-export { wsServerContext, httpServerContext }
+export { wsServerContext, httpServerContext };

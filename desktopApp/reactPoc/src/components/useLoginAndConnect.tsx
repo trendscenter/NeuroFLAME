@@ -36,6 +36,8 @@ export const useLoginAndConnect = () => {
     }
 
     const { accessToken, userId, username: user, roles } = result?.data?.login;
+    localStorage.setItem('accessToken', accessToken);
+    
     return { accessToken, userId, username: user, roles }
   };
 
