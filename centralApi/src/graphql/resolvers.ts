@@ -759,18 +759,25 @@ export default {
         throw new Error('Failed to change password')
       }
     },
-    userChangeRoles: async (
+    adminChangeUserRoles: async (
       _: unknown,
-      { userId, roles }: { userId: string; roles: string[] },
+      { username, roles }: { username: string; roles: string[] },
       context: any,
     ): Promise<boolean> => {
-      const isAdmin = context.roles.includes('admin')
+
+      if (!context.userId) {
+        throw new Error('User not authenticated')
+      }
+
+      const callingUser = await User.findById(context.userId)
+      const isAdmin = callingUser.roles.includes('admin')
+
       if (!isAdmin) {
         throw new Error('Unauthorized')
       }
 
       try {
-        await User.updateOne({ _id: userId }, { roles })
+        await User.updateOne({ username }, { roles })
         return true
       } catch (error) {
         console.error('Error changing roles:', error)

@@ -186,7 +186,7 @@ export default `#graphql
     computationEdit(computationId: String, title: String, imageName: String, imageDownloadUrl: String, notes: String): Boolean
     userCreate(username: String, password: String): LoginOutput
     userChangePassword(password: String): Boolean
-    userChangeRoles(userId: String, roles: [String]): Boolean
+    adminChangeUserRoles(username: String, roles: [String]): Boolean
     adminChangeUserPassword(username: String, password: String): Boolean
   }
 

@@ -8,10 +8,17 @@ const ADMIN_CHANGE_USER_PASSWORD = gql`
     }
 `;
 
+const ADMIN_CHANGE_USER_ROLES = gql`
+    mutation AdminChangeUserRoles($username: String!, $roles: [String]!) {
+        adminChangeUserRoles(username: $username, roles: $roles)
+    }
+`;
+
 export default function AdminChangeUserPassword() {
     const { centralApiApolloClient } = useContext(ApolloClientsContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [roles, setRoles] = useState([] as string[]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
@@ -49,9 +56,29 @@ export default function AdminChangeUserPassword() {
         }
     };
 
+    const changeRoles = async () => {
+        setLoading(true);
+        try {
+            await centralApiApolloClient?.mutate({
+                mutation: ADMIN_CHANGE_USER_ROLES,
+                variables: {
+                    username,
+                    roles
+                }
+            });
+            setError('');
+            setMessage('Roles changed successfully.');
+        } catch (e) {
+            console.error(`Error changing roles: ${e}`);
+            setError('Failed to change roles. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div>
-            <h1>Change Password</h1>
+            <h1>Admin Change User Details</h1>
             <div>
                 <label htmlFor="username">Username:</label>
             </div>
@@ -75,12 +102,27 @@ export default function AdminChangeUserPassword() {
                     onChange={(e) => setPassword(e.target.value)}
                     aria-describedby="passwordHelp"
                 />
+                <button onClick={changePassword} disabled={loading}>
+                    {loading ? 'Changing...' : 'Change Password'}
+                </button>
+            </div>
+            <div>
+                <label htmlFor="roles">Roles (comma separated):</label>
+            </div>
+            <div>
+                <input
+                    type="text"
+                    id="roles"
+                    name="roles"
+                    value={roles.join(', ')}
+                    onChange={(e) => setRoles(e.target.value.split(',').map(role => role.trim()))}
+                />
+                <button onClick={changeRoles} disabled={loading}>
+                    {loading ? 'Changing...' : 'Change Roles'}
+                </button>
             </div>
             {error && <div id="passwordHelp" style={{ color: 'red' }}>{error}</div>}
             {message && <div style={{ color: 'green' }}>{message}</div>}
-            <button onClick={changePassword} disabled={loading}>
-                {loading ? 'Changing...' : 'Change Password'}
-            </button>
         </div>
     );
 }

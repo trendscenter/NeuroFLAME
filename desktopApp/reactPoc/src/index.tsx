@@ -20,7 +20,7 @@ import ConsortiumCreate from './components/ConsortiumCreate';
 import ComputationDetails from './components/ComputationDetails';
 import ComputationCreate from './components/ComputationsCreate';
 import ChangePassword from './components/ChangePassword';
-import AdminChangeUserPassword from './components/AdminChangeUserPassword';
+import AdminEditUser from './components/AdminEditUser';
 
 const router = createHashRouter([
   {
@@ -68,8 +68,8 @@ const router = createHashRouter([
         element: <ChangePassword></ChangePassword>
       },
       {
-        path: "adminChangeUserPassword",
-        element: <AdminChangeUserPassword></AdminChangeUserPassword>
+        path: "adminEditUser",
+        element: <AdminEditUser></AdminEditUser>
       }
     ]
   }

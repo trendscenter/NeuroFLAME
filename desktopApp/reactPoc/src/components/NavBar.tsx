@@ -22,10 +22,10 @@ const NavBar: React.FC<NavBarProps> = ({ style }) => {
                 <Link to={`/login`}>login</Link>
             </li>
             <li>
-                <Link to={`/computations`}>computations</Link>
+                <Link to={`/consortia`}>consortia</Link>
             </li>
             <li>
-                <Link to={`/consortia`}>consortia</Link>
+                <Link to={`/computations`}>computations</Link>
             </li>
             <li>
                 <Link to={"/appConfig"}>app config</Link>
@@ -35,11 +35,15 @@ const NavBar: React.FC<NavBarProps> = ({ style }) => {
             </li>
         </ul>
         {
-            roles.includes('admin') && <ul>
-                <li>
-                    <Link to={"/adminChangeUserPassword"}>admin change user password</Link>
-                </li>
-            </ul>
+            roles.includes('admin') &&
+            <div>
+                <h3>Admin</h3>
+                <ul>
+                    <li>
+                        <Link to={"/adminEditUser"}>Admin Edit User</Link>
+                    </li>
+                </ul>
+            </div>
         }
     </div >
 }

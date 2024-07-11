@@ -76,51 +76,58 @@ export default function PageLogin() {
         <div>
             <h1>Welcome {loggedInUsername}</h1>
             <div>
-                <button onClick={handleConnect}>Connect</button>
+                <button onClick={handleConnect} style={{ width: '150px' }}>Connect</button>
             </div>
             <div>
-                <button onClick={handleLogout}>Logout</button>
+                <button onClick={handleLogout} style={{ width: '150px' }}>Logout</button>
             </div>
             <div>
-                <button>
+                <button style={{ width: '150px' }}>
                     <Link to="/changePassword/">Change Password</Link>
                 </button>
             </div>
         </div>
+
     );
 
     const loginView = (
         <div>
             <h1>Login</h1>
-            <input
-                type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
+            <div>
+                <input
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+            </div>
             <input
                 type="password"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-            <label>
-                <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                />
-                Remember me
-            </label>
-            <button onClick={
-                async () => {
-                    await handleLogin(username, password, rememberMe)
-                }
-            }>Login</button> or <button
-                onClick={async () => {
-                    await handleCreateUser(username, password, rememberMe)
-                }}
-            >Create User</button>
+            <div>
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={rememberMe}
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                    />
+                    Remember me
+                </label>
+            </div>
+            <div>
+                <button onClick={
+                    async () => {
+                        await handleLogin(username, password, rememberMe)
+                    }
+                }>Login</button> or <button
+                    onClick={async () => {
+                        await handleCreateUser(username, password, rememberMe)
+                    }}
+                >Create User</button>
+            </div>
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
         </div>
     );
