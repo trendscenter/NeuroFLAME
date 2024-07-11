@@ -44,11 +44,17 @@ const validateToken = async (accessToken: string): Promise<tokenPayload> => {
       },
       body: JSON.stringify({ token: accessToken }),
     })
+
+    if (!response.ok) {
+      throw new Error(`Error fetching decoded token: ${response.statusText}`)
+    }
+
     const { decodedAccessToken } = (await response.json()) as {
       decodedAccessToken: tokenPayload
     }
     return decodedAccessToken
   } catch (e) {
+    console.error(`Error fetching decoded token: ${e}`)
     throw new Error(`Error fetching decoded token: ${e}`) // More specific error message
   }
 }
