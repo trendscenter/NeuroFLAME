@@ -388,7 +388,12 @@ export default function ConsortiumDetails(props: any) {
                                 <p><strong>Title:</strong> {consortiumDetails.studyConfiguration.computation.title}</p>
                                 <p><strong>Image Name:</strong> {consortiumDetails.studyConfiguration.computation.imageName}</p>
                                 <p><strong>Image Download URL:</strong> <a href={consortiumDetails.studyConfiguration.computation.imageDownloadUrl}>{consortiumDetails.studyConfiguration.computation.imageDownloadUrl}</a></p>
-                                <p><strong>Computation Notes:</strong> {consortiumDetails.studyConfiguration.computation.notes}</p>
+                                <div>
+                                <strong>Computation Notes:</strong>
+                                    <pre>
+                                        {consortiumDetails.studyConfiguration.computation.notes}
+                                    </pre>
+                                </div>
                                 <p><strong>Owner:</strong> {consortiumDetails.studyConfiguration.computation.owner}</p>
                             </div>
                         )}

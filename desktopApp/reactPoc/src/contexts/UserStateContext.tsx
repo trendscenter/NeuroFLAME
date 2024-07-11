@@ -37,6 +37,9 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
                 username: localUsername,
                 roles: JSON.parse(localRoles)
             })
+            // TODO investigate ways that don't rely on local storage
+            localStorage.setItem("accessToken", localAccessToken);
+
         }
     }
 
@@ -69,10 +72,6 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
         localStorage.removeItem("roles");
     }
 
-    const getAccessToken = () => {
-        return userData.accessToken;
-    }
-
     const setUserData = async (data: { accessToken: string, userId: string, username: string, roles: string[] }, persist: boolean) => {
         _setUserData({
             accessToken: data.accessToken,
@@ -83,6 +82,10 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
         if (persist) {
             setLocalStorageForUser(data);
         }
+    }
+
+    const getAccessToken = () => {
+        return localStorage.getItem("accessToken") || ""
     }
 
     return (

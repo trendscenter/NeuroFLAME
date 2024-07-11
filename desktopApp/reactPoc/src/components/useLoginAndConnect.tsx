@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
 import { gql } from "@apollo/client";
 
@@ -49,10 +49,6 @@ export const useLoginAndConnect = () => {
       throw new Error('Error connecting as user');
     }
   };
-
-
-
-
   return {
     loginToCentral,
     connectAsUser

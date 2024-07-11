@@ -22,14 +22,11 @@ export default function PageLogin() {
 
 
     const handleLogin = async (username: string, password: string, rememberMe: boolean) => {
-        console.log("before loginToCentral")
         setErrorMessage(''); // Clear previous error messages
         try {
             const { accessToken, userId, username: returnedUserName, roles } = await loginToCentral(username, password);
             setUserData({ accessToken, userId, username: returnedUserName, roles }, rememberMe);
-            console.log("before connectAndSubscribe")
             await connectAndSubscribe();
-            console.log("after connectAndSubscribe")
             navigate('/consortia/');
         } catch (e: any) {
             console.error(`Error logging in: ${e}`);
@@ -40,11 +37,8 @@ export default function PageLogin() {
 
     const connectAndSubscribe = async () => {
         try {
-            console.log("before connectAsUser")
             await connectAsUser();
-            console.log("before subscribe")
             await subscribe();
-            console.log("after subscribe")
         } catch (e: any) {
             console.error(`Error connecting: ${e}`);
             setErrorMessage('Failed to connect. Please try again later.');
