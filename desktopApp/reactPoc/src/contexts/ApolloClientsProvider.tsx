@@ -41,7 +41,7 @@ const ApolloClientsProvider: React.FC<Props> = ({ children, config }) => {
       }),
     )
   },
-    [config]
+    [config, getAccessToken]
   )
 
   if (!centralApiApolloClient || !edgeClientApolloClient) {

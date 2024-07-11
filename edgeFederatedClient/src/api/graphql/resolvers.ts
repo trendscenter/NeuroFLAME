@@ -37,6 +37,7 @@ export const resolvers = {
 
   Mutation: {
     connectAsUser: async (_: any, args: any, context: any): Promise<string> => {
+      console.log('connectAsUser:', context)
       try {
         // Make the runCoordinator connect to the centralApi
         const { wsUrl } = getConfig()

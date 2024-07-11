@@ -838,6 +838,7 @@ export default {
           const { userId } = context
 
           // Check if the user is part of the consortium's active members
+          console.log(`checking if user is active member of consortiumId: ${consortiumId}, userId: ${userId}`)
           const consortium = await Consortium.findById(consortiumId).lean()
           if (!consortium) {
             throw new Error('Consortium not found')
@@ -848,6 +849,8 @@ export default {
               return memberObjectId.toString() === userId
             },
           )
+
+          console.log(`emitting a run event to userId: ${userId}, isActiveMember: ${isActiveMember}`)
           return isActiveMember
         },
       ),

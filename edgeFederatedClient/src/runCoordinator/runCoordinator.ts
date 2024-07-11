@@ -29,6 +29,7 @@ export async function subscribeToCentralApi({
   }
 
   console.log('Subscribing to central API')
+  console.log(`using access token: ${accessToken}`)
   // Create a new GraphQL WebSocket client
   client = createClient({
     url: wsUrl,
