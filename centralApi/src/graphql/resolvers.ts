@@ -689,7 +689,7 @@ export default {
     userCreate: async (
       _: unknown,
       { username, password }: { username: string; password: string },
-    ): Promise<boolean> => {
+    ): Promise<LoginOutput> => {
       try {
         const existingUser = await User.findOne({ username })
         if (existingUser) {
@@ -697,31 +697,62 @@ export default {
         }
 
         const hashedPassword = await hashPassword(password)
-        await User.create({
+        const user = await User.create({
           username,
-          password: hashedPassword,
+          hash: hashedPassword,
         })
-        return true
+
+        const tokens = generateTokens({ userId: user._id })
+        const { accessToken } = tokens as { accessToken: string }
+
+        return {
+          accessToken,
+          userId: user._id.toString(),
+          username: user.username,
+          roles: user.roles,
+        }
       } catch (error) {
-        console.error('Error creating user:', error)
-        throw new Error('Failed to create user')
+        console.error('Error creating user:', error.message)
+        throw new Error(error.message)
       }
     },
 
     userChangePassword: async (
       _: unknown,
-      { userId, password }: { userId: string; password: string },
+      { password }: { userId: string; password: string },
       context: any,
     ): Promise<boolean> => {
-      const isSameUser = context.user.userId === userId
-      const isAdmin = context.user.roles.includes('admin')
-      if (!isSameUser && !isAdmin) {
+      const { userId } = context
+      if (!userId) {
+        throw new Error('User not authenticated')
+      }
+
+      try {
+        const hashedPassword = await hashPassword(password)
+        await User.updateOne({ _id: userId }, { hash: hashedPassword })
+        return true
+      } catch (error) {
+        console.error('Error changing password:', error)
+        throw new Error('Failed to change password')
+      }
+    },
+    adminChangeUserPassword: async (
+      _: unknown,
+      { username, password }: { username: string; password: string },
+      context: any,
+    ): Promise<boolean> => {
+      // Get the user based on context.userId
+      const callingUser = await User.findById(context.userId)
+
+      // Check if the user is the same or an admin
+      const isAuthorized = callingUser.roles.includes('admin')
+      if (!isAuthorized) {
         throw new Error('Unauthorized')
       }
 
       try {
         const hashedPassword = await hashPassword(password)
-        await User.updateOne({ _id: userId }, { password: hashedPassword })
+        await User.updateOne({ username }, { hash: hashedPassword })
         return true
       } catch (error) {
         console.error('Error changing password:', error)
@@ -733,7 +764,7 @@ export default {
       { userId, roles }: { userId: string; roles: string[] },
       context: any,
     ): Promise<boolean> => {
-      const isAdmin = context.user.roles.includes('admin')
+      const isAdmin = context.roles.includes('admin')
       if (!isAdmin) {
         throw new Error('Unauthorized')
       }

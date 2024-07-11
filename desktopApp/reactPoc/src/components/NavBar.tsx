@@ -6,7 +6,7 @@ interface NavBarProps {
 }
 
 const NavBar: React.FC<NavBarProps> = ({ style }) => {
-    const { username, userId } = useUserState()
+    const { username, roles } = useUserState()
     return <div style={{ ...style }}>
         <div>
             {
@@ -34,6 +34,13 @@ const NavBar: React.FC<NavBarProps> = ({ style }) => {
                 <Link to={"/notifications"}>notifications</Link>
             </li>
         </ul>
+        {
+            roles.includes('admin') && <ul>
+                <li>
+                    <Link to={"/adminChangeUserPassword"}>admin change user password</Link>
+                </li>
+            </ul>
+        }
     </div >
 }
 

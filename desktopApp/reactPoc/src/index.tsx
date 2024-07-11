@@ -19,6 +19,8 @@ import NotificationList from './components/NotificationList';
 import ConsortiumCreate from './components/ConsortiumCreate';
 import ComputationDetails from './components/ComputationDetails';
 import ComputationCreate from './components/ComputationsCreate';
+import ChangePassword from './components/ChangePassword';
+import AdminChangeUserPassword from './components/AdminChangeUserPassword';
 
 const router = createHashRouter([
   {
@@ -60,6 +62,14 @@ const router = createHashRouter([
       {
         path: "notifications",
         element: <NotificationList></NotificationList>
+      },
+      {
+        path: "changePassword",
+        element: <ChangePassword></ChangePassword>
+      },
+      {
+        path: "adminChangeUserPassword",
+        element: <AdminChangeUserPassword></AdminChangeUserPassword>
       }
     ]
   }

@@ -184,9 +184,10 @@ export default `#graphql
     consortiumSetMemberActive(consortiumId: String, active: Boolean): Boolean
     computationCreate(title: String, imageName: String, imageDownloadUrl: String, notes: String): Boolean
     computationEdit(computationId: String, title: String, imageName: String, imageDownloadUrl: String, notes: String): Boolean
-    userCreate(username: String, password: String): Boolean
-    userChangePassword(userId: String, password: String): Boolean
+    userCreate(username: String, password: String): LoginOutput
+    userChangePassword(password: String): Boolean
     userChangeRoles(userId: String, roles: [String]): Boolean
+    adminChangeUserPassword(username: String, password: String): Boolean
   }
 
   type Subscription {

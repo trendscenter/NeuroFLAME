@@ -52,9 +52,9 @@ const seedDatabase = async () => {
         hash: await bcrypt.hash('password3', saltRounds),
       },
       {
-        _id: user3Id,
+        _id: user4Id,
         username: 'user4',
-        hash: await bcrypt.hash('password3', saltRounds),
+        hash: await bcrypt.hash('password4', saltRounds),
         roles: ['admin'],
       },
       {

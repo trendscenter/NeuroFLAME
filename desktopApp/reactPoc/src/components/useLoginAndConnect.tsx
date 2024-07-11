@@ -20,6 +20,18 @@ const CONNECT_AS_USER = gql`
 `;
 
 
+const USER_CREATE = gql`
+  mutation UserCreate($username: String!, $password: String!) {
+    userCreate(username: $username, password: $password) {
+      accessToken
+      userId
+      username
+      roles
+    }
+  }
+`
+
+
 export const useLoginAndConnect = () => {
   const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext);
 
@@ -37,7 +49,7 @@ export const useLoginAndConnect = () => {
 
     const { accessToken, userId, username: user, roles } = result?.data?.login;
     localStorage.setItem('accessToken', accessToken);
-    
+
     return { accessToken, userId, username: user, roles }
   };
 
@@ -51,8 +63,29 @@ export const useLoginAndConnect = () => {
       throw new Error('Error connecting as user');
     }
   };
+
+  const createUser = async (username: string, password: string) => {
+    try {
+      const result = await centralApiApolloClient?.mutate({
+        mutation: USER_CREATE,
+        variables: { username, password }
+      });
+
+      console.log(result?.data)
+
+      const { accessToken, userId, username: user, roles } = result?.data?.userCreate;
+      localStorage.setItem('accessToken', accessToken);
+
+      return { accessToken, userId, username: user, roles }
+    } catch (e: any) {
+      console.error(`Error creating user: ${e}`);
+      throw new Error(e.message);
+    }
+  }
+
   return {
     loginToCentral,
-    connectAsUser
+    connectAsUser,
+    createUser,
   }
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useUserState } from '../contexts/UserStateContext';
 import { useLoginAndConnect } from './useLoginAndConnect';
-import {useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useNotifications } from '../contexts/NotificationsContext';
 
 export default function PageLogin() {
@@ -9,8 +9,8 @@ export default function PageLogin() {
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const { loginToCentral, connectAsUser } = useLoginAndConnect();
-    const {subscribe, unsubscribe} = useNotifications();
+    const { loginToCentral, connectAsUser, createUser } = useLoginAndConnect();
+    const { subscribe, unsubscribe } = useNotifications();
     const { username: loggedInUsername, setUserData, clearUserData } = useUserState();
     const [isLoggedIn, setIsloggedIn] = useState(false);
     const navigate = useNavigate();
@@ -19,7 +19,19 @@ export default function PageLogin() {
         setIsloggedIn(!!loggedInUsername);
     }, [loggedInUsername]);
 
-
+    const handleCreateUser = async (username: string, password: string, rememberMe: boolean) => {
+        setErrorMessage(''); // Clear previous error messages
+        try {
+            const { accessToken, userId, username: returnedUserName, roles } = await createUser(username, password);
+            setUserData({ accessToken, userId, username: returnedUserName, roles }, rememberMe);
+            await connectAndSubscribe();
+            navigate('/consortia/');
+        } catch (e: any) {
+            console.error(`Error logging in: ${e.message}`);
+            setErrorMessage(`Failed to login: ${e.message}`);
+            clearUserData();
+        }
+    };
 
     const handleLogin = async (username: string, password: string, rememberMe: boolean) => {
         setErrorMessage(''); // Clear previous error messages
@@ -64,10 +76,15 @@ export default function PageLogin() {
         <div>
             <h1>Welcome {loggedInUsername}</h1>
             <div>
-                <button onClick={handleConnect}>Connect As User</button>
+                <button onClick={handleConnect}>Connect</button>
             </div>
             <div>
                 <button onClick={handleLogout}>Logout</button>
+            </div>
+            <div>
+                <button>
+                    <Link to="/changePassword/">Change Password</Link>
+                </button>
             </div>
         </div>
     );
@@ -99,7 +116,11 @@ export default function PageLogin() {
                 async () => {
                     await handleLogin(username, password, rememberMe)
                 }
-            }>Login</button>
+            }>Login</button> or <button
+                onClick={async () => {
+                    await handleCreateUser(username, password, rememberMe)
+                }}
+            >Create User</button>
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
         </div>
     );
