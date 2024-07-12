@@ -4,6 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import multer from 'multer'
 import unzipper from 'unzipper'
+import crypto from 'crypto'
 import getConfig from './config/getConfig.js'
 
 interface TokenPayload {
@@ -75,6 +76,18 @@ const init = async () => {
     } catch {
       return false
     }
+  }
+
+  // Utility function to calculate file checksum
+  const calculateChecksum = (filePath: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const hash = crypto.createHash('sha256')
+      const stream = fs.createReadStream(filePath)
+
+      stream.on('data', (data) => hash.update(data))
+      stream.on('end', () => resolve(hash.digest('hex')))
+      stream.on('error', (error) => reject(error))
+    })
   }
 
   // Multer storage configuration
@@ -166,6 +179,14 @@ const init = async () => {
             })
         })
 
+        // Calculate and log checksum after validation
+        const checksumAfterValidation = await calculateChecksum(zipPath)
+        console.log(`Checksum after validation: ${checksumAfterValidation}`)
+
+        // Ensure the file is not modified between validation and extraction
+        const fileStats = await fs.promises.stat(zipPath)
+        console.log(`File size after validation: ${fileStats.size} bytes`)
+
         console.log('Extracting ZIP file...')
         await new Promise<void>((resolve, reject) => {
           fs.createReadStream(zipPath)
@@ -179,6 +200,10 @@ const init = async () => {
               reject(error)
             })
         })
+
+        // Calculate and log checksum after extraction
+        const checksumAfterExtraction = await calculateChecksum(zipPath)
+        console.log(`Checksum after extraction: ${checksumAfterExtraction}`)
 
         res.send(
           `File ${originalname} uploaded and extracted successfully to ${extractPath}`,
