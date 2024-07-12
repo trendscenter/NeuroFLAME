@@ -13,7 +13,7 @@ router.post(
   uploadFile,
   unzipFile,
   (req: Request, res: Response) => {
-    res.send(`File uploaded and extracted successfully to ${req.extractPath}`)
+    res.send(`File uploaded and extracted successfully!`)
   },
 )
 

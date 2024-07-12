@@ -4,7 +4,7 @@ import fs from 'fs-extra'
 import { Request, Response, NextFunction } from 'express'
 import getConfig from '../config/getConfig.js'
 
-const extractMiddleware = async (
+export const unzipFile = async (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -13,7 +13,7 @@ const extractMiddleware = async (
     if (!req.file) {
       throw new Error('No file uploaded')
     }
-    
+
     const zipPath = req.file.path
     const { consortiumId, runId } = req.params
     const config = await getConfig()
@@ -29,11 +29,10 @@ const extractMiddleware = async (
       .pipe(unzipper.Extract({ path: extractPath }))
       .promise()
 
+    console.log(`File uploaded and extracted successfully to ${extractPath}`)
     // Continue to the next middleware or route handler
     next()
   } catch (error) {
     next(error)
   }
 }
-
-export default extractMiddleware
