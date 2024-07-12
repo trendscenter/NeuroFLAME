@@ -4,8 +4,8 @@ import { createReadStream, createWriteStream } from 'fs'
 import fs from 'fs/promises'
 import path from 'path'
 import archiver from 'archiver'
+import getConfig from '../../../config/getConfig'
 
-import defaultConfig from '../../../config/defaultConfig.js'
 
 interface UploadParameters {
   consortiumId: string
@@ -18,7 +18,7 @@ export default async function uploadFileToServer({
   runId,
   path_baseDirectory,
 }: UploadParameters): Promise<void> {
-  const { fileServerUrl, accessToken } = defaultConfig
+  const { fileServerUrl, accessToken } = await getConfig()
   const url = `${fileServerUrl}/upload/${consortiumId}/${runId}`
 
   const zipPath = path.join(

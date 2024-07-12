@@ -3,7 +3,8 @@ import { provisionRun } from './provisionRun/provisionRun.js'
 import { reservePort } from './portManagement.js'
 import { launchNode } from './launchNode.js'
 import uploadToFileServer from './uploadToFileServer.js'
-import defaultConfig from '../../../config/defaultConfig.js'
+import getConfig from '../../../config/getConfig.js'
+
 
 interface startRunArgs {
   imageName: string
@@ -19,8 +20,9 @@ export default async function ({
   runId,
   computationParameters,
 }: startRunArgs) {
+  const config = await getConfig()
   console.log('Starting run...')
-  const path_baseDirectory = defaultConfig.baseDir
+  const path_baseDirectory = config.baseDir
 
   const path_run = path.join(path_baseDirectory, 'runs/', consortiumId, runId)
   const path_centralNodeRunKit = path.join(path_run, 'runKits', 'centralNode')
