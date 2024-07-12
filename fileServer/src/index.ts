@@ -151,22 +151,35 @@ const init = async () => {
 
       try {
         // Validate ZIP file before processing
+        console.log('Validating ZIP file...')
         await new Promise<void>((resolve, reject) => {
           fs.createReadStream(zipPath)
             .pipe(unzipper.Parse())
             .on('entry', (entry) => entry.autodrain())
-            .on('error', reject)
-            .on('close', resolve)
+            .on('error', (error) => {
+              console.error('Error during ZIP validation:', error)
+              reject(error)
+            })
+            .on('close', () => {
+              console.log('ZIP validation completed successfully.')
+              resolve()
+            })
         })
 
+        console.log('Extracting ZIP file...')
         await new Promise<void>((resolve, reject) => {
           fs.createReadStream(zipPath)
             .pipe(unzipper.Extract({ path: extractPath }))
-            .on('close', resolve)
-            .on('error', reject)
+            .on('close', () => {
+              console.log('ZIP extraction completed successfully.')
+              resolve()
+            })
+            .on('error', (error) => {
+              console.error('Error during ZIP extraction:', error)
+              reject(error)
+            })
         })
 
-        fs.unlinkSync(zipPath)
         res.send(
           `File ${originalname} uploaded and extracted successfully to ${extractPath}`,
         )
