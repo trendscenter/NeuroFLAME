@@ -157,7 +157,7 @@ const init = async () => {
             .on('error', reject)
         })
 
-        fs.unlinkSync(zipPath)
+        // fs.unlinkSync(zipPath)
         res.send(
           `File ${originalname} uploaded and extracted successfully to ${extractPath}`,
         )
