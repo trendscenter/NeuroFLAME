@@ -12,7 +12,7 @@ if [ ! -d "$SOURCE_DIR" ]; then
   echo "Source directory $SOURCE_DIR does not exist."
   exit 1
 fi
-
+#
 # Copy the contents of the defaults directory to the configs directory, overwriting existing files
 cp -r "$SOURCE_DIR/"* "$DEST_DIR/"
 
