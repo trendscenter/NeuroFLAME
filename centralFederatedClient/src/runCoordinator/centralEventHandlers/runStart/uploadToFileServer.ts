@@ -91,7 +91,7 @@ async function uploadZipFile(
     }
   } catch (error) {
     console.error('File upload failed:', formatAxiosError(error))
-    throw error
+    throw (error as Error).toString()
   }
 }
 
