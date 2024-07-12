@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "compile": "tsc",
-    "start": "npm run compile && node ./dist/index.js",
+    "start": "npm run compile && node ./dist/index.js --",
     "getTokens": "npm run compile && node ./dist/authentication/getTokens.js",
     "seed": "npm run compile && node ./dist/database/seed.js"
   },

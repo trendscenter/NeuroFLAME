@@ -1,6 +1,5 @@
-import { promises as fs } from 'fs'
 import * as runCoordinator from './runCoordinator/runCoordinator.js'
-import defaultConfig from './config/defaultConfig.js'
+import getConfig from './config/getConfig.js'
 
 interface FederatedClientLaunchConfiguration {
   httpUrl: string
@@ -21,16 +20,11 @@ export async function start(
   })
 }
 
-async function loadConfig(
-  filePath: string,
-): Promise<FederatedClientLaunchConfiguration> {
-  const configFile = await fs.readFile(filePath, 'utf-8')
-  return JSON.parse(configFile)
-}
 
 ;(async () => {
   try {
-    await start(defaultConfig)
+    const config = await getConfig()
+    await start(config)
   } catch (err) {
     console.error('Failed:', err)
   }
