@@ -3,7 +3,7 @@ import zlib from 'zlib'
 import tar from 'tar-stream'
 import fs from 'fs-extra'
 import { Request, Response, NextFunction } from 'express'
-import getConfig from '../config/getConfig'
+import getConfig from '../config/getConfig.js'
 
 export const unzipFile = async (
   req: Request,
