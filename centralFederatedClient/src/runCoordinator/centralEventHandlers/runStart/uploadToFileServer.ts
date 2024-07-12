@@ -43,8 +43,6 @@ export default async function uploadFileToServer({
   } catch (error) {
     console.error('Error during file upload:', error)
     throw error // Properly propagate errors
-  } finally {
-    await cleanupTempFile(zipPath)
   }
 }
 
@@ -66,28 +64,46 @@ async function uploadZipFile(
   formData.append('file', createReadStream(zipPath))
 
   console.log('Starting file upload...')
-  const response = await axios.post(url, formData, {
-    headers: {
-      'x-access-token': accessToken,
-      ...formData.getHeaders(),
-    },
-  })
 
-  if (response.status !== 200) {
-    throw new Error(
-      `Failed to upload file to file server: ${response.statusText}`,
-    )
+  const maxRetries = 3
+  let attempt = 0
+  let success = false
+
+  while (attempt < maxRetries && !success) {
+    try {
+      const response = await axios.post(url, formData, {
+        headers: {
+          'x-access-token': accessToken,
+          ...formData.getHeaders(),
+        },
+      })
+
+      if (response.status === 200) {
+        success = true
+        console.log('File uploaded successfully')
+      } else {
+        throw new Error(`Failed to upload file: ${response.statusText}`)
+      }
+    } catch (error) {
+      attempt++
+      if (attempt >= maxRetries) {
+        console.error('File upload failed after multiple attempts:', error)
+        throw error
+      } else {
+        console.warn(`Retrying file upload (${attempt}/${maxRetries})...`)
+      }
+    }
   }
 }
 
-async function cleanupTempFile(filePath: string): Promise<void> {
-  try {
-    await fs.unlink(filePath)
-    console.log('Temporary zip file deleted')
-  } catch (error) {
-    console.error('Failed to delete temporary zip file:', error)
-  }
-}
+// async function cleanupTempFile(filePath: string): Promise<void> {
+//   try {
+//     await fs.unlink(filePath)
+//     console.log('Temporary zip file deleted')
+//   } catch (error) {
+//     console.error('Failed to delete temporary zip file:', error)
+//   }
+// }
 
 export async function zipDirectory(
   sourceDir: string,
