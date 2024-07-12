@@ -4,7 +4,8 @@ import { createReadStream, createWriteStream } from 'fs'
 import fs from 'fs/promises'
 import path from 'path'
 import archiver from 'archiver'
-import getConfig from '../../../config/getConfig'
+import getConfig from '../../../config/getConfig.js'
+
 
 
 interface UploadParameters {
