@@ -41,7 +41,7 @@ export default async function uploadFileToServer({
     await uploadZipFile(url, zipPath, accessToken)
     console.log('File uploaded successfully')
   } catch (error) {
-    console.error('Error during file upload:', error)
+    console.error('Error during file upload:', formatAxiosError(error))
     throw error // Properly propagate errors
   }
 }
@@ -87,7 +87,10 @@ async function uploadZipFile(
     } catch (error) {
       attempt++
       if (attempt >= maxRetries) {
-        console.error('File upload failed after multiple attempts:', error)
+        console.error(
+          'File upload failed after multiple attempts:',
+          formatAxiosError(error),
+        )
         throw error
       } else {
         console.warn(`Retrying file upload (${attempt}/${maxRetries})...`)
@@ -95,15 +98,6 @@ async function uploadZipFile(
     }
   }
 }
-
-// async function cleanupTempFile(filePath: string): Promise<void> {
-//   try {
-//     await fs.unlink(filePath)
-//     console.log('Temporary zip file deleted')
-//   } catch (error) {
-//     console.error('Failed to delete temporary zip file:', error)
-//   }
-// }
 
 export async function zipDirectory(
   sourceDir: string,
@@ -147,4 +141,23 @@ export async function zipDirectory(
     archive.directory(sourceDir, false)
     archive.finalize()
   })
+}
+
+function formatAxiosError(error: any): string {
+  if (axios.isAxiosError(error)) {
+    const status = error.response?.status || 'N/A'
+    const statusText = error.response?.statusText || 'N/A'
+    const url = error.config?.url || 'N/A'
+    const method = error.config?.method || 'N/A'
+    const data = error.response?.data || 'N/A'
+
+    return `Axios error:
+    Status: ${status}
+    StatusText: ${statusText}
+    URL: ${url}
+    Method: ${method}
+    Data: ${JSON.stringify(data)}`
+  }
+
+  return `Error: ${error.message}`
 }
