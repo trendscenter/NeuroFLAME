@@ -1,4 +1,4 @@
-import fetch from 'node-fetch'
+import axios from 'axios'
 import FormData from 'form-data'
 import { createReadStream, createWriteStream } from 'fs'
 import fs from 'fs/promises'
@@ -19,7 +19,6 @@ export default async function uploadFileToServer({
 }: UploadParameters): Promise<void> {
   const { fileServerUrl, accessToken } = await getConfig()
   const url = `${fileServerUrl}/upload/${consortiumId}/${runId}`
-
   const zipPath = path.join(
     path_baseDirectory,
     'runs',
@@ -28,7 +27,6 @@ export default async function uploadFileToServer({
     'hosting',
     `${runId}.zip`,
   )
-
   const extractPath = path.join(
     path_baseDirectory,
     'runs',
@@ -38,39 +36,56 @@ export default async function uploadFileToServer({
   )
 
   try {
-    console.log('Starting to zip the directory...')
     await zipDirectory(extractPath, zipPath)
-    console.log(`Successfully created zip file at ${zipPath}`)
-
-    // Verify that the file exists and is not empty
-    const fileStats = await fs.stat(zipPath)
-    if (fileStats.size === 0) {
-      throw new Error('Zip file is empty')
-    }
-
-    const formData = new FormData()
-    formData.append('file', createReadStream(zipPath))
-
-    console.log('Starting file upload...')
-    const response = await fetch(url, {
-      method: 'POST',
-      body: formData,
-      headers: {
-        [`x-access-token`]: accessToken,
-        ...formData.getHeaders(),
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to upload file to file server: ${response.statusText}`,
-      )
-    }
-
+    await validateZipFile(zipPath)
+    await uploadZipFile(url, zipPath, accessToken)
     console.log('File uploaded successfully')
   } catch (error) {
     console.error('Error during file upload:', error)
     throw error // Properly propagate errors
+  } finally {
+    await cleanupTempFile(zipPath)
+  }
+}
+
+async function validateZipFile(zipPath: string): Promise<void> {
+  console.log(`Validating zip file at ${zipPath}...`)
+  const fileStats = await fs.stat(zipPath)
+  if (fileStats.size === 0) {
+    throw new Error('Zip file is empty')
+  }
+  console.log('Zip file validation successful')
+}
+
+async function uploadZipFile(
+  url: string,
+  zipPath: string,
+  accessToken: string,
+): Promise<void> {
+  const formData = new FormData()
+  formData.append('file', createReadStream(zipPath))
+
+  console.log('Starting file upload...')
+  const response = await axios.post(url, formData, {
+    headers: {
+      'x-access-token': accessToken,
+      ...formData.getHeaders(),
+    },
+  })
+
+  if (response.status !== 200) {
+    throw new Error(
+      `Failed to upload file to file server: ${response.statusText}`,
+    )
+  }
+}
+
+async function cleanupTempFile(filePath: string): Promise<void> {
+  try {
+    await fs.unlink(filePath)
+    console.log('Temporary zip file deleted')
+  } catch (error) {
+    console.error('Failed to delete temporary zip file:', error)
   }
 }
 
@@ -83,8 +98,7 @@ export async function zipDirectory(
     try {
       await fs.mkdir(outputDir, { recursive: true }) // Ensure the directory exists
     } catch (err) {
-      reject(`Failed to create directory ${outputDir}: ${err}`)
-      return
+      return reject(`Failed to create directory ${outputDir}: ${err}`)
     }
 
     const output = createWriteStream(outPath)
