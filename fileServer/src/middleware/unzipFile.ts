@@ -1,8 +1,9 @@
 import path from 'path'
-import unzipper from 'unzipper'
+import zlib from 'zlib'
+import tar from 'tar-stream'
 import fs from 'fs-extra'
 import { Request, Response, NextFunction } from 'express'
-import getConfig from '../config/getConfig.js'
+import getConfig from '../config/getConfig'
 
 export const unzipFile = async (
   req: Request,
@@ -23,18 +24,28 @@ export const unzipFile = async (
     // Ensure the extract path exists
     await fs.ensureDir(extractPath)
 
-    // small delay to ensure the file is written to disk
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    // Create extraction stream
+    const extract = tar.extract()
 
-    // Extract the zip file
-    await fs
-      .createReadStream(zipPath)
-      .pipe(unzipper.Extract({ path: extractPath }))
-      .promise()
+    extract.on('entry', async (header: any, stream: any, next: any) => {
+      const filePath = path.join(extractPath, header.name)
+      const writeStream = fs.createWriteStream(filePath)
+      stream.pipe(writeStream)
 
-    console.log(`File uploaded and extracted successfully to ${extractPath}`)
-    // Continue to the next middleware or route handler
-    next()
+      stream.on('end', () => {
+        next()
+      })
+
+      stream.resume()
+    })
+
+    extract.on('finish', () => {
+      console.log(`File uploaded and extracted successfully to ${extractPath}`)
+      next()
+    })
+
+    // Create a read stream from the zip file and pipe it through zlib and tar-stream
+    fs.createReadStream(zipPath).pipe(zlib.createGunzip()).pipe(extract)
   } catch (error) {
     next(error)
   }
