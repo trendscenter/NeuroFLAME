@@ -9,7 +9,7 @@
     "start": "npm run build && electron . --",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "start-configured": "npm run build && electron . --config=configs/electronApp1.json"
+    "start-configured": "npm run build && electron . --config=../../configs/electronApp1.json"
   },
   "keywords": [],
   "author": "",

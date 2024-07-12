@@ -4,6 +4,7 @@ import { createReadStream, createWriteStream } from 'fs'
 import fs from 'fs/promises'
 import path from 'path'
 import archiver from 'archiver'
+import crypto from 'crypto'
 import getConfig from '../../../config/getConfig.js'
 
 interface UploadParameters {
@@ -40,6 +41,8 @@ export default async function uploadFileToServer({
     await validateZipFile(zipPath)
     const fileSize = await getFileSize(zipPath) // Get the file size
     console.log(`File size is ${fileSize} bytes`)
+    const checksum = await generateChecksum(zipPath) // Generate and log the checksum
+    console.log(`Checksum is ${checksum}`)
     await uploadZipFile(url, zipPath, accessToken)
     console.log('File uploaded successfully')
   } catch (error) {
@@ -60,6 +63,17 @@ async function validateZipFile(zipPath: string): Promise<void> {
 async function getFileSize(filePath: string): Promise<number> {
   const stats = await fs.stat(filePath)
   return stats.size
+}
+
+async function generateChecksum(filePath: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const hash = crypto.createHash('sha256')
+    const stream = createReadStream(filePath)
+
+    stream.on('data', (data) => hash.update(data))
+    stream.on('end', () => resolve(hash.digest('hex')))
+    stream.on('error', (error) => reject(error))
+  })
 }
 
 async function uploadZipFile(
@@ -91,7 +105,7 @@ async function uploadZipFile(
     }
   } catch (error) {
     console.error('File upload failed:', formatAxiosError(error))
-    throw (error as Error).toString()
+    throw error
   }
 }
 

@@ -69,7 +69,7 @@ export async function provisionRun({
 async function ensureDirectoryExists(directoryPath: string): Promise<void> {
   try {
     await fs.promises.mkdir(directoryPath, { recursive: true })
-    console.log(`Directory ensured: ${directoryPath}`)
+    // console.log(`Directory ensured: ${directoryPath}`)
   } catch (error) {
     if ((error as { code?: string }).code === 'EEXIST') {
       return
