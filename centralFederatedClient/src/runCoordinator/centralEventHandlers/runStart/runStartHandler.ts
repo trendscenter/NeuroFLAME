@@ -36,10 +36,10 @@ export const runStartHandler = {
       })
     } catch (e: any) {
       console.error('Run Start Central - Error:', e)
-      await reportRunError({ runId, errorMessage: e.toString() })
+      return await reportRunError({ runId, errorMessage: e.toString() })
     }
 
     // report to the central api that the run is ready
-    await reportRunReady({ runId })
+    return await reportRunReady({ runId })
   },
 }
