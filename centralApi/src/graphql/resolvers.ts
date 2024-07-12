@@ -339,7 +339,7 @@ export default {
         consortiumTitle: consortium.title,
         runId: run._id.toString(),
         status: 'Provisioning',
-        timestampe: Date.now()
+        timestamp: Date.now()
       })
 
       return { runId: run._id.toString() }
@@ -383,7 +383,7 @@ export default {
         consortiumTitle: consortium.title,
         runId: run._id.toString(),
         status: 'Starting',
-        timestampe: Date.now()
+        timestamp: Date.now()
       })
 
       return true
@@ -419,7 +419,7 @@ export default {
         consortiumTitle: consortium.title,
         runId: run._id.toString(),
         status: 'Error',
-        timestampe: Date.now()
+        timestamp: Date.now()
       })
 
       return true
@@ -455,7 +455,7 @@ export default {
         consortiumTitle: consortium.title,
         runId: run._id.toString(),
         status: 'Complete',
-        timestampe: Date.now()
+        timestamp: Date.now()
       })
       return true
     },
