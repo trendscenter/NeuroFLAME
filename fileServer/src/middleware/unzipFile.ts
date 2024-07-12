@@ -23,6 +23,9 @@ export const unzipFile = async (
     // Ensure the extract path exists
     await fs.ensureDir(extractPath)
 
+    // small delay to ensure the file is written to disk
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
     // Extract the zip file
     await fs
       .createReadStream(zipPath)
