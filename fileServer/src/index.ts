@@ -10,8 +10,9 @@ const init = async () => {
 
   app.use(express.json());
 
-  app.use('/api', downloadRoute);
-  app.use('/api', uploadRoute);
+  app.use(downloadRoute);
+  app.use(uploadRoute);
+
 
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 };
