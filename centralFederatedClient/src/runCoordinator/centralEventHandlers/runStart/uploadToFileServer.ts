@@ -6,8 +6,6 @@ import path from 'path'
 import archiver from 'archiver'
 import getConfig from '../../../config/getConfig.js'
 
-
-
 interface UploadParameters {
   consortiumId: string
   runId: string
@@ -40,11 +38,20 @@ export default async function uploadFileToServer({
   )
 
   try {
+    console.log('Starting to zip the directory...')
     await zipDirectory(extractPath, zipPath)
+    console.log(`Successfully created zip file at ${zipPath}`)
+
+    // Verify that the file exists and is not empty
+    const fileStats = await fs.stat(zipPath)
+    if (fileStats.size === 0) {
+      throw new Error('Zip file is empty')
+    }
 
     const formData = new FormData()
     formData.append('file', createReadStream(zipPath))
 
+    console.log('Starting file upload...')
     const response = await fetch(url, {
       method: 'POST',
       body: formData,
@@ -64,13 +71,6 @@ export default async function uploadFileToServer({
   } catch (error) {
     console.error('Error during file upload:', error)
     throw error // Properly propagate errors
-  } finally {
-    try {
-      await fs.unlink(zipPath) // Use async unlink
-      console.log('Temporary zip file deleted')
-    } catch (error) {
-      console.error('Failed to delete temporary zip file:', error)
-    }
   }
 }
 
@@ -95,7 +95,23 @@ export async function zipDirectory(
       resolve()
     })
 
-    archive.on('error', (err) => reject(err))
+    output.on('end', () => {
+      console.log('Data has been drained')
+    })
+
+    archive.on('error', (err) => {
+      console.error('Archiving error:', err)
+      reject(err)
+    })
+
+    archive.on('warning', (err) => {
+      if (err.code === 'ENOENT') {
+        console.warn('Archiving warning:', err)
+      } else {
+        console.error('Archiving warning:', err)
+        reject(err)
+      }
+    })
 
     archive.pipe(output)
     archive.directory(sourceDir, false)
