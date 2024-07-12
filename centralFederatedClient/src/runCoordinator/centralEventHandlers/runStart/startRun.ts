@@ -23,6 +23,7 @@ export default async function ({
   const config = await getConfig()
   console.log('Starting run...')
   const path_baseDirectory = config.baseDir
+  const FQDN = config.FQDN
 
   const path_run = path.join(path_baseDirectory, 'runs/', consortiumId, runId)
   const path_centralNodeRunKit = path.join(path_run, 'runKits', 'centralNode')
@@ -36,6 +37,7 @@ export default async function ({
     computationParameters,
     fed_learn_port,
     admin_port,
+    FQDN
   })
 
   await uploadToFileServer({

@@ -11,6 +11,7 @@ interface provisionRunArgs {
   computationParameters: string
   fed_learn_port: number
   admin_port: number
+  FQDN: string
 }
 
 export async function provisionRun({
@@ -19,12 +20,12 @@ export async function provisionRun({
   path_run,
   fed_learn_port,
   admin_port,
+  FQDN,
 }: provisionRunArgs) {
   // these variables will be configurable by environment variables or config
 
-  const FQDN = 'host.docker.internal'
   const adminName = 'admin@admin.com'
-  //
+
 
   const path_startupKits = path.join(path_run, 'startupKits/')
   const path_runKits = path.join(path_run, 'runKits/')

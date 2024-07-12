@@ -8,6 +8,7 @@ interface CentralFederateClientConfig {
   userId: string
   fileServerUrl: string
   baseDir: string
+  FQDN: string
 }
 
 export default async function getConfig(): Promise<
