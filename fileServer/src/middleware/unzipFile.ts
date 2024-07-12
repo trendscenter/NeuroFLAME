@@ -23,16 +23,18 @@ export const unzipFile = async (
       req.params.runId,
     )
 
-    await new Promise<void>((resolve, reject) => {
-      fs.createReadStream(zipPath)
-        .pipe(unzipper.Parse())
-        .on('entry', (entry) => entry.autodrain())
-        .on('error', (error) => reject(error))
-        .on('close', () => resolve())
-    })
+    // await new Promise<void>((resolve, reject) => {
+    //   fs.createReadStream(zipPath)
+    //     .pipe(unzipper.Parse())
+    //     .on('entry', (entry) => entry.autodrain())
+    //     .on('error', (error) => reject(error))
+    //     .on('close', () => resolve())
+    // })
 
     const checksumAfterValidation = await calculateChecksum(zipPath)
     console.log(`Checksum after validation: ${checksumAfterValidation}`)
+
+    // add a pause here
 
     await new Promise<void>((resolve, reject) => {
       fs.createReadStream(zipPath)
