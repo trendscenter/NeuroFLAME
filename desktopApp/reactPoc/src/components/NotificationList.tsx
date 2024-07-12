@@ -17,11 +17,16 @@ interface NotificationListProps {
 const NotificationList: React.FC<NotificationListProps> = () => {
   const { events } = useNotifications();
 
+  // Sort the events by timestamp
+  const sortedEvents = events.sort((a, b) => {
+    return new Date(Number(b.timestamp)).getTime() - new Date(Number(a.timestamp)).getTime()
+  });
+
   return (
     <div>
       <h2>Notifications</h2>
       <ul>
-        {events.map((event, index) => (
+        {sortedEvents.map((event, index) => (
           <li key={index}>
             <p>
               <Link to={`/consortia/${event.consortiumId}`}>

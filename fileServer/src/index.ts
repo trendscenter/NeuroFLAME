@@ -160,9 +160,9 @@ app.post(
         fs.unlinkSync(zipPath)
 
         res.send(`File uploaded and extracted successfully to ${extractPath}`)
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error unzipping file:', error)
-        res.status(500).send('Error unzipping the file')
+        res.status(500).send(`Error unzipping the file: ${error.message}`)
       }
     } else {
       res.status(400).send('No file uploaded.')
