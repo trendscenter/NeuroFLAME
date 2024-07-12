@@ -38,6 +38,8 @@ export default async function uploadFileToServer({
   try {
     await zipDirectory(extractPath, zipPath)
     await validateZipFile(zipPath)
+    const fileSize = await getFileSize(zipPath) // Get the file size
+    console.log(`File size is ${fileSize} bytes`)
     await uploadZipFile(url, zipPath, accessToken)
     console.log('File uploaded successfully')
   } catch (error) {
@@ -55,6 +57,11 @@ async function validateZipFile(zipPath: string): Promise<void> {
   console.log('Zip file validation successful')
 }
 
+async function getFileSize(filePath: string): Promise<number> {
+  const stats = await fs.stat(filePath)
+  return stats.size
+}
+
 async function uploadZipFile(
   url: string,
   zipPath: string,
@@ -70,37 +77,22 @@ async function uploadZipFile(
     formData,
   })
 
-  const maxRetries = 3
-  let attempt = 0
-  let success = false
+  try {
+    const response = await axios.post(url, formData, {
+      headers: {
+        'x-access-token': accessToken,
+        ...formData.getHeaders(),
+      },
+    })
 
-  while (attempt < maxRetries && !success) {
-    try {
-      const response = await axios.post(url, formData, {
-        headers: {
-          'x-access-token': accessToken,
-          ...formData.getHeaders(),
-        },
-      })
-
-      if (response.status === 200) {
-        success = true
-        console.log('File uploaded successfully')
-      } else {
-        throw new Error(`Failed to upload file: ${response.statusText}`)
-      }
-    } catch (error) {
-      attempt++
-      if (attempt >= maxRetries) {
-        console.error(
-          'File upload failed after multiple attempts:',
-          formatAxiosError(error),
-        )
-        throw error
-      } else {
-        console.warn(`Retrying file upload (${attempt}/${maxRetries})...`)
-      }
+    if (response.status === 200) {
+      console.log('File uploaded successfully')
+    } else {
+      throw new Error(`Failed to upload file: ${response.statusText}`)
     }
+  } catch (error) {
+    console.error('File upload failed:', formatAxiosError(error))
+    throw error
   }
 }
 
