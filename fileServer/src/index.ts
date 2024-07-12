@@ -164,7 +164,7 @@ const init = async () => {
 
       try {
         // Validate ZIP file before processing
-        console.log('Validating ZIP file...')
+        console.log(`Validating ZIP file at ${zipPath}...`)
         await new Promise<void>((resolve, reject) => {
           fs.createReadStream(zipPath)
             .pipe(unzipper.Parse())
@@ -187,7 +187,7 @@ const init = async () => {
         const fileStats = await fs.promises.stat(zipPath)
         console.log(`File size after validation: ${fileStats.size} bytes`)
 
-        console.log('Extracting ZIP file...')
+        console.log(`Extracting ZIP file to ${extractPath}...`)
         await new Promise<void>((resolve, reject) => {
           fs.createReadStream(zipPath)
             .pipe(unzipper.Extract({ path: extractPath }))
