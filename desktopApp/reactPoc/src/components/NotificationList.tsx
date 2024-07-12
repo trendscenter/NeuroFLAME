@@ -25,7 +25,6 @@ const NotificationList: React.FC<NotificationListProps> = () => {
   return (
     <div>
       <h2>Notifications</h2>
-      {JSON.stringify(sortedEvents)}
       <ul>
         {sortedEvents.map((event, index) => (
           <li key={index}>
@@ -38,7 +37,9 @@ const NotificationList: React.FC<NotificationListProps> = () => {
             </p>
             <p><strong>Run ID:</strong> {event.runId}</p>
             <p><strong>Status:</strong> {event.status}</p>
-            <p><strong>Timestamp:</strong> {event.timestamp}</p>
+            <p><strong>Timestamp:</strong> {
+              new Date(Number(event.timestamp)).toLocaleString()
+            }</p>
           </li>
         ))}
       </ul>
