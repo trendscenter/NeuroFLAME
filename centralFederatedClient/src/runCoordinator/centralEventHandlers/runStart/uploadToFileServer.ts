@@ -64,6 +64,11 @@ async function uploadZipFile(
   formData.append('file', createReadStream(zipPath))
 
   console.log('Starting file upload...')
+  // log the url and formData
+  console.log({
+    url,
+    formData,
+  })
 
   const maxRetries = 3
   let attempt = 0
