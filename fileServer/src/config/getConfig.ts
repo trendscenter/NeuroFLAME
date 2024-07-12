@@ -11,10 +11,10 @@ export default async function getConfig(): Promise<fileServerConfiguration> {
   const configPath = getConfigPath()
 
   if (configPath) {
-    console.log(`Attempting to load config from: ${configPath}`)
+    // console.log(`Attempting to load config from: ${configPath}`)
     try {
       const config = await loadConfigFromFile(configPath)
-      console.log(`Loaded configuration from: ${configPath}`)
+      // console.log(`Loaded configuration from: ${configPath}`)
       return config
     } catch (error) {
       console.error(`Failed to load config from ${configPath}:`, error)

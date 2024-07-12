@@ -22,12 +22,14 @@ export const uploadFile = async (
     filename: (req, file, cb) => cb(null, file.originalname),
   })
 
+  
   const upload = multer({ storage }).single('file')
   upload(req, res, (err) => {
     if (err) {
       console.error('Error during file upload:', err)
       return res.status(500).send(`Error during file upload: ${err.message}`)
     }
+    console.log(`file uploaded to ${uploadPath}`)
     next()
   })
 }

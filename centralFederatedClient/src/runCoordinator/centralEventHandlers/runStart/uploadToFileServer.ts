@@ -38,6 +38,7 @@ export default async function uploadFileToServer({
 
   try {
     await zipDirectory(extractPath, zipPath)
+    console.log(`Zip file created at ${zipPath}`)
     await validateZipFile(zipPath)
     const fileSize = await getFileSize(zipPath) // Get the file size
     console.log(`File size is ${fileSize} bytes`)
@@ -105,7 +106,7 @@ async function uploadZipFile(
     }
   } catch (error) {
     console.error('File upload failed:', formatAxiosError(error))
-    throw error
+    throw new Error(formatAxiosError(error))
   }
 }
 
