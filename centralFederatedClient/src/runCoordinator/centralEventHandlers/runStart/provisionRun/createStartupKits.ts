@@ -13,6 +13,13 @@ export async function createStartupKits({
 }: CreateStartupKitsArgs): Promise<void> {
   const provisionImageName = 'nvflare-pt'
 
+  const Binds = [
+    `${projectFilePath}:/project/Project.yml`,
+    `${outputDirectory}:/outputDirectory`,
+  ]
+
+  console.log(Binds)
+
   // Define container options
   const containerOptions = {
     Image: provisionImageName,
@@ -25,10 +32,7 @@ export async function createStartupKits({
       '/outputDirectory',
     ],
     HostConfig: {
-      Binds: [
-        `${projectFilePath}:/project/Project.yml`,
-        `${outputDirectory}:/outputDirectory`,
-      ],
+      Binds,
     },
   }
 
