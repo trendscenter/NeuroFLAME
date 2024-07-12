@@ -25,10 +25,13 @@ export const unzipFile = async (
 
     // copy the file from the zip path to a temporary path
     const tmpPath = path.join(extractPath, 'tmp.zip')
+
     await fs.copy(zipPath, tmpPath)
 
     // small delay to ensure the file is written to disk
     await new Promise((resolve) => setTimeout(resolve, 1000))
+
+    console.log({tmpPath})
 
     // Extract the zip file
     await fs
@@ -37,7 +40,7 @@ export const unzipFile = async (
       .promise()
 
     // Delete the temporary zip file
-    await fs.unlink(tmpPath)
+    // await fs.unlink(tmpPath)
 
     console.log(`File uploaded and extracted successfully to ${extractPath}`)
     // Continue to the next middleware or route handler
