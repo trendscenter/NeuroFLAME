@@ -7,7 +7,8 @@
     "compile": "tsc",
     "start": "npm run compile && node ./dist/index.js --",
     "getTokens": "npm run compile && node ./dist/authentication/getTokens.js",
-    "seed": "npm run compile && node ./dist/database/seed.js"
+    "seed": "npm run compile && node ./dist/database/seed.js",
+    "start-configured": "npm run compile && node ./dist/index.js -- --config=../configs/centralApi.json"
   },
   "keywords": [],
   "author": "",

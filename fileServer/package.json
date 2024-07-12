@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "compile": "tsc",
-    "start": "npm run compile && node ./dist/index.js --"
+    "start": "npm run compile && node ./dist/index.js --",
+    "start-configured": "npm run compile && node ./dist/index.js -- --config=../configs/fileServer.json"
   },
   "author": "",
   "license": "ISC",

@@ -21,7 +21,7 @@ const REPORT_RUN_READY_MUTATION = `
 `
 
 export default async function reportReady({ runId }: { runId: string }) {
-  const config = getConfig()
+  const config = await getConfig()
   const { httpUrl, accessToken } = config
 
   try {

@@ -21,7 +21,7 @@ const REPORT_RUN_ERROR_MUTATION = `
 `;
 
 export default async function reportRunError({ runId, errorMessage }: { runId: string, errorMessage: string }) {
-  const config = getConfig();
+  const config = await getConfig();
   const { httpUrl, accessToken } = config;
 
   try {

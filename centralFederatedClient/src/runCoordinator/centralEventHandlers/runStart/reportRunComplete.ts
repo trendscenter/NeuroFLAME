@@ -21,7 +21,7 @@ const REPORT_RUN_COMPLETE_MUTATION = `
 `;
 
 export default async function reportRunComplete({ runId }: { runId: string }) {
-  const config = getConfig();
+  const config = await getConfig();
   const { httpUrl, accessToken } = config;
 
   try {
