@@ -25,6 +25,7 @@ const NotificationList: React.FC<NotificationListProps> = () => {
   return (
     <div>
       <h2>Notifications</h2>
+      {JSON.stringify(sortedEvents)}
       <ul>
         {sortedEvents.map((event, index) => (
           <li key={index}>

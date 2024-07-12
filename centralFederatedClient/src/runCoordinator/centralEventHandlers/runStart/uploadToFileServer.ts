@@ -74,7 +74,6 @@ async function uploadZipFile(
   // log the url and formData
   console.log({
     url,
-    formData,
   })
 
   try {
