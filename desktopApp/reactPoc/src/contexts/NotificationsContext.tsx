@@ -11,6 +11,7 @@ const RUN_EVENT_SUBSCRIPTION = gql`
       consortiumTitle
       runId
       status
+      timestamp
     }
   }
 `;
@@ -26,6 +27,7 @@ interface RunEvent {
     consortiumTitle: string;
     runId: string;
     status: string;
+    timestamp: string;
 }
 
 export const NotificationsContext = React.createContext<NotificationsContextType>({

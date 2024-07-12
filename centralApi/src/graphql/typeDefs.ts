@@ -76,6 +76,7 @@ export interface RunEventPayload {
   consortiumTitle: string
   runId: string
   status: string
+  timestamp: string
 }
 
 export interface RunListItem {
@@ -176,6 +177,7 @@ export default `#graphql
     consortiumTitle: String
     runId: String
     status: String
+    timestamp: String
   }
 
   type RunListItem {
