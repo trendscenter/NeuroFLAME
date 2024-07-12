@@ -18,8 +18,6 @@ export async function createStartupKits({
     `${outputDirectory}:/outputDirectory`,
   ]
 
-  console.log(Binds)
-
   // Define container options
   const containerOptions = {
     Image: provisionImageName,
