@@ -1,66 +1,39 @@
-import { Request, Response, NextFunction } from 'express'
-import fs from 'fs'
 import path from 'path'
 import unzipper from 'unzipper'
-import calculateChecksum from '../utils/calculateChecksum.js'
+import fs from 'fs-extra'
+import { Request, Response, NextFunction } from 'express'
 import getConfig from '../config/getConfig.js'
 
-export const unzipFile = async (
+const extractMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
-  if (!req.file) return res.status(400).send('No file uploaded.')
-
-  const { path: zipPath, originalname } = req.file
-
+): Promise<void> => {
   try {
+    if (!req.file) {
+      throw new Error('No file uploaded')
+    }
+    
+    const zipPath = req.file.path
+    const { consortiumId, runId } = req.params
     const config = await getConfig()
     const { baseDir } = config
-    const extractPath = path.join(
-      baseDir,
-      req.params.consortiumId,
-      req.params.runId,
-    )
+    const extractPath = path.join(baseDir, consortiumId, runId)
 
-    // await new Promise<void>((resolve, reject) => {
-    //   fs.createReadStream(zipPath)
-    //     .pipe(unzipper.Parse())
-    //     .on('entry', (entry) => entry.autodrain())
-    //     .on('error', (error) => reject(error))
-    //     .on('close', () => resolve())
-    // })
+    // Ensure the extract path exists
+    await fs.ensureDir(extractPath)
 
-    const checksumAfterValidation = await calculateChecksum(zipPath)
-    console.log(`Checksum after validation: ${checksumAfterValidation}`)
+    // Extract the zip file
+    await fs
+      .createReadStream(zipPath)
+      .pipe(unzipper.Extract({ path: extractPath }))
+      .promise()
 
-    // add a pause here
-
-    await new Promise<void>((resolve, reject) => {
-      fs.createReadStream(zipPath)
-        .pipe(unzipper.Extract({ path: extractPath }))
-        .on('close', () => resolve())
-        .on('error', (error) => reject(error))
-    })
-
-    const checksumAfterExtraction = await calculateChecksum(zipPath)
-    console.log(`Checksum after extraction: ${checksumAfterExtraction}`)
-
-    req.extractPath = extractPath
+    // Continue to the next middleware or route handler
     next()
   } catch (error) {
-    console.error('Error during file unzipping:', error)
-    res
-      .status(500)
-      .send(`Error during file unzipping: ${(error as Error).message}`)
+    next(error)
   }
 }
 
-// Extend the Request interface to include extract path
-declare global {
-  namespace Express {
-    interface Request {
-      extractPath?: string
-    }
-  }
-}
+export default extractMiddleware
