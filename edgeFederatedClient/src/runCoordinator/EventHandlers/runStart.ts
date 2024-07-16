@@ -37,7 +37,7 @@ export const runStartHandler = {
       const runKitPath = path.join(runPath, 'runKit')
       const resultsPath = path.join(runPath, 'results')
 
-      // Ensure all paths exist and are writable
+      // Ensure all paths exist and are writable and executable
       await fs.mkdir(consortiumPath, { recursive: true, mode: 0o777 })
       await fs.mkdir(runPath, { recursive: true, mode: 0o777 })
       await fs.mkdir(runKitPath, { recursive: true, mode: 0o777 })
