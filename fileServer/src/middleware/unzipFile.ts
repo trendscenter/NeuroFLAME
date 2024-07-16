@@ -31,7 +31,7 @@ export const unzipFile = async (
     // small delay to ensure the file is written to disk
     await new Promise((resolve) => setTimeout(resolve, 5000))
 
-    console.log({tmpPath, zipPath, extractPath})
+    console.log({ tmpPath, zipPath, extractPath })
 
     // Extract the zip file
     await fs
@@ -49,3 +49,4 @@ export const unzipFile = async (
     next(error)
   }
 }
+

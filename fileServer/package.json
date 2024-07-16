@@ -7,7 +7,8 @@
   "scripts": {
     "compile": "tsc",
     "start": "npm run compile && node ./dist/index.js --",
-    "start-configured": "npm run compile && node ./dist/index.js -- --config=../configs/fileServer.json"
+    "start-configured": "npm run compile && node ./dist/index.js -- --config=../configs/fileServer.json",
+    "zip-test" : "npm run compile && node ./dist/unzipIt.js -- "
   },
   "author": "",
   "license": "ISC",
