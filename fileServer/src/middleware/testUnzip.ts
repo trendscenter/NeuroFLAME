@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import unzipper from 'unzipper'
 import path from 'path'
 import fs from 'fs'
-import getConfig from '../config/getConfig'
+import getConfig from '../config/getConfig.js'
 
 interface MulterRequest extends Request {
   file: Express.Multer.File
