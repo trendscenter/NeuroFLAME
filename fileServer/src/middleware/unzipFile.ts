@@ -29,7 +29,6 @@ export const unzipFile = async (
     await fs.copy(zipPath, tmpPath)
 
     // small delay to ensure the file is written to disk
-    await new Promise((resolve) => setTimeout(resolve, 5000))
 
     console.log({ tmpPath, zipPath, extractPath })
 

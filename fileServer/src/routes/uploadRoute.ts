@@ -11,7 +11,7 @@ router.post(
   decodeAndValidateJWT,
   isCentralUser,
   uploadFile,
-  unzipFile,
+  // unzipFile,
   (req: Request, res: Response) => {
     res.send(`File uploaded and extracted successfully!`)
   },
