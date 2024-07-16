@@ -37,11 +37,11 @@ export const runStartHandler = {
       const runKitPath = path.join(runPath, 'runKit')
       const resultsPath = path.join(runPath, 'results')
 
-      // Ensure all paths exist
-      await fs.mkdir(consortiumPath, { recursive: true })
-      await fs.mkdir(runPath, { recursive: true })
-      await fs.mkdir(runKitPath, { recursive: true })
-      await fs.mkdir(resultsPath, { recursive: true })
+      // Ensure all paths exist and are writable
+      await fs.mkdir(consortiumPath, { recursive: true, mode: 0o777 })
+      await fs.mkdir(runPath, { recursive: true, mode: 0o777 })
+      await fs.mkdir(runKitPath, { recursive: true, mode: 0o777 })
+      await fs.mkdir(resultsPath, { recursive: true, mode: 0o777 })
 
       const mountConfigPath = path.join(consortiumPath, 'mount_config.json')
 
