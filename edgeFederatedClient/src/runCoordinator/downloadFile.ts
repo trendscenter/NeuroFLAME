@@ -29,14 +29,30 @@ export default async function ({
     await fs.promises.mkdir(path_output_dir, { recursive: true })
     const path_output_file = path.join(path_output_dir, outputFilename)
     const writer = fs.createWriteStream(path_output_file)
+    console.log(`Writing to file: ${path_output_file}`)
 
     response.data.pipe(writer)
 
+    // Check download completion
     return new Promise<void>((resolve, reject) => {
-      writer.on('finish', () => {
+      writer.on('finish', async () => {
         console.log('File write completed successfully.')
-        resolve()
+
+        // Verify file size matches expected content-length
+        const fileSize = (await fs.promises.stat(path_output_file)).size
+        const contentLength = response.headers['content-length']
+
+        if (contentLength && fileSize !== parseInt(contentLength, 10)) {
+          reject(
+            new Error(
+              `File size mismatch: expected ${contentLength}, but got ${fileSize}`,
+            ),
+          )
+        } else {
+          resolve()
+        }
       })
+
       writer.on('error', (error) => {
         console.error('File write failed:', error)
         reject(error)

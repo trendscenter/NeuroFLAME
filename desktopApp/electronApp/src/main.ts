@@ -14,6 +14,8 @@ import { useDirectoryDialog } from './dialogs.js'
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 let mainWindow: BrowserWindow | null = null
 
+
+
 // Get the configuration file path based on command-line arguments or default location
 const configPath: string = getConfigPath()
 
@@ -62,8 +64,8 @@ ipcMain.handle('getConfigPath', () => configPath)
 ipcMain.handle('getConfig', getConfig)
 ipcMain.handle('openConfig', openConfig)
 ipcMain.handle('applyDefaultConfig', applyDefaultConfig)
-ipcMain.handle('useDirectoryDialog', (event, pathString, ) => {
-  console.log('useDirectoryDialog', {pathString})
+ipcMain.handle('useDirectoryDialog', (event, pathString) => {
+  console.log('useDirectoryDialog', { pathString })
   if (mainWindow) {
     return useDirectoryDialog({ mainWindow, pathString })
   }

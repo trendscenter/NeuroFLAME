@@ -1,9 +1,11 @@
-import { BrowserWindow } from 'electron'
+import { BrowserWindow, session } from 'electron'
 import path from 'path'
 
 export async function createMainWindow(
   __dirname: string,
 ): Promise<BrowserWindow> {
+
+  // TODO: handle sessions
   const mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
@@ -15,6 +17,7 @@ export async function createMainWindow(
       nodeIntegration: false,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js'),
+      session: session.fromPartition(Date.now().toString())
     },
   })
 
