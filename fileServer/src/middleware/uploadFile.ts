@@ -51,7 +51,7 @@ export const uploadFile = async (
       console.log(`File uploaded to ${uploadedFilePath}`);
       console.log(`Uploaded file size: ${fileSize} bytes`);
       console.log(`Uploaded file checksum: ${checksum}`);
-
+      res.send("File uploaded successfully");
       next();
     } catch (error) {
       console.error('Error processing uploaded file:', error);
