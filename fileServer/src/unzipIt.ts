@@ -18,3 +18,5 @@ export function unzipIt({
       .pipe(unzipper.Extract({ path: extractPath }))
       .promise()
   }
+
+unzipIt({ zipPath, extractPath })
