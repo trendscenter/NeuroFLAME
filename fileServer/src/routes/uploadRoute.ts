@@ -16,7 +16,7 @@ router.post(
   '/upload/:consortiumId/:runId',
   decodeAndValidateJWT,
   isCentralUser,
-  uploadFile,
+  // uploadFile,
   // unzipFile,
   (req: Request, res: Response, next: NextFunction) =>
     testUnzip(req as MulterRequest, res, next),
