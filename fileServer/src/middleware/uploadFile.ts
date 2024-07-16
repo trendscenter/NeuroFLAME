@@ -48,9 +48,11 @@ export const uploadFile = async (
       const fileSize = fs.statSync(uploadedFilePath).size
       const checksum = generateChecksumSync(uploadedFilePath)
 
+      console.log(`\n\n`)
       console.log(`File uploaded to ${uploadedFilePath}`)
       console.log(`Uploaded file size: ${fileSize} bytes`)
       console.log(`Uploaded file checksum: ${checksum}`)
+      console.log(`\n\n`)
       
       next()
     } catch (error) {
