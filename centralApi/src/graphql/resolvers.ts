@@ -977,11 +977,6 @@ export default {
       resolve: (payload: RunEventPayload): RunEventPayload => {
         return payload
       },
-      onConnect: async (connectionParams: any, webSocket: any, context: any) => {
-        // user connecting
-        // check the connectionParams for the token
-        console.log('onConnect', connectionParams)
-      },
       subscribe: withFilter(
         () => pubsub.asyncIterator(['RUN_EVENT']),
         async (

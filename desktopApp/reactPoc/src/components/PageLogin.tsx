@@ -49,6 +49,7 @@ export default function PageLogin() {
 
     const connectAndSubscribe = async () => {
         try {
+            await unsubscribe();
             await startClients();
             await connectAsUser();
             await subscribe();
