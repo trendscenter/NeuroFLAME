@@ -43,6 +43,9 @@
       }
     ],
     "asar": true,
+    "asarUnpack": [
+      "build/**"
+    ],
     "win": {
       "target": "nsis"
     },
