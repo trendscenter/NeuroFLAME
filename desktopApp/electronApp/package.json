@@ -47,7 +47,7 @@
       "target": "nsis"
     },
     "mac": {
-      "target": "dmg",
+      "target": "zip",
       "type": "development",
       "hardenedRuntime": false,
       "gatekeeperAssess": false,
