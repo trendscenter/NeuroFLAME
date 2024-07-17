@@ -47,17 +47,15 @@ export const createApolloClient = ({
 
   // Authentication Link
   const authLink = new ApolloLink((operation, forward) => {
-    const accessToken = getAccessToken()
 
     operation.setContext(({ headers = {} }) => ({
       headers: {
         ...headers,
-        'x-access-token': accessToken || '',
+        'x-access-token': getAccessToken(),
       },
     }))
     return forward(operation)
   })
-
 
   const splitLink = split(
     ({ query }) => {

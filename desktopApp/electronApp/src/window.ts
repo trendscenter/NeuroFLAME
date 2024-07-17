@@ -21,5 +21,7 @@ export async function createMainWindow(
     },
   })
 
+  mainWindow.webContents.openDevTools()
+  
   return mainWindow
 }
