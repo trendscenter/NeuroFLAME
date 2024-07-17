@@ -25,7 +25,7 @@ async function createWindow(): Promise<void> {
 
   const appPath = app.getAppPath();
   const productionUrl = url.format({
-    pathname: path.join(appPath, 'build/index.html'),
+    pathname: path.join(appPath, '../app/build/index.html'),
     protocol: 'file:',
     slashes: true,
   })
