@@ -10,6 +10,7 @@ import {
   openConfig,
 } from './config.js'
 import { useDirectoryDialog } from './dialogs.js'
+import { electron } from 'process'
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 let mainWindow: BrowserWindow | null = null
@@ -23,14 +24,17 @@ const configPath: string = getConfigPath()
 async function createWindow(): Promise<void> {
   mainWindow = await createMainWindow(__dirname)
 
+  const appPath = app.getAppPath();
+  const productionUrl = url.format({
+    pathname: path.join(appPath, 'build/index.html'),
+    protocol: 'file:',
+    slashes: true,
+  })
+  const developmentUrl = 'http://localhost:3000';
   // Load the correct URL (packaged or development)
   const startUrl = app.isPackaged
-    ? url.format({
-        pathname: path.join(__dirname, '../../app/build/index.html'),
-        protocol: 'file:',
-        slashes: true,
-      })
-    : 'http://localhost:3000'
+    ? productionUrl
+    : developmentUrl
 
   await mainWindow.loadURL(startUrl)
 
