@@ -10,7 +10,6 @@ import {
   openConfig,
 } from './config.js'
 import { useDirectoryDialog } from './dialogs.js'
-import { electron } from 'process'
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 let mainWindow: BrowserWindow | null = null
