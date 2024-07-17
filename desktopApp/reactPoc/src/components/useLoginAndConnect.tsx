@@ -33,7 +33,7 @@ const USER_CREATE = gql`
 
 
 export const useLoginAndConnect = () => {
-  const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext);
+  const { centralApiApolloClient, edgeClientApolloClient, startClients } = useContext(ApolloClientsContext);
 
 
   const loginToCentral = async (username: string, password: string) => {
@@ -83,9 +83,11 @@ export const useLoginAndConnect = () => {
     }
   }
 
+
   return {
     loginToCentral,
     connectAsUser,
     createUser,
+    startClients
   }
 }

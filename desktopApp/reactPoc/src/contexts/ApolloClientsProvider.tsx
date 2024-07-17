@@ -23,12 +23,26 @@ const ApolloClientsProvider: React.FC<Props> = ({ children, config }) => {
   >()
 
   useEffect(() => {
+    startClients();
+  },
+    [config]
+  )
+
+  const startClients = async () => {
+    if (centralApiApolloClient) {
+      centralApiApolloClient.stop();
+    }
+
+    if (edgeClientApolloClient) {
+      edgeClientApolloClient.stop();
+    }
+
     console.log("creating centralApiApolloClient", config.centralServerQueryUrl)
     setCentralApiApolloClient(
       createApolloClient({
         httpUrl: config.centralServerQueryUrl,
         wsUrl: config.centralServerSubscriptionUrl,
-        getAccessToken: () => {return localStorage.getItem('accessToken') || '' }
+        getAccessToken: () => { return localStorage.getItem('accessToken') || '' }
       }),
     )
     console.log("creating edgeClientApolloClient", config.edgeClientQueryUrl)
@@ -36,19 +50,17 @@ const ApolloClientsProvider: React.FC<Props> = ({ children, config }) => {
       createApolloClient({
         httpUrl: config.edgeClientQueryUrl,
         wsUrl: config.edgeClientSubscriptionUrl,
-        getAccessToken: () => {return localStorage.getItem('accessToken') || '' }
+        getAccessToken: () => { return localStorage.getItem('accessToken') || '' }
       }),
     )
-  },
-    [config]
-  )
+  }
 
   if (!centralApiApolloClient || !edgeClientApolloClient) {
     return <div>Loading...</div>
   }
 
   return (
-    <ApolloClientsContext.Provider value={{ centralApiApolloClient, edgeClientApolloClient }}>
+    <ApolloClientsContext.Provider value={{ centralApiApolloClient, edgeClientApolloClient, startClients }}>
       {children}
     </ApolloClientsContext.Provider>
   );
