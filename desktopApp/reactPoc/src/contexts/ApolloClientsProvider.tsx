@@ -44,7 +44,6 @@ const ApolloClientsProvider: React.FC<Props> = ({ children, config }) => {
       httpUrl: config.centralServerQueryUrl,
       wsUrl: config.centralServerSubscriptionUrl,
       getAccessToken: () => {
-        console.log("getting accessToken", localStorage.getItem('accessToken'))
         return localStorage.getItem('accessToken') || ''
       }
     })
@@ -56,7 +55,6 @@ const ApolloClientsProvider: React.FC<Props> = ({ children, config }) => {
       httpUrl: config.edgeClientQueryUrl,
       wsUrl: config.edgeClientSubscriptionUrl,
       getAccessToken: () => {
-        console.log("getting accessToken", localStorage.getItem('accessToken'))
         return localStorage.getItem('accessToken') || ''
       }
     })
@@ -69,7 +67,7 @@ const ApolloClientsProvider: React.FC<Props> = ({ children, config }) => {
   }
 
   return (
-    <ApolloClientsContext.Provider value={{ centralApiApolloClient, edgeClientApolloClient, startClients }}>
+    <ApolloClientsContext.Provider value={{ centralApiApolloClient, edgeClientApolloClient }}>
       {children}
     </ApolloClientsContext.Provider>
   );

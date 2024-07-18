@@ -9,7 +9,7 @@ export default function PageLogin() {
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const { loginToCentral, connectAsUser, createUser, startClients } = useLoginAndConnect();
+    const { loginToCentral, connectAsUser, createUser } = useLoginAndConnect();
     const { subscribe, unsubscribe } = useNotifications();
     const { username: loggedInUsername, setUserData, clearUserData } = useUserState();
     const [isLoggedIn, setIsloggedIn] = useState(false);
@@ -50,7 +50,6 @@ export default function PageLogin() {
     const connectAndSubscribe = async () => {
         try {
             await unsubscribe();
-            await startClients();
             await connectAsUser();
             await subscribe();
         } catch (e: any) {

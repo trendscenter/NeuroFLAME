@@ -29,8 +29,8 @@ export const createApolloClient = ({
   const wsLink = new GraphQLWsLink(
     createClient({
       url: wsUrl,
-      connectionParams: {
-        accessToken: getAccessToken(),
+      connectionParams: () => {
+        return { accessToken: getAccessToken() }
       },
     }),
   )

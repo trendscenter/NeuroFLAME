@@ -339,7 +339,7 @@ export default {
         consortiumTitle: consortium.title,
         runId: run._id.toString(),
         status: 'Provisioning',
-        timestamp: Date.now()
+        timestamp: Date.now(),
       })
 
       return { runId: run._id.toString() }
@@ -383,7 +383,7 @@ export default {
         consortiumTitle: consortium.title,
         runId: run._id.toString(),
         status: 'Starting',
-        timestamp: Date.now()
+        timestamp: Date.now(),
       })
 
       return true
@@ -419,7 +419,7 @@ export default {
         consortiumTitle: consortium.title,
         runId: run._id.toString(),
         status: 'Error',
-        timestamp: Date.now()
+        timestamp: Date.now(),
       })
 
       return true
@@ -455,7 +455,7 @@ export default {
         consortiumTitle: consortium.title,
         runId: run._id.toString(),
         status: 'Complete',
-        timestamp: Date.now()
+        timestamp: Date.now(),
       })
       return true
     },
@@ -960,6 +960,7 @@ export default {
           // Check if the user is part of the consortium's active members
           const consortium = await Consortium.findById(consortiumId).lean()
           if (!consortium) {
+            console.error('Consortium not found')
             throw new Error('Consortium not found')
           }
 
@@ -984,15 +985,20 @@ export default {
           variables: unknown,
           context: Context,
         ) => {
+          console.log(`Run event emitted`, { payload, context })
+      
           if (context.error) {
+            console.error(`Error subscribing to runEvent: ${context.error}`)
             throw new Error(`Error subscribing to runEvent: ${context.error}`)
           }
+
           const { consortiumId } = payload
           const { userId } = context
 
           // Check if the user is part of the consortium's active members
           const consortium = await Consortium.findById(consortiumId).lean()
           if (!consortium) {
+            console.error('Consortium not found')
             throw new Error('Consortium not found')
           }
 
