@@ -79,7 +79,7 @@ export default async function ({
     onContainerExitError: (containerId, error) => {
       reportRunError({
         runId,
-        errorMessage: error.message,
+        errorMessage: `Error: ${error.message}`,
       })
     },
   })
