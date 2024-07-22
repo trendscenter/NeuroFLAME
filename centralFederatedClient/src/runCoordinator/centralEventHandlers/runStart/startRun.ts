@@ -4,7 +4,8 @@ import { reservePort } from './portManagement.js'
 import { launchNode } from './launchNode.js'
 import uploadToFileServer from './uploadToFileServer.js'
 import getConfig from '../../../config/getConfig.js'
-
+import reportRunError from './reportRunError.js'
+import reportRunComplete from './reportRunComplete.js'
 
 interface startRunArgs {
   imageName: string
@@ -37,7 +38,7 @@ export default async function ({
     computationParameters,
     fed_learn_port,
     admin_port,
-    FQDN
+    FQDN,
   })
 
   await uploadToFileServer({
@@ -70,5 +71,16 @@ export default async function ({
       },
     ],
     commandsToRun: ['python', '/workspace/entry_central.py'],
+    onContainerExitSuccess: (containerId) => {
+      reportRunComplete({
+        runId,
+      })
+    },
+    onContainerExitError: (containerId, error) => {
+      reportRunError({
+        runId,
+        errorMessage: error.message,
+      })
+    },
   })
 }

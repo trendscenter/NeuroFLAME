@@ -13,6 +13,8 @@ interface LaunchNodeArgs {
     containerPort: number
   }>
   commandsToRun: string[]
+  onContainerExitSuccess?: (containerId: string) => void
+  onContainerExitError?: (containerId: string, error: Error) => void
 }
 
 interface ExposedPorts {
@@ -29,14 +31,17 @@ export async function launchNode({
   directoriesToMount,
   portBindings,
   commandsToRun,
+  onContainerExitSuccess,
+  onContainerExitError,
 }: LaunchNodeArgs) {
   if (containerService === 'docker') {
     await launchDockerNode({
-      containerService,
       imageName,
       directoriesToMount,
       portBindings,
       commandsToRun,
+      onContainerExitSuccess,
+      onContainerExitError,
     })
   } else if (containerService === 'singularity') {
     // Placeholder for singularity command handling
@@ -45,76 +50,101 @@ export async function launchNode({
 }
 
 const launchDockerNode = async ({
-  containerService,
   imageName,
   directoriesToMount,
   portBindings,
   commandsToRun,
-}: LaunchNodeArgs) => {
+  onContainerExitSuccess,
+  onContainerExitError,
+}: Omit<LaunchNodeArgs, 'containerService'>) => {
   console.log('Running docker command')
 
   const binds = directoriesToMount.map(
     (mount) => `${mount.hostDirectory}:${mount.containerDirectory}`,
   )
-  const ExposedPorts: ExposedPorts = {}
-  const PortBindings: PortBindings = {}
+  const exposedPorts: ExposedPorts = {}
+  const portBindingsFormatted: PortBindings = {}
 
   portBindings.forEach((binding) => {
     const containerPort = `${binding.containerPort}/tcp`
-    ExposedPorts[containerPort] = {} // Just expose the port
-    PortBindings[containerPort] = [{ HostPort: `${binding.hostPort}` }] // Correctly format as string
+    exposedPorts[containerPort] = {} // Just expose the port
+    portBindingsFormatted[containerPort] = [{ HostPort: `${binding.hostPort}` }] // Correctly format as string
   })
 
   try {
-    // create the container
+    // Create the container
     const container = await docker.createContainer({
       Image: imageName,
       Cmd: commandsToRun,
-      ExposedPorts,
+      ExposedPorts: exposedPorts,
       HostConfig: {
         Binds: binds,
-        PortBindings,
+        PortBindings: portBindingsFormatted,
       },
     })
 
-    // start the container
+    // Start the container
     await container.start()
     console.log(`Container started successfully: ${container.id}`)
 
-    // add event handlers for the container
-    docker.getEvents((err, stream) => {
-      if (err) {
-        console.error(`Error getting Docker events: ${err}`)
-        return
-      }
-      stream?.on('data', async (chunk) => {
-        const event = JSON.parse(chunk.toString())
+    // Add event handlers for the container
+    attachDockerEventHandlers(
+      container.id,
+      onContainerExitSuccess,
+      onContainerExitError,
+    )
 
-        if (event.Type === 'container' && event.Action === 'die') {
-          console.log(
-            `Container ${event.id} stopped with exit code: ${event.Actor.Attributes.exitCode}`,
-          )
-          if (parseInt(event.Actor.Attributes.exitCode, 10) !== 0) {
-            console.error(`Container ${event.id} stopped due to an error`)
-          } else {
-            console.log(`Container ${event.id} stopped gracefully`)
-          }
-        }
-
-        if (event.Type === 'container' && event.Action === 'stop') {
-          console.log(`Container ${event.id} stopped gracefully`)
-        }
-      })
-
-      stream?.on('error', (err) => {
-        console.error(`Event stream error: ${err}`)
-      })
-    })
-
-    // return the container ID
+    // Return the container ID
     return container.id
   } catch (error) {
     console.error(`Failed to launch Docker container: ${error}`)
+    onContainerExitError && onContainerExitError('', error as Error)
     throw error
   }
+}
+
+const attachDockerEventHandlers = (
+  containerId: string,
+  onContainerExitSuccess?: (containerId: string) => void,
+  onContainerExitError?: (containerId: string, error: Error) => void,
+) => {
+  docker.getEvents((err, stream) => {
+    if (err) {
+      console.error(`Error getting Docker events: ${err}`)
+      onContainerExitError && onContainerExitError(containerId, err)
+      return
+    }
+    stream?.on('data', (chunk) => {
+      const event = JSON.parse(chunk.toString())
+
+      if (event.Type === 'container' && event.Actor.ID === containerId) {
+        if (event.Action === 'die') {
+          const exitCode = parseInt(event.Actor.Attributes.exitCode, 10)
+          if (exitCode !== 0) {
+            console.error(
+              `Container ${containerId} stopped due to an error with exit code: ${exitCode}`,
+            )
+            onContainerExitError &&
+              onContainerExitError(
+                containerId,
+                new Error(`Exit code: ${exitCode}`),
+              )
+          } else {
+            console.log(`Container ${containerId} stopped gracefully`)
+            onContainerExitSuccess && onContainerExitSuccess(containerId)
+          }
+        }
+
+        if (event.Action === 'stop') {
+          console.log(`Container ${containerId} stopped gracefully`)
+          onContainerExitSuccess && onContainerExitSuccess(containerId)
+        }
+      }
+    })
+
+    stream?.on('error', (err) => {
+      console.error(`Event stream error: ${err}`)
+      onContainerExitError && onContainerExitError(containerId, err)
+    })
+  })
 }
