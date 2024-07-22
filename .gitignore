@@ -3,3 +3,4 @@
 **/dist/
 _devTestDirectories/
 configs/*.json
+*.log

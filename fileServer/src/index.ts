@@ -2,6 +2,7 @@ import express from 'express'
 import downloadRoute from './routes/downloadRoute.js'
 import uploadRoute from './routes/uploadRoute.js'
 import getConfig from './config/getConfig.js'
+import logger from './logger.js'
 
 const init = async () => {
   const app = express()
@@ -17,6 +18,6 @@ const init = async () => {
 }
 
 init().catch((error: any) => {
-  console.error('Failed to initialize server:', error)
-  process.exit(1)
+  logger.error('Failed to initialize server:', error)
+  process.exitCode = 1
 })

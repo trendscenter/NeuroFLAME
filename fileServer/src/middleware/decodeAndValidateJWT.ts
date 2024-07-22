@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import axios from 'axios'
 import getConfig from '../config/getConfig.js'
+import logger from '../logger.js'
 
 const decodeAndValidateJWT = async (
   req: Request,
@@ -21,7 +22,7 @@ const decodeAndValidateJWT = async (
       res.status(401).send('Invalid token')
     }
   } catch (error) {
-    console.error('Authentication error:', error)
+    logger.error('Authentication error:', error)
     res.status(500).send('Authentication service error')
   }
 }

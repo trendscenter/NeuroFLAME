@@ -3,6 +3,7 @@ import unzipper from 'unzipper'
 import fs from 'fs-extra'
 import { Request, Response, NextFunction } from 'express'
 import getConfig from '../config/getConfig.js'
+import logger from '../logger.js'
 
 export const unzipFile = async (
   req: Request,
@@ -28,7 +29,7 @@ export const unzipFile = async (
 
     await fs.copy(zipPath, tmpPath)
 
-    console.log({ tmpPath, zipPath, extractPath })
+    logger.log(JSON.stringify({ tmpPath, zipPath, extractPath }), 'info')
 
     // Extract the zip file
     try {
@@ -39,13 +40,16 @@ export const unzipFile = async (
     } catch (e) {
       // skip the error because the files seem to extract correctly
       // TODO: investigate why the error is thrown
-      console.log(`Error extracting the file: ${e}, continuing...`)
+      logger.log(`Error extracting the file: ${e}, continuing...`, 'error')
     }
 
     // Delete the temporary zip file
     // await fs.unlink(tmpPath)
 
-    console.log(`File uploaded and extracted successfully to ${extractPath}`)
+    logger.log(
+      `File uploaded and extracted successfully to ${extractPath}`,
+      'info',
+    )
     // Continue to the next middleware or route handler
     next()
   } catch (error) {
