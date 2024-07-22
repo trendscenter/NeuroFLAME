@@ -47,12 +47,22 @@
       "target": "nsis"
     },
     "mac": {
-      "target": "zip",
+      "target": [
+        {
+          "target": "pkg",
+          "arch": [
+            "unviversal"
+          ]
+        }
+      ],
       "type": "development",
       "hardenedRuntime": false,
       "gatekeeperAssess": false,
       "entitlements": null,
-      "entitlementsInherit": null
+      "entitlementsInherit": null,
+      "arch": [
+        "x64"
+      ]
     },
     "linux": {
       "target": "AppImage"

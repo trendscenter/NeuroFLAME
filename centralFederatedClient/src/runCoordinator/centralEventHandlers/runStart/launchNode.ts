@@ -31,39 +31,90 @@ export async function launchNode({
   commandsToRun,
 }: LaunchNodeArgs) {
   if (containerService === 'docker') {
-    console.log('Running docker command')
-
-    const binds = directoriesToMount.map(
-      (mount) => `${mount.hostDirectory}:${mount.containerDirectory}`,
-    )
-    const ExposedPorts: ExposedPorts = {}
-    const PortBindings: PortBindings = {}
-
-    portBindings.forEach((binding) => {
-      const containerPort = `${binding.containerPort}/tcp`
-      ExposedPorts[containerPort] = {} // Just expose the port
-      PortBindings[containerPort] = [{ HostPort: `${binding.hostPort}` }] // Correctly format as string
+    await launchDockerNode({
+      containerService,
+      imageName,
+      directoriesToMount,
+      portBindings,
+      commandsToRun,
     })
-
-    try {
-      const container = await docker.createContainer({
-        Image: imageName,
-        Cmd: commandsToRun,
-        ExposedPorts,
-        HostConfig: {
-          Binds: binds,
-          PortBindings,
-        },
-      })
-
-      await container.start()
-      console.log(`Container started successfully: ${container.id}`)
-    } catch (error) {
-      console.error(`Failed to launch Docker container: ${error}`)
-      throw error
-    }
   } else if (containerService === 'singularity') {
     // Placeholder for singularity command handling
     console.log('Singularity handling not implemented.')
+  }
+}
+
+const launchDockerNode = async ({
+  containerService,
+  imageName,
+  directoriesToMount,
+  portBindings,
+  commandsToRun,
+}: LaunchNodeArgs) => {
+  console.log('Running docker command')
+
+  const binds = directoriesToMount.map(
+    (mount) => `${mount.hostDirectory}:${mount.containerDirectory}`,
+  )
+  const ExposedPorts: ExposedPorts = {}
+  const PortBindings: PortBindings = {}
+
+  portBindings.forEach((binding) => {
+    const containerPort = `${binding.containerPort}/tcp`
+    ExposedPorts[containerPort] = {} // Just expose the port
+    PortBindings[containerPort] = [{ HostPort: `${binding.hostPort}` }] // Correctly format as string
+  })
+
+  try {
+    // create the container
+    const container = await docker.createContainer({
+      Image: imageName,
+      Cmd: commandsToRun,
+      ExposedPorts,
+      HostConfig: {
+        Binds: binds,
+        PortBindings,
+      },
+    })
+
+    // start the container
+    await container.start()
+    console.log(`Container started successfully: ${container.id}`)
+
+    // add event handlers for the container
+    docker.getEvents((err, stream) => {
+      if (err) {
+        console.error(`Error getting Docker events: ${err}`)
+        return
+      }
+      stream?.on('data', async (chunk) => {
+        const event = JSON.parse(chunk.toString())
+
+        if (event.Type === 'container' && event.Action === 'die') {
+          console.log(
+            `Container ${event.id} stopped with exit code: ${event.Actor.Attributes.exitCode}`,
+          )
+          if (parseInt(event.Actor.Attributes.exitCode, 10) !== 0) {
+            console.error(`Container ${event.id} stopped due to an error`)
+          } else {
+            console.log(`Container ${event.id} stopped gracefully`)
+          }
+        }
+
+        if (event.Type === 'container' && event.Action === 'stop') {
+          console.log(`Container ${event.id} stopped gracefully`)
+        }
+      })
+
+      stream?.on('error', (err) => {
+        console.error(`Event stream error: ${err}`)
+      })
+    })
+
+    // return the container ID
+    return container.id
+  } catch (error) {
+    console.error(`Failed to launch Docker container: ${error}`)
+    throw error
   }
 }
