@@ -6,4 +6,5 @@ export default {
     user: 'admin',
     pass: 'secret',
   },
+  logPath: './',
 }
