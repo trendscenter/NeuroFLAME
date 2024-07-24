@@ -5,6 +5,7 @@ import Run from './models/Run.js'
 import User from './models/User.js'
 import bcrypt from 'bcrypt'
 import getConfig from '../config/getConfig.js'
+import logger from '../../logger.js'
 
 const { databaseDetails } = await getConfig()
 const { url, user, pass } = databaseDetails
@@ -26,7 +27,7 @@ const run2Id = new mongoose.Types.ObjectId('66289c79aecab67040a23001')
 const seedDatabase = async () => {
   try {
     await mongoose.connect(url, { user, pass, authSource: 'admin' })
-    console.log('MongoDB connected successfully.')
+    logger.info('MongoDB connected successfully.')
 
     // Clear existing data
     await User.deleteMany({})
@@ -65,7 +66,7 @@ const seedDatabase = async () => {
       },
     ]
     await User.insertMany(users)
-    console.log('Users seeded successfully!')
+    logger.info('Users seeded successfully!')
 
     // Create computations
     const computations = [
@@ -93,7 +94,7 @@ Parameters example:
       },
     ]
     await Computation.insertMany(computations)
-    console.log('Computations seeded successfully!')
+    logger.info('Computations seeded successfully!')
 
     // Create consortia
     const consortia = [
@@ -135,7 +136,7 @@ Parameters example:
       },
     ]
     await Consortium.insertMany(consortia)
-    console.log('Consortia seeded successfully!')
+    logger.info('Consortia seeded successfully!')
 
     // Create runs
     const runs = [
@@ -161,9 +162,9 @@ Parameters example:
       },
     ]
     await Run.insertMany(runs)
-    console.log('Runs seeded successfully!')
+    logger.info('Runs seeded successfully!')
   } catch (error) {
-    console.error('Failed to seed database:', error)
+    logger.error('Failed to seed database:', error)
   } finally {
     await mongoose.connection.close()
   }

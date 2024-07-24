@@ -9,6 +9,7 @@ import { useServer } from 'graphql-ws/lib/use/ws'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import mongoose from 'mongoose'
+import logger from '../logger.js'
 
 import typeDefs from './graphql/typeDefs.js'
 import resolvers from './graphql/resolvers.js'
@@ -116,8 +117,8 @@ export async function start({
 
   // Now that our HTTP server is fully set up, actually listen.
   httpServer.listen(PORT, () => {
-    console.log(`🚀 Query endpoint ready at http://localhost:${PORT}/graphql`)
-    console.log(
+    logger.info(`🚀 Query endpoint ready at http://localhost:${PORT}/graphql`)
+    logger.info(
       `🚀 Subscription endpoint ready at ws://localhost:${PORT}/graphql`,
     )
   })
@@ -126,4 +127,4 @@ export async function start({
 start({
   port: config.apolloPort,
   databaseDetails: config.databaseDetails,
-}).catch(console.error) // Proper error handling
+}).catch(logger.error) // Proper error handling

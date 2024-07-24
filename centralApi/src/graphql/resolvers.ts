@@ -25,6 +25,7 @@ import {
   RunListItem,
   RunDetails,
 } from './typeDefs.js'
+import logger from '../../logger.js'
 
 interface Context {
   userId: string
@@ -122,7 +123,7 @@ export default {
           },
         }
       } catch (error) {
-        console.error('Error in getConsortiumDetails:', error)
+        logger.error('Error in getConsortiumDetails:', error)
         throw new Error(`Failed to fetch consortium details: ${error.message}`)
       }
     },
@@ -152,7 +153,7 @@ export default {
           owner,
         }
       } catch (error) {
-        console.error('Error in getComputationDetails:', error)
+        logger.error('Error in getComputationDetails:', error)
         throw new Error(`Failed to fetch computation details: ${error.message}`)
       }
     },
@@ -185,7 +186,7 @@ export default {
           }
         })
       } catch (error) {
-        console.error('Error fetching run list:', error)
+        logger.error('Error fetching run list:', error)
         throw new Error('Failed to fetch run list')
       }
     },
@@ -253,7 +254,7 @@ export default {
           },
         }
       } catch (e) {
-        console.error('Error fetching run details:', e)
+        logger.error('Error fetching run details:', e)
         throw new Error('Failed to fetch run details')
       }
     },
@@ -349,7 +350,7 @@ export default {
       { runId }: { runId: string },
       context: Context,
     ): Promise<boolean> => {
-      console.log('reportRunReady', runId)
+      logger.info('reportRunReady', runId)
       // authenticate the user
       // is the token valid?
       if (!context.userId) {
@@ -393,7 +394,7 @@ export default {
       { runId, errorMessage }: { runId: string; errorMessage: string },
       context: Context,
     ): Promise<boolean> => {
-      console.log('reportRunError', runId)
+      logger.info('reportRunError', runId)
       // authenticate the user
       // is the token valid?
       if (!context.userId) {
@@ -429,7 +430,7 @@ export default {
       { runId },
       context: Context,
     ): Promise<boolean> => {
-      console.log('reportRunError', runId)
+      logger.info('reportRunError', runId)
       // authenticate the user
       // is the token valid?
       if (!context.userId) {
@@ -497,7 +498,7 @@ export default {
 
         return true
       } catch (error) {
-        console.error('Error in studySetComputation:', error)
+        logger.error('Error in studySetComputation:', error)
         throw new Error(`Failed to set computation: ${error.message}`)
       }
     },
@@ -534,7 +535,7 @@ export default {
 
         return true
       } catch (error) {
-        console.error('Error in setStudyParameters:', error)
+        logger.error('Error in setStudyParameters:', error)
         throw new Error(`Failed to set computation: ${error.message}`)
       }
     },
@@ -561,7 +562,7 @@ export default {
 
         return true
       } catch (error) {
-        console.error('Error in setStudyNotes:', error)
+        logger.error('Error in setStudyNotes:', error)
         throw new Error(`Failed to set computation: ${error.message}`)
       }
     },
@@ -694,7 +695,7 @@ export default {
         )
         return true
       } catch (error) {
-        console.error('Error updating computation:', error)
+        logger.error('Error updating computation:', error)
         throw new Error('Failed to update computation')
       }
     },
@@ -736,7 +737,7 @@ export default {
         )
         return true
       } catch (error) {
-        console.error('Error updating consortium:', error)
+        logger.error('Error updating consortium:', error)
         throw new Error('Failed to update consortium')
       }
     },
@@ -797,7 +798,7 @@ export default {
         })
         return true
       } catch (error) {
-        console.error('Error updating consortium active members:', error)
+        logger.error('Error updating consortium active members:', error)
         throw new Error('Failed to update consortium active members')
       }
     },
@@ -827,7 +828,7 @@ export default {
           roles: user.roles,
         }
       } catch (error) {
-        console.error('Error creating user:', error.message)
+        logger.error('Error creating user:', error.message)
         throw new Error(error.message)
       }
     },
@@ -847,7 +848,7 @@ export default {
         await User.updateOne({ _id: userId }, { hash: hashedPassword })
         return true
       } catch (error) {
-        console.error('Error changing password:', error)
+        logger.error('Error changing password:', error)
         throw new Error('Failed to change password')
       }
     },
@@ -870,7 +871,7 @@ export default {
         await User.updateOne({ username }, { hash: hashedPassword })
         return true
       } catch (error) {
-        console.error('Error changing password:', error)
+        logger.error('Error changing password:', error)
         throw new Error('Failed to change password')
       }
     },
@@ -894,7 +895,7 @@ export default {
         await User.updateOne({ username }, { roles })
         return true
       } catch (error) {
-        console.error('Error changing roles:', error)
+        logger.error('Error changing roles:', error)
         throw new Error('Failed to change roles')
       }
     },
@@ -960,7 +961,7 @@ export default {
           // Check if the user is part of the consortium's active members
           const consortium = await Consortium.findById(consortiumId).lean()
           if (!consortium) {
-            console.error('Consortium not found')
+            logger.error('Consortium not found')
             throw new Error('Consortium not found')
           }
 
@@ -985,10 +986,10 @@ export default {
           variables: unknown,
           context: Context,
         ) => {
-          console.log(`Run event emitted`, { payload, context })
-      
+          logger.info(`Run event emitted`, { payload, context })
+
           if (context.error) {
-            console.error(`Error subscribing to runEvent: ${context.error}`)
+            logger.error(`Error subscribing to runEvent: ${context.error}`)
             throw new Error(`Error subscribing to runEvent: ${context.error}`)
           }
 
@@ -998,7 +999,7 @@ export default {
           // Check if the user is part of the consortium's active members
           const consortium = await Consortium.findById(consortiumId).lean()
           if (!consortium) {
-            console.error('Consortium not found')
+            logger.error('Consortium not found')
             throw new Error('Consortium not found')
           }
 
@@ -1009,7 +1010,7 @@ export default {
           )
           const isActiveMember = activeMemberIds.includes(userId)
 
-          console.log(`Emitting a run event to userId:`, { userId })
+          logger.info(`Emitting a run event to userId:`, { userId })
           return isActiveMember
         },
       ),
