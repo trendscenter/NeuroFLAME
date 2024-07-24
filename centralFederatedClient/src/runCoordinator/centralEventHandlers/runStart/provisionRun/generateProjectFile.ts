@@ -1,5 +1,6 @@
 import fs from 'fs'
 import yaml from 'js-yaml'
+import logger from '../../../../logger.js'
 
 interface GenerateProjectFileArgs {
   projectName: string
@@ -77,9 +78,9 @@ export async function generateProjectFile({
   // Write the YAML content to the specified output file path
   try {
     await fs.promises.writeFile(outputFilePath, yamlContent, 'utf8')
-    console.log(`Project file generated at: ${outputFilePath}`)
+    logger.info(`Project file generated at: ${outputFilePath}`)
   } catch (error) {
-    console.error(`Failed to generate project file: ${error}`)
+    logger.error(`Failed to generate project file: ${error}`)
     throw error // Allows further error handling by the caller
   }
 }

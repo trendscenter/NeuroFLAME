@@ -1,5 +1,6 @@
 import * as runCoordinator from './runCoordinator/runCoordinator.js'
 import getConfig from './config/getConfig.js'
+import logger from './logger.js'
 
 interface FederatedClientLaunchConfiguration {
   httpUrl: string
@@ -26,6 +27,6 @@ export async function start(
     const config = await getConfig()
     await start(config)
   } catch (err) {
-    console.error('Failed:', err)
+    logger.error('Failed:', err)
   }
 })()

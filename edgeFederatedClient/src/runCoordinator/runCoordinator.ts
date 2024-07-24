@@ -1,5 +1,6 @@
 import { createClient } from 'graphql-ws'
 import { WebSocket } from 'ws'
+import logger from '../logger.js'
 import {
   runStartHandler,
   RUN_START_SUBSCRIPTION,
@@ -28,7 +29,7 @@ export async function subscribeToCentralApi({
     client.dispose()
   }
 
-  console.log('Subscribing to central API')
+  logger.info('Subscribing to central API')
   // Create a new GraphQL WebSocket client
   client = createClient({
     url: wsUrl,

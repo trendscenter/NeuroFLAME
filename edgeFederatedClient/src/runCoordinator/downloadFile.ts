@@ -1,6 +1,7 @@
 import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
+import logger from '../logger.js'
 
 export default async function ({
   url,
@@ -24,19 +25,19 @@ export default async function ({
     })
 
     // Log successful receipt of the response
-    console.log('Response received, streaming to file.')
+    logger.info('Response received, streaming to file.')
 
     await fs.promises.mkdir(path_output_dir, { recursive: true })
     const path_output_file = path.join(path_output_dir, outputFilename)
     const writer = fs.createWriteStream(path_output_file)
-    console.log(`Writing to file: ${path_output_file}`)
+    logger.info(`Writing to file: ${path_output_file}`)
 
     response.data.pipe(writer)
 
     // Check download completion
     return new Promise<void>((resolve, reject) => {
       writer.on('finish', async () => {
-        console.log('File write completed successfully.')
+        logger.info('File write completed successfully.')
 
         // Verify file size matches expected content-length
         const fileSize = (await fs.promises.stat(path_output_file)).size
@@ -54,7 +55,7 @@ export default async function ({
       })
 
       writer.on('error', (error) => {
-        console.error('File write failed:', error)
+        logger.error('File write failed:', error)
         reject(error)
       })
     })
@@ -70,12 +71,12 @@ export default async function ({
         statusCode: error.response?.status,
         statusText: error.response?.statusText,
       }
-      console.error(
+      logger.error(
         'Failed to download file:',
         JSON.stringify(errorDetails, null, 2),
       )
     } else {
-      console.error('Unexpected error:', error)
+      logger.error('Unexpected error:', error)
       customError = error
     }
     throw customError // Rethrow the error after logging it

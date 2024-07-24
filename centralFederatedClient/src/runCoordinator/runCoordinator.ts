@@ -1,6 +1,7 @@
 import { createClient } from 'graphql-ws';
 import { WebSocket } from 'ws';
 import { runStartHandler, RUN_START_SUBSCRIPTION } from './centralEventHandlers/runStart/runStartHandler.js';
+import logger from '../logger.js'
 
 // Interface for subscription event handlers
 interface EventHandlers {
@@ -30,7 +31,7 @@ export async function subscribeToCentralApi({ wsUrl, accessToken }: Subscription
     },
   });
 
-  console.log('Subscribing to central API...');
+  logger.info('Subscribing to central API...');
   subscribe(client, RUN_START_SUBSCRIPTION, runStartHandler);
 }
 

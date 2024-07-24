@@ -1,5 +1,6 @@
 import path from 'path'
 import fs from 'fs/promises'
+import logger from '../../../../logger.js'
 
 interface CreateRunKitsArgs {
   startupKitsPath: string
@@ -16,7 +17,7 @@ export async function createRunKits({
   FQDN,
   adminName,
 }: CreateRunKitsArgs) {
-  console.log('Running createRunKits command')
+  logger.info('Running createRunKits command')
 
   try {
     // Ensure the output directory exists
@@ -76,9 +77,9 @@ tail -f /dev/null`
     const entrypointScriptPath = path.join(centralNodePath, 'entrypoint.sh')
     await fs.writeFile(entrypointScriptPath, entrypointScript, { mode: 0o755 }) // mode: 0o755 makes the script executable
 
-    console.log('RunKits created successfully.')
+    logger.info('RunKits created successfully.')
   } catch (error) {
-    console.error('Error creating runKits:', error)
+    logger.error('Error creating runKits:', error)
     throw error // Rethrow or handle as needed
   }
 }

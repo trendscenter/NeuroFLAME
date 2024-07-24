@@ -29,7 +29,7 @@ export const unzipFile = async (
 
     await fs.copy(zipPath, tmpPath)
 
-    logger.log(JSON.stringify({ tmpPath, zipPath, extractPath }), 'info')
+    logger.info(JSON.stringify({ tmpPath, zipPath, extractPath }), 'info')
 
     // Extract the zip file
     try {
@@ -40,13 +40,13 @@ export const unzipFile = async (
     } catch (e) {
       // skip the error because the files seem to extract correctly
       // TODO: investigate why the error is thrown
-      logger.log(`Error extracting the file: ${e}, continuing...`, 'error')
+      logger.info(`Error extracting the file: ${e}, continuing...`, 'error')
     }
 
     // Delete the temporary zip file
     // await fs.unlink(tmpPath)
 
-    logger.log(
+    logger.info(
       `File uploaded and extracted successfully to ${extractPath}`,
       'info',
     )

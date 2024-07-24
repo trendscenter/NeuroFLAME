@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import path from 'path'
 import url from 'url'
 import { start as startEdgeFederatedClient } from 'edge-federated-client'
+import logger from './logger.js';
 import { createMainWindow } from './window.js'
 import {
   getConfigPath,
@@ -58,7 +59,7 @@ app.on('window-all-closed', () => {
 })
 app.on('activate', () => {
   if (mainWindow === null) {
-    createWindow().catch(console.error)
+    createWindow().catch(logger.error)
   }
 })
 
@@ -68,7 +69,7 @@ ipcMain.handle('getConfig', getConfig)
 ipcMain.handle('openConfig', openConfig)
 ipcMain.handle('applyDefaultConfig', applyDefaultConfig)
 ipcMain.handle('useDirectoryDialog', (event, pathString) => {
-  console.log('useDirectoryDialog', { pathString })
+  logger.info('useDirectoryDialog', { pathString })
   if (mainWindow) {
     return useDirectoryDialog({ mainWindow, pathString })
   }

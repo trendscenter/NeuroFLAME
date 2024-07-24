@@ -26,7 +26,6 @@ export async function provisionRun({
 
   const adminName = 'admin@admin.com'
 
-
   const path_startupKits = path.join(path_run, 'startupKits/')
   const path_runKits = path.join(path_run, 'runKits/')
   const path_hosting = path.join(path_run, 'hosting/')
@@ -69,7 +68,7 @@ export async function provisionRun({
 async function ensureDirectoryExists(directoryPath: string): Promise<void> {
   try {
     await fs.promises.mkdir(directoryPath, { recursive: true })
-    // console.log(`Directory ensured: ${directoryPath}`)
+    // logger.info(`Directory ensured: ${directoryPath}`)
   } catch (error) {
     if ((error as { code?: string }).code === 'EEXIST') {
       return

@@ -4,6 +4,7 @@ import { launchNode } from '../launchNode.js'
 import path from 'path'
 import { unzipFile } from '../unzipFile.js'
 import fs from 'fs/promises'
+import logger from '../../logger.js'
 
 export const RUN_START_SUBSCRIPTION = `
 subscription runStartSubscription {
@@ -17,10 +18,10 @@ subscription runStartSubscription {
 }`
 
 export const runStartHandler = {
-  error: (err: any) => console.error('Run Start - Subscription error:', err),
-  complete: () => console.log('Run Start - Subscription completed'),
+  error: (err: any) => logger.error('Run Start - Subscription error:', err),
+  complete: () => logger.info('Run Start - Subscription completed'),
   next: async ({ data }: { data: any }) => {
-    console.log('Run Start - Received data')
+    logger.info('Run Start - Received data')
     try {
       const {
         consortiumId,
@@ -85,7 +86,7 @@ export const runStartHandler = {
           containerDirectory: '/workspace/data',
         })
       } catch (e) {
-        console.error('Failed to read or parse mount configuration:', e)
+        logger.error('Failed to read or parse mount configuration:', e)
         throw new Error('Failed to load mount configuration')
       }
 
@@ -98,7 +99,7 @@ export const runStartHandler = {
         commandsToRun: ['python', '/workspace/entry_edge.py'],
       })
     } catch (error) {
-      console.error('Error in runStartHandler:', error)
+      logger.error('Error in runStartHandler:', error)
     }
   },
 }

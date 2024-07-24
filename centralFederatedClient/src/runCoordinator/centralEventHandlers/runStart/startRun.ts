@@ -6,6 +6,7 @@ import uploadToFileServer from './uploadToFileServer.js'
 import getConfig from '../../../config/getConfig.js'
 import reportRunError from './reportRunError.js'
 import reportRunComplete from './reportRunComplete.js'
+import logger from '../../../logger.js'
 
 interface startRunArgs {
   imageName: string
@@ -22,7 +23,7 @@ export default async function ({
   computationParameters,
 }: startRunArgs) {
   const config = await getConfig()
-  console.log('Starting run...')
+  logger.info('Starting run...')
   const path_baseDirectory = config.baseDir
   const FQDN = config.FQDN
 
@@ -79,7 +80,7 @@ export default async function ({
     onContainerExitError: (containerId, error) => {
       reportRunError({
         runId,
-        errorMessage: `Error: ${error.message}`,
+        errorMessage: error,
       })
     },
   })

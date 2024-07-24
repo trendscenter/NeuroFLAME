@@ -2,6 +2,7 @@ import path from 'path';
 import { promises as fs } from 'fs';
 import { app, shell } from 'electron';
 import { defaultConfig } from './defaultConfig.js';
+import logger from './logger.js';
 
 export function getConfigPath(): string {
   const args: string[] = process.argv.slice(1); // Skip the first argument which is the path to node
@@ -13,17 +14,17 @@ export function getConfigPath(): string {
 
 export async function getConfig(): Promise<typeof defaultConfig> {
   const configPath = getConfigPath();
-  console.log('Reading configuration from:', configPath);
+  logger.info('Reading configuration from:', configPath);
   try {
     const config = await fs.readFile(configPath, 'utf8');
     return JSON.parse(config);
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-      console.log('Configuration file not found, creating default configuration.');
+      logger.info('Configuration file not found, creating default configuration.');
       await fs.writeFile(configPath, JSON.stringify(defaultConfig, null, 2));
       return defaultConfig;
     } else {
-      console.error('Failed to read or parse the configuration file:', error);
+      logger.error('Failed to read or parse the configuration file:', error);
       throw new Error('Failed to access the configuration file.');
     }
   }
@@ -39,7 +40,7 @@ export async function openConfig(): Promise<void> {
   try {
     await shell.openPath(configPath);
   } catch (e) {
-    console.error('Failed to open path:', e);
+    logger.error('Failed to open path:', e);
     throw new Error('Failed to open path');
   }
 }

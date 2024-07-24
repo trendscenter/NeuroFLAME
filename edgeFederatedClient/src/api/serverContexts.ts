@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getConfig } from '../config/config.js';
+import logger from '../logger.js';
 
 // WebSocket server context
 export const wsServerContext = async (ctx: any) => {
@@ -56,10 +57,10 @@ const validateToken = async (accessToken: string): Promise<TokenPayload> => {
     return decodedAccessToken;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error(`Axios error: ${error.message}`, error.response?.data);
+      logger.error(`Axios error: ${error.message}`, error.response?.data);
       throw new Error(`Error fetching decoded token: ${error.response?.statusText || error.message}`);
     } else {
-      console.error(`Unexpected error: ${error}`);
+      logger.error(`Unexpected error: ${error}`);
       throw new Error(`Unexpected error fetching decoded token: ${error}`);
     }
   }

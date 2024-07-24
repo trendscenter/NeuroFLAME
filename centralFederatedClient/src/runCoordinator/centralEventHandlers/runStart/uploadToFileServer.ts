@@ -6,6 +6,7 @@ import path from 'path'
 import archiver from 'archiver'
 import crypto from 'crypto'
 import getConfig from '../../../config/getConfig.js'
+import logger from '../../../logger.js'
 
 interface UploadParameters {
   consortiumId: string
@@ -38,27 +39,27 @@ export default async function uploadFileToServer({
 
   try {
     await zipDirectory(extractPath, zipPath)
-    console.log(`Zip file created at ${zipPath}`)
+    logger.info(`Zip file created at ${zipPath}`)
     await validateZipFile(zipPath)
     const fileSize = await getFileSize(zipPath) // Get the file size
-    console.log(`File size is ${fileSize} bytes`)
+    logger.info(`File size is ${fileSize} bytes`)
     const checksum = await generateChecksum(zipPath) // Generate and log the checksum
-    console.log(`Checksum is ${checksum}`)
+    logger.info(`Checksum is ${checksum}`)
     await uploadZipFile(url, zipPath, accessToken)
-    console.log('File uploaded successfully')
+    logger.info('File uploaded successfully')
   } catch (error) {
-    console.error('Error during file upload:', formatAxiosError(error))
+    logger.error('Error during file upload:', formatAxiosError(error))
     throw error // Properly propagate errors
   }
 }
 
 async function validateZipFile(zipPath: string): Promise<void> {
-  console.log(`Validating zip file at ${zipPath}...`)
+  logger.info(`Validating zip file at ${zipPath}...`)
   const fileStats = await fs.stat(zipPath)
   if (fileStats.size === 0) {
     throw new Error('Zip file is empty')
   }
-  console.log('Zip file validation successful')
+  logger.info('Zip file validation successful')
 }
 
 async function getFileSize(filePath: string): Promise<number> {
@@ -85,9 +86,9 @@ async function uploadZipFile(
   const formData = new FormData()
   formData.append('file', createReadStream(zipPath))
 
-  console.log('Starting file upload...')
+  logger.info('Starting file upload...')
   // log the url and formData
-  console.log({
+  logger.info({
     url,
   })
 
@@ -100,12 +101,12 @@ async function uploadZipFile(
     })
 
     if (response.status === 200) {
-      console.log('File uploaded successfully')
+      logger.info('File uploaded successfully')
     } else {
       throw new Error(`Failed to upload file: ${response.statusText}`)
     }
   } catch (error) {
-    console.error('File upload failed:', formatAxiosError(error))
+    logger.error('File upload failed:', formatAxiosError(error))
     throw new Error(formatAxiosError(error))
   }
 }
@@ -126,16 +127,16 @@ export async function zipDirectory(
     const archive = archiver('zip', { zlib: { level: 9 } })
 
     output.on('close', () => {
-      console.log(`Archived ${archive.pointer()} total bytes.`)
+      logger.info(`Archived ${archive.pointer()} total bytes.`)
       resolve()
     })
 
     output.on('end', () => {
-      console.log('Data has been drained')
+      logger.info('Data has been drained')
     })
 
     archive.on('error', (err) => {
-      console.error('Archiving error:', err)
+      logger.error('Archiving error:', err)
       reject(err)
     })
 
@@ -143,7 +144,7 @@ export async function zipDirectory(
       if (err.code === 'ENOENT') {
         console.warn('Archiving warning:', err)
       } else {
-        console.error('Archiving warning:', err)
+        logger.error('Archiving warning:', err)
         reject(err)
       }
     })

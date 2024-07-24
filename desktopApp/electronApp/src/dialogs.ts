@@ -1,6 +1,7 @@
 import { BrowserWindow, dialog } from 'electron';
 import { promises as fs } from 'fs';
 import path from 'path';
+import logger from './logger.js';
 
 // Define the type for the function parameters
 interface DirectoryDialogParams {
@@ -39,7 +40,7 @@ export async function useDirectoryDialog({
 
     return { directoryPath: filePaths[0], canceled, error: null };
   } catch (error) {
-    console.error('Failed to open directory dialog:', error);
+    logger.error('Failed to open directory dialog:', error);
     return {
       directoryPath: undefined,
       canceled: true,

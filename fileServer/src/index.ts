@@ -13,8 +13,8 @@ const init = async () => {
 
   app.use('/', downloadRoute)
   app.use('/', uploadRoute)
-
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+  
+  app.listen(PORT, () => logger.info(`Server is running on port ${PORT}`))
 }
 
 init().catch((error: any) => {

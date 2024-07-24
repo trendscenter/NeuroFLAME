@@ -8,6 +8,7 @@ import WebSocket, { WebSocketServer } from 'ws'
 import { useServer } from 'graphql-ws/lib/use/ws'
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import logger from '../logger.js'
 
 import { typeDefs } from './graphql/typeDefs.js'
 import { resolvers } from './graphql/resolvers.js'
@@ -72,8 +73,8 @@ export async function start({ port }: { port: number }) {
 
   // Now that our HTTP server is fully set up, actually listen.
   httpServer.listen(PORT, () => {
-    console.log(`🚀 Query endpoint ready at http://localhost:${PORT}/graphql`)
-    console.log(
+    logger.info(`🚀 Query endpoint ready at http://localhost:${PORT}/graphql`)
+    logger.info(
       `🚀 Subscription endpoint ready at ws://localhost:${PORT}/graphql`,
     )
   })

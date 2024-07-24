@@ -1,5 +1,6 @@
 import fs from 'fs/promises'
 import defaultConfig from './defaultConfig.js'
+import logger from '../logger.js'
 
 interface CentralFederateClientConfig {
   httpUrl: string
@@ -17,17 +18,17 @@ export default async function getConfig(): Promise<
   const configPath = getConfigPath()
 
   if (configPath) {
-    // console.log(`Attempting to load config from: ${configPath}`)
+    // logger.info(`Attempting to load config from: ${configPath}`)
     try {
       const config = await loadConfigFromFile(configPath)
-      // console.log(`Loaded configuration from: ${configPath}`)
+      // logger.info(`Loaded configuration from: ${configPath}`)
       return config
     } catch (error) {
-      console.error(`Failed to load config from ${configPath}:`, error)
+      logger.error(`Failed to load config from ${configPath}:`, error)
     }
   }
 
-  console.log('Loading default configuration.')
+  logger.info('Loading default configuration.')
   return defaultConfig
 }
 

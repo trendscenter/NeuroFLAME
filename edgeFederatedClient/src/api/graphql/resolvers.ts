@@ -2,6 +2,7 @@ import * as runCoordinator from '../../runCoordinator/runCoordinator.js'
 import { getConfig } from '../../config/config.js'
 import path from 'path'
 import fs from 'fs/promises'
+import logger from '../../logger.js'
 
 export const resolvers = {
   Query: {
@@ -28,7 +29,7 @@ export const resolvers = {
 
         return config.dataPath
       } catch (error) {
-        console.error('Error reading mount directory:', error)
+        logger.error('Error reading mount directory:', error)
         throw new Error('Failed to read mount directory')
       }
     },
@@ -36,7 +37,7 @@ export const resolvers = {
 
   Mutation: {
     connectAsUser: async (_: any, args: any, context: any): Promise<string> => {
-      console.log('connectAsUser')
+      logger.info('connectAsUser')
       try {
         // Make the runCoordinator connect to the centralApi
         const { wsUrl } = getConfig()
@@ -46,7 +47,7 @@ export const resolvers = {
         })
         return JSON.stringify(context)
       } catch (error) {
-        console.error('Error in connectAsUser:', error)
+        logger.error('Error in connectAsUser:', error)
         throw new Error('Failed to connect as user')
       }
     },
@@ -71,7 +72,7 @@ export const resolvers = {
 
         return true
       } catch (error) {
-        console.error('Error in setMountDir:', error)
+        logger.error('Error in setMountDir:', error)
         throw new Error('Failed to set mount directory')
       }
     },

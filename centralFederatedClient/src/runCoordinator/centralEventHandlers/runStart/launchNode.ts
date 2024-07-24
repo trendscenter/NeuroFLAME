@@ -1,4 +1,5 @@
 import Docker from 'dockerode'
+import logger from '../../../logger.js'
 const docker = new Docker()
 
 interface LaunchNodeArgs {
@@ -14,7 +15,7 @@ interface LaunchNodeArgs {
   }>
   commandsToRun: string[]
   onContainerExitSuccess?: (containerId: string) => void
-  onContainerExitError?: (containerId: string, error: Error) => void
+  onContainerExitError?: (containerId: string, error: string) => void
 }
 
 interface ExposedPorts {
@@ -45,7 +46,7 @@ export async function launchNode({
     })
   } else if (containerService === 'singularity') {
     // Placeholder for singularity command handling
-    console.log('Singularity handling not implemented.')
+    logger.info('Singularity handling not implemented.')
   }
 }
 
@@ -57,7 +58,7 @@ const launchDockerNode = async ({
   onContainerExitSuccess,
   onContainerExitError,
 }: Omit<LaunchNodeArgs, 'containerService'>) => {
-  console.log('Running docker command')
+  logger.info('Running docker command')
 
   const binds = directoriesToMount.map(
     (mount) => `${mount.hostDirectory}:${mount.containerDirectory}`,
@@ -85,7 +86,7 @@ const launchDockerNode = async ({
 
     // Start the container
     await container.start()
-    console.log(`Container started successfully: ${container.id}`)
+    logger.info(`Container started successfully: ${container.id}`)
 
     // Add event handlers for the container
     attachDockerEventHandlers(
@@ -97,8 +98,9 @@ const launchDockerNode = async ({
     // Return the container ID
     return container.id
   } catch (error) {
-    console.error(`Failed to launch Docker container: ${error}`)
-    onContainerExitError && onContainerExitError('', error as Error)
+    logger.error(`Failed to launch Docker container: ${error}`)
+    onContainerExitError &&
+      onContainerExitError('', (error as Error).toString())
     throw error
   }
 }
@@ -106,11 +108,11 @@ const launchDockerNode = async ({
 const attachDockerEventHandlers = (
   containerId: string,
   onContainerExitSuccess?: (containerId: string) => void,
-  onContainerExitError?: (containerId: string, error: Error) => void,
+  onContainerExitError?: (containerId: string, error: string) => void,
 ) => {
   docker.getEvents((err, stream) => {
     if (err) {
-      console.error(`Error getting Docker events: ${err}`)
+      logger.error(`Error getting Docker events: ${err}`)
       onContainerExitError && onContainerExitError(containerId, err)
       return
     }
@@ -121,29 +123,26 @@ const attachDockerEventHandlers = (
         if (event.Action === 'die') {
           const exitCode = parseInt(event.Actor.Attributes.exitCode, 10)
           if (exitCode !== 0) {
-            console.error(
+            logger.error(
               `Container ${containerId} stopped due to an error with exit code: ${exitCode}`,
             )
             onContainerExitError &&
-              onContainerExitError(
-                containerId,
-                new Error(`Exit code: ${exitCode}`),
-              )
+              onContainerExitError(containerId, `Exit code: ${exitCode}`)
           } else {
-            console.log(`Container ${containerId} stopped gracefully`)
+            logger.info(`Container ${containerId} stopped gracefully`)
             onContainerExitSuccess && onContainerExitSuccess(containerId)
           }
         }
 
         if (event.Action === 'stop') {
-          console.log(`Container ${containerId} stopped gracefully`)
+          logger.info(`Container ${containerId} stopped gracefully`)
           onContainerExitSuccess && onContainerExitSuccess(containerId)
         }
       }
     })
 
     stream?.on('error', (err) => {
-      console.error(`Event stream error: ${err}`)
+      logger.error(`Event stream error: ${err}`)
       onContainerExitError && onContainerExitError(containerId, err)
     })
   })

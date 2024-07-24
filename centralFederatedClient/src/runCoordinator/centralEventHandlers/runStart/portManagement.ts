@@ -1,5 +1,5 @@
 import net from 'net';
-
+import logger from '../../../logger.js'
 interface ReservePortResult {
   port: number;
   server: net.Server;
@@ -14,7 +14,7 @@ export async function reservePort(): Promise<ReservePortResult> {
     server.listen(0, () => {
         const address = server.address() as net.AddressInfo;
         const port = address.port;
-        console.log(`Listening on port ${port}`);
+        logger.info(`Listening on port ${port}`);
         
         resolve({
             port,

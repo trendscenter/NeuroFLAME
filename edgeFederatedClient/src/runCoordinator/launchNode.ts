@@ -1,4 +1,5 @@
 import Docker from 'dockerode'
+import logger from '../logger.js'
 const docker = new Docker()
 
 interface LaunchNodeArgs {
@@ -31,7 +32,7 @@ export async function launchNode({
   commandsToRun,
 }: LaunchNodeArgs) {
   if (containerService === 'docker') {
-    console.log('Running docker command')
+    logger.info('Running docker command')
 
     const binds = directoriesToMount.map(
       (mount) => `${mount.hostDirectory}:${mount.containerDirectory}`,
@@ -57,13 +58,13 @@ export async function launchNode({
       })
 
       await container.start()
-      console.log(`Container started successfully: ${container.id}`)
+      logger.info(`Container started successfully: ${container.id}`)
     } catch (error) {
-      console.error(`Failed to launch Docker container: ${error}`)
+      logger.error(`Failed to launch Docker container: ${error}`)
       throw error
     }
   } else if (containerService === 'singularity') {
     // Placeholder for singularity command handling
-    console.log('Singularity handling not implemented.')
+    logger.info('Singularity handling not implemented.')
   }
 }

@@ -16,12 +16,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "edge-federated-client": "1.0.0"
+    "edge-federated-client": "1.0.0",
+    "winston": "^3.13.1"
   },
   "devDependencies": {
-    "electron": "^30.0.1",
     "@types/electron": "^1.6.10",
     "@types/node": "^20.12.7",
+    "electron": "^30.0.1",
     "electron-builder": "^24.13.3",
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.5"

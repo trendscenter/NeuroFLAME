@@ -1,4 +1,5 @@
 import getConfig from '../../../config/getConfig.js'
+import logger from '../../../logger.js'
 
 // TypeScript interfaces for the GraphQL response
 interface GraphQLResponse<T> {
@@ -44,7 +45,7 @@ export default async function reportReady({ runId }: { runId: string }) {
 
     // Handle the response data here
     if (responseData.errors) {
-      console.error('GraphQL Error:', responseData.errors)
+      logger.error('GraphQL Error:', responseData.errors)
       throw new Error('Failed to report run ready due to GraphQL error')
     }
 
@@ -54,7 +55,7 @@ export default async function reportReady({ runId }: { runId: string }) {
       throw new Error('Invalid response data')
     }
   } catch (error) {
-    console.error('Error reporting run ready:', error)
+    logger.error('Error reporting run ready:', error)
     throw error
   }
 }
