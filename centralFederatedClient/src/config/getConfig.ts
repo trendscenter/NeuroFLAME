@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 import defaultConfig from './defaultConfig.js'
-import logger from '../logger.js'
+import { logger } from '../logger.js'
 
 interface CentralFederateClientConfig {
   httpUrl: string
@@ -10,6 +10,7 @@ interface CentralFederateClientConfig {
   fileServerUrl: string
   baseDir: string
   FQDN: string
+  logPath?: string
 }
 
 export default async function getConfig(): Promise<
@@ -46,7 +47,9 @@ function getConfigPathFromEnv(): string | undefined {
   return envPath ? `${envPath}/centralApiConfig.json` : undefined
 }
 
-async function loadConfigFromFile(path: string): Promise<CentralFederateClientConfig> {
+async function loadConfigFromFile(
+  path: string,
+): Promise<CentralFederateClientConfig> {
   const data = await fs.readFile(path, 'utf8')
   return JSON.parse(data)
 }

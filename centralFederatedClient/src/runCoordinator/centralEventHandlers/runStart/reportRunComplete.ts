@@ -1,16 +1,16 @@
-import getConfig from '../../../config/getConfig.js';
-import logger from '../../../logger.js'
+import getConfig from '../../../config/getConfig.js'
+import { logger } from '../../../logger.js'
 
 // TypeScript interfaces for the GraphQL response
 interface GraphQLResponse<T> {
-  data?: T;
-  errors?: { message: string }[];
+  data?: T
+  errors?: { message: string }[]
 }
 
 interface ReportRunCompleteResponse {
   reportRunComplete: {
-    success: boolean;
-    message?: string;
+    success: boolean
+    message?: string
   }
 }
 
@@ -19,11 +19,11 @@ const REPORT_RUN_COMPLETE_MUTATION = `
   mutation reportRunComplete($runId: String!) {
     reportRunComplete(runId: $runId)
   }
-`;
+`
 
 export default async function reportRunComplete({ runId }: { runId: string }) {
-  const config = await getConfig();
-  const { httpUrl, accessToken } = config;
+  const config = await getConfig()
+  const { httpUrl, accessToken } = config
 
   try {
     const response = await fetch(httpUrl, {
@@ -36,24 +36,26 @@ export default async function reportRunComplete({ runId }: { runId: string }) {
         query: REPORT_RUN_COMPLETE_MUTATION,
         variables: { runId },
       }),
-    });
+    })
 
     // Parse the JSON response and assert its type
-    const responseData = (await response.json()) as GraphQLResponse<ReportRunCompleteResponse>;
+    const responseData = (await response.json()) as GraphQLResponse<
+      ReportRunCompleteResponse
+    >
 
     // Handle the response data here
     if (responseData.errors) {
-      logger.error('GraphQL Error:', responseData.errors);
-      throw new Error('Failed to report run complete due to GraphQL error');
+      logger.error('GraphQL Error:', responseData.errors)
+      throw new Error('Failed to report run complete due to GraphQL error')
     }
 
     if (responseData.data && responseData.data.reportRunComplete) {
-      return responseData.data.reportRunComplete;
+      return responseData.data.reportRunComplete
     } else {
-      throw new Error('Invalid response data');
+      throw new Error('Invalid response data')
     }
   } catch (error) {
-    logger.error('Error reporting run complete:', error);
-    throw error;
+    logger.error('Error reporting run complete:', error)
+    throw error
   }
 }

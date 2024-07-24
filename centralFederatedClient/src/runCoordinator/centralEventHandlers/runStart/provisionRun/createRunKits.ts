@@ -1,6 +1,6 @@
 import path from 'path'
 import fs from 'fs/promises'
-import logger from '../../../../logger.js'
+import { logger } from '../../../../logger.js'
 
 interface CreateRunKitsArgs {
   startupKitsPath: string

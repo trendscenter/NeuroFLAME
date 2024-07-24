@@ -1,5 +1,4 @@
 import { logToPath, logger } from './logger.js'
-
 import { setConfig, edgeClientLaunchConfiguration } from './config/config.js'
 import { start as startApiServer } from './api/index.js'
 

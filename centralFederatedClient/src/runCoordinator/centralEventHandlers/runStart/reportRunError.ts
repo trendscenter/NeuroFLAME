@@ -1,16 +1,16 @@
-import getConfig from '../../../config/getConfig.js';
-import logger from '../../../logger.js'
+import getConfig from '../../../config/getConfig.js'
+import { logger } from '../../../logger.js'
 
 // TypeScript interfaces for the GraphQL response
 interface GraphQLResponse<T> {
-  data?: T;
-  errors?: { errorMessage: string }[];
+  data?: T
+  errors?: { errorMessage: string }[]
 }
 
 interface ReportRunErrorResponse {
   reportRunError: {
-    success: boolean;
-    errorMessage?: string;
+    success: boolean
+    errorMessage?: string
   }
 }
 
@@ -19,11 +19,17 @@ const REPORT_RUN_ERROR_MUTATION = `
   mutation reportRunError($runId: String!, $errorMessage: String!) {
     reportRunError(runId: $runId, errorMessage: $errorMessage)
   }
-`;
+`
 
-export default async function reportRunError({ runId, errorMessage }: { runId: string, errorMessage: string }) {
-  const config = await getConfig();
-  const { httpUrl, accessToken } = config;
+export default async function reportRunError({
+  runId,
+  errorMessage,
+}: {
+  runId: string
+  errorMessage: string
+}) {
+  const config = await getConfig()
+  const { httpUrl, accessToken } = config
 
   try {
     const response = await fetch(httpUrl, {
@@ -36,25 +42,27 @@ export default async function reportRunError({ runId, errorMessage }: { runId: s
         query: REPORT_RUN_ERROR_MUTATION,
         variables: { runId, errorMessage },
       }),
-    });
+    })
 
     // Parse the JSON response and assert its type
-    const responseData = (await response.json()) as GraphQLResponse<ReportRunErrorResponse>;
+    const responseData = (await response.json()) as GraphQLResponse<
+      ReportRunErrorResponse
+    >
 
     // Handle the response data here
     if (responseData.errors) {
-      logger.error('GraphQL Error:', responseData.errors);
-      throw new Error('Failed to report run error due to GraphQL error');
+      logger.error('GraphQL Error:', responseData.errors)
+      throw new Error('Failed to report run error due to GraphQL error')
     }
     logger.info(responseData.data)
 
     if (responseData.data && responseData.data.reportRunError) {
-      return responseData.data.reportRunError;
+      return responseData.data.reportRunError
     } else {
-      throw new Error('Invalid response data');
+      throw new Error('Invalid response data')
     }
   } catch (error) {
-    logger.error('Error reporting run error:', error);
-    throw error;
+    logger.error('Error reporting run error:', error)
+    throw error
   }
 }

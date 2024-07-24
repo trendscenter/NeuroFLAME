@@ -1,6 +1,6 @@
 import fs from 'fs'
 import yaml from 'js-yaml'
-import logger from '../../../../logger.js'
+import { logger } from '../../../../logger.js'
 
 interface GenerateProjectFileArgs {
   projectName: string

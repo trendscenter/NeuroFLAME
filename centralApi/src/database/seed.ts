@@ -5,7 +5,7 @@ import Run from './models/Run.js'
 import User from './models/User.js'
 import bcrypt from 'bcrypt'
 import getConfig from '../config/getConfig.js'
-import logger from '../logger.js'
+import {logger} from '../logger.js'
 
 const { databaseDetails } = await getConfig()
 const { url, user, pass } = databaseDetails

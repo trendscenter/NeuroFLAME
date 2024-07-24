@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import axios from 'axios'
 import getConfig from '../config/getConfig.js'
-import logger from '../logger.js'
+import { logger } from '../logger.js'
 
 const decodeAndValidateJWT = async (
   req: Request,

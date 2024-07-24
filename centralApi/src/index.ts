@@ -4,12 +4,12 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 import express from 'express'
 import { createServer } from 'http'
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import {WebSocketServer} from 'ws'
+import { WebSocketServer } from 'ws'
 import { useServer } from 'graphql-ws/lib/use/ws'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import mongoose from 'mongoose'
-import logger from './logger.js'
+import { logger, logToPath } from './logger.js'
 
 import typeDefs from './graphql/typeDefs.js'
 import resolvers from './graphql/resolvers.js'
@@ -20,6 +20,9 @@ import { validateAccessToken } from './authentication/authentication.js'
 import getConfig from './config/getConfig.js'
 
 const config = await getConfig()
+if (config.logPath) {
+  logToPath(config.logPath)
+}
 
 export async function start({
   port,
@@ -31,6 +34,7 @@ export async function start({
     user: string
     pass: string
   }
+  logPath?: string
 }) {
   const { url, user, pass } = databaseDetails
 

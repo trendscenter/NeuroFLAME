@@ -3,7 +3,7 @@ import unzipper from 'unzipper'
 import fs from 'fs-extra'
 import { Request, Response, NextFunction } from 'express'
 import getConfig from '../config/getConfig.js'
-import logger from '../logger.js'
+import { logger } from '../logger.js'
 
 export const unzipFile = async (
   req: Request,

@@ -5,6 +5,7 @@ interface fileServerConfiguration {
   authenticationUrl: string
   baseDir: string
   port: number
+  logPath?: string
 }
 
 export default async function getConfig(): Promise<fileServerConfiguration> {

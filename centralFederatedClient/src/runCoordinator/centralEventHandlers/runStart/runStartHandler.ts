@@ -1,7 +1,7 @@
 import reportRunError from './reportRunError.js'
 import reportRunReady from './reportRunReady.js'
 import startRun from './startRun.js'
-import logger from '../../../logger.js'
+import { logger } from '../../../logger.js'
 
 export const RUN_START_SUBSCRIPTION = `
 subscription runStartSubscription {

@@ -10,7 +10,7 @@ const logger = createLogger({
       ({ timestamp, level, message }) => `${timestamp} ${level}: ${message}`,
     ),
   ),
-  transports: [new transports.Console()],
+  transports: [new transports.Console({ level: 'info' })],
 })
 
 const logToPath = (logDir: string): void => {

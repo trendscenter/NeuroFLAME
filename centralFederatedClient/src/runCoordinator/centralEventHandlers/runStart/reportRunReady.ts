@@ -1,5 +1,5 @@
 import getConfig from '../../../config/getConfig.js'
-import logger from '../../../logger.js'
+import { logger } from '../../../logger.js'
 
 // TypeScript interfaces for the GraphQL response
 interface GraphQLResponse<T> {

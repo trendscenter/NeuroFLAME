@@ -6,7 +6,7 @@ import path from 'path'
 import archiver from 'archiver'
 import crypto from 'crypto'
 import getConfig from '../../../config/getConfig.js'
-import logger from '../../../logger.js'
+import { logger } from '../../../logger.js'
 
 interface UploadParameters {
   consortiumId: string

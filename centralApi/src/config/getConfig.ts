@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 import defaultConfig from './defaultConfig.js'
-import logger from '../logger.js'
+import {logger} from '../logger.js'
 
 interface CentralApiConfig {
   fileServerUrl: string
@@ -9,7 +9,8 @@ interface CentralApiConfig {
     url: string
     user: string
     pass: string
-  }
+  },
+  logPath?: string
 }
 
 export default async function getConfig(): Promise<CentralApiConfig> {
