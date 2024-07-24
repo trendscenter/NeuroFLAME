@@ -52,7 +52,7 @@
         {
           "target": "pkg",
           "arch": [
-            "unviversal"
+            "universal"
           ]
         }
       ],
