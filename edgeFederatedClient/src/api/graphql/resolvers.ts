@@ -2,7 +2,7 @@ import * as runCoordinator from '../../runCoordinator/runCoordinator.js'
 import { getConfig } from '../../config/config.js'
 import path from 'path'
 import fs from 'fs/promises'
-import logger from '../../logger.js'
+import {logger} from '../../logger.js'
 
 export const resolvers = {
   Query: {

@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import path from 'path'
 import url from 'url'
 import { start as startEdgeFederatedClient } from 'edge-federated-client'
-import logger from './logger.js';
+import { logger, logToPath } from './logger.js'
 import { createMainWindow } from './window.js'
 import {
   getConfigPath,
@@ -12,10 +12,11 @@ import {
 } from './config.js'
 import { useDirectoryDialog } from './dialogs.js'
 
+const logPath = path.join(app.getPath('userData'), './logs')
+logToPath(logPath)
+
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 let mainWindow: BrowserWindow | null = null
-
-
 
 // Get the configuration file path based on command-line arguments or default location
 const configPath: string = getConfigPath()
@@ -23,24 +24,22 @@ const configPath: string = getConfigPath()
 // Function to create the main application window
 async function createWindow(): Promise<void> {
   mainWindow = await createMainWindow(__dirname)
-
-  const appPath = app.getAppPath();
+  const appPath = app.getAppPath()
   const productionUrl = url.format({
     pathname: path.join(appPath, '../app/build/index.html'),
     protocol: 'file:',
     slashes: true,
   })
-  const developmentUrl = 'http://localhost:3000';
+  const developmentUrl = 'http://localhost:3000'
   // Load the correct URL (packaged or development)
-  const startUrl = app.isPackaged
-    ? productionUrl
-    : developmentUrl
+  const startUrl = app.isPackaged ? productionUrl : developmentUrl
 
   await mainWindow.loadURL(startUrl)
 
   // Load configuration and start the edge client if configured
   const config = await getConfig()
   if (config.startEdgeClientOnLaunch) {
+    config.edgeClientConfig.logPath = path.join(logPath, './edgeClient')
     startEdgeFederatedClient(config.edgeClientConfig)
   }
 

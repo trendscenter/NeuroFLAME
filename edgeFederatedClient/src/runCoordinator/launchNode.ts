@@ -1,5 +1,5 @@
 import Docker from 'dockerode'
-import logger from '../logger.js'
+import {logger} from '../logger.js'
 const docker = new Docker()
 
 interface LaunchNodeArgs {

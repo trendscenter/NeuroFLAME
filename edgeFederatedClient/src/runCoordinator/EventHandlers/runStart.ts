@@ -4,7 +4,7 @@ import { launchNode } from '../launchNode.js'
 import path from 'path'
 import { unzipFile } from '../unzipFile.js'
 import fs from 'fs/promises'
-import logger from '../../logger.js'
+import {logger} from '../../logger.js'
 
 export const RUN_START_SUBSCRIPTION = `
 subscription runStartSubscription {

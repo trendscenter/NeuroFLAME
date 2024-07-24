@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { getConfig } from '../config/config.js';
-import logger from '../logger.js';
+import {logger} from '../logger.js';
 
 // WebSocket server context
 export const wsServerContext = async (ctx: any) => {

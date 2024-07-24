@@ -1,34 +1,34 @@
-import { BrowserWindow, dialog } from 'electron';
-import { promises as fs } from 'fs';
-import path from 'path';
-import logger from './logger.js';
+import { BrowserWindow, dialog } from 'electron'
+import { promises as fs } from 'fs'
+import path from 'path'
+import { logger } from './logger.js'
 
 // Define the type for the function parameters
 interface DirectoryDialogParams {
-  mainWindow: BrowserWindow;
-  pathString?: string;
+  mainWindow: BrowserWindow
+  pathString?: string
 }
 
 // Define the type for the function's return value
 interface DirectoryDialogResult {
-  directoryPath?: string;
-  canceled: boolean;
-  error: string | null;
+  directoryPath?: string
+  canceled: boolean
+  error: string | null
 }
 
 export async function useDirectoryDialog({
   mainWindow,
   pathString,
 }: DirectoryDialogParams): Promise<DirectoryDialogResult> {
-  let defaultPath: string | undefined;
+  let defaultPath: string | undefined
 
   if (pathString) {
     try {
-      const resolvedPath = path.resolve(pathString);
-      await fs.access(resolvedPath);
-      defaultPath = resolvedPath;
+      const resolvedPath = path.resolve(pathString)
+      await fs.access(resolvedPath)
+      defaultPath = resolvedPath
     } catch {
-      console.warn(`Invalid path provided: ${pathString}`);
+      console.warn(`Invalid path provided: ${pathString}`)
     }
   }
 
@@ -36,15 +36,15 @@ export async function useDirectoryDialog({
     const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
       properties: ['openDirectory', 'openFile'],
       defaultPath,
-    });
+    })
 
-    return { directoryPath: filePaths[0], canceled, error: null };
+    return { directoryPath: filePaths[0], canceled, error: null }
   } catch (error) {
-    logger.error('Failed to open directory dialog:', error);
+    logger.error('Failed to open directory dialog:', error)
     return {
       directoryPath: undefined,
       canceled: true,
       error: (error as Error).message,
-    };
+    }
   }
 }

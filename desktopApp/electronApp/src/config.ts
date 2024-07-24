@@ -2,7 +2,7 @@ import path from 'path';
 import { promises as fs } from 'fs';
 import { app, shell } from 'electron';
 import { defaultConfig } from './defaultConfig.js';
-import logger from './logger.js';
+import {logger} from './logger.js';
 
 export function getConfigPath(): string {
   const args: string[] = process.argv.slice(1); // Skip the first argument which is the path to node
