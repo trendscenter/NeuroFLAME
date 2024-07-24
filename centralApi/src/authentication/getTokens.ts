@@ -1,5 +1,5 @@
 import { generateTokens } from './authentication.js'
-import logger from '../../logger.js'
+import logger from '../logger.js'
 
 const centralToken = generateTokens(
   { userId: '66289c79aebab67040a20067', roles: ['central'] },

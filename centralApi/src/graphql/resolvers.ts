@@ -25,7 +25,7 @@ import {
   RunListItem,
   RunDetails,
 } from './typeDefs.js'
-import logger from '../../logger.js'
+import logger from '../logger.js'
 
 interface Context {
   userId: string

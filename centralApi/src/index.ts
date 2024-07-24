@@ -9,7 +9,7 @@ import { useServer } from 'graphql-ws/lib/use/ws'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import mongoose from 'mongoose'
-import logger from '../logger.js'
+import logger from './logger.js'
 
 import typeDefs from './graphql/typeDefs.js'
 import resolvers from './graphql/resolvers.js'
