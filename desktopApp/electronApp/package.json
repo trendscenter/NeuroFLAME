@@ -60,10 +60,7 @@
       "hardenedRuntime": false,
       "gatekeeperAssess": false,
       "entitlements": null,
-      "entitlementsInherit": null,
-      "arch": [
-        "x64"
-      ]
+      "entitlementsInherit": null
     },
     "linux": {
       "target": "AppImage"
