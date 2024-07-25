@@ -127,7 +127,10 @@ const attachDockerEventHandlers = (
               `Container ${containerId} stopped due to an error with exit code: ${exitCode}`,
             )
             onContainerExitError &&
-              onContainerExitError(containerId, `Exit code: ${exitCode}`)
+              onContainerExitError(
+                containerId,
+                `Container Exit Code: ${exitCode}`,
+              )
           } else {
             logger.info(`Container ${containerId} stopped gracefully`)
             onContainerExitSuccess && onContainerExitSuccess(containerId)
