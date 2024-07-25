@@ -1,7 +1,7 @@
 import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
-import {logger} from '../logger.js'
+import { logger } from '../logger.js'
 
 export default async function ({
   url,
@@ -55,7 +55,7 @@ export default async function ({
       })
 
       writer.on('error', (error) => {
-        logger.error('File write failed:', error)
+        logger.error('File write failed:', error.toString())
         reject(error)
       })
     })
@@ -76,7 +76,7 @@ export default async function ({
         JSON.stringify(errorDetails, null, 2),
       )
     } else {
-      logger.error('Unexpected error:', error)
+      logger.error('Unexpected error:', JSON.stringify(error, null, 2))
       customError = error
     }
     throw customError // Rethrow the error after logging it

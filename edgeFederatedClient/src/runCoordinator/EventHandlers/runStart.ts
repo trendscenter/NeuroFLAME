@@ -4,7 +4,7 @@ import { launchNode } from '../launchNode.js'
 import path from 'path'
 import { unzipFile } from '../unzipFile.js'
 import fs from 'fs/promises'
-import {logger} from '../../logger.js'
+import { logger } from '../../logger.js'
 
 export const RUN_START_SUBSCRIPTION = `
 subscription runStartSubscription {
@@ -18,7 +18,7 @@ subscription runStartSubscription {
 }`
 
 export const runStartHandler = {
-  error: (err: any) => logger.error('Run Start - Subscription error:', err),
+  error: (err: any) => logger.error(`Run Start - Subscription error: ${err}`),
   complete: () => logger.info('Run Start - Subscription completed'),
   next: async ({ data }: { data: any }) => {
     logger.info('Run Start - Received data')
@@ -57,9 +57,11 @@ export const runStartHandler = {
       // Unzip the file
       try {
         await unzipFile(runKitPath, 'kit.zip')
-      } catch (e: any) {
+      } catch (e) {
         throw new Error(
-          `Error unzipping the file: ${e.message || e.toString()}`,
+          `Error unzipping the file: ${
+            (e as Error).message || (e as Error).toString()
+          }`,
         )
       }
 
@@ -86,7 +88,7 @@ export const runStartHandler = {
           containerDirectory: '/workspace/data',
         })
       } catch (e) {
-        logger.error('Failed to read or parse mount configuration:', e)
+        logger.error(`Failed to read or parse mount configuration: ${e}`)
         throw new Error('Failed to load mount configuration')
       }
 
@@ -99,7 +101,7 @@ export const runStartHandler = {
         commandsToRun: ['python', '/workspace/entry_edge.py'],
       })
     } catch (error) {
-      logger.error('Error in runStartHandler:', error)
+      logger.error(`Error in runStartHandler: ${error}`)
     }
   },
 }

@@ -1,5 +1,5 @@
 import Docker from 'dockerode'
-import {logger} from '../logger.js'
+import { logger } from '../logger.js'
 const docker = new Docker()
 
 interface LaunchNodeArgs {
@@ -60,7 +60,9 @@ export async function launchNode({
       await container.start()
       logger.info(`Container started successfully: ${container.id}`)
     } catch (error) {
-      logger.error(`Failed to launch Docker container: ${error}`)
+      logger.error(
+        `Failed to launch Docker container: ${JSON.stringify(error, null, 2)}`,
+      )
       throw error
     }
   } else if (containerService === 'singularity') {
