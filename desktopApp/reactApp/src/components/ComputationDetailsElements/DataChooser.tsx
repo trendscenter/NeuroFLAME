@@ -5,18 +5,20 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import IconButton from '@mui/material/IconButton';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import FolderIcon from '@mui/icons-material/Folder';
 import SaveIcon from  '@mui/icons-material/Save';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
-import TextField from '@mui/material/TextField';
+import TextareaAutosize from 'react-textarea-autosize';
+import { LineWeight } from '@mui/icons-material';
 
 // Define custom styles
 const customStyles = {
     h3 : {
         margin: '0',
         padding: '0',
-        lineHeight: '2',
+        lineHeight: '1.5',
     },
     container: {
         background: '#ffffff',
@@ -28,14 +30,14 @@ const customStyles = {
         whiteSpace: 'nowrap',
         display: 'flex',
         justifyContent: 'flex-start',
-        alignConten: 'center',
+        alignContent: 'center',
         lineHeight: '2',
     },
     labelBetween: {
         whiteSpace: 'nowrap',
         display: 'flex',
         justifyContent: 'space-between',
-        alignContent: 'center',
+        alignContent: 'center'
     },
     files: {
         height: '200px',
@@ -50,12 +52,15 @@ export default function OpenDialog(props: any) {
     const [files, setFiles] = useState(null);
     const [editDirManually, setEditDirManually] = useState(false);
 
-    const handleClick = (path) => {
-        window.ElectronAPI.openFile().then((result) => {
-            setDirectory(result.filepath);
-            setFiles(result.filelist);
-        });
-    };
+    const handleUseDirectoryDialog = async () => {
+        const { directoryPath, error, canceled } = await window.ElectronAPI.useDirectoryDialog(props.mountDir)
+        if (directoryPath) {
+            props.setMount(directoryPath)
+        }
+        if (error) {
+            console.error(error)
+        }
+    }
 
     const handleSetMount = () => {
         if(directory){
@@ -83,7 +88,7 @@ export default function OpenDialog(props: any) {
     <div>
         {!directory && !props.mountDir && !editDirManually && 
         <div>
-            <button onClick={handleClick} style={{width: '100%', borderRadius: '2rem'}}>
+            <button onClick={handleUseDirectoryDialog} style={{width: '100%', borderRadius: '2rem'}}>
                 Select Data Directory
             </button>
             <div style={{marginTop: '0.5rem', textAlign: 'center'}}>
@@ -91,37 +96,34 @@ export default function OpenDialog(props: any) {
             </div>
         </div>}
         {editDirManually && 
-        <div style={{display: 'flex', justifyContent: 'middle', alignItems: 'center'}}>
-            <TextField style={{width: '85%'}} id="standard-basic" label="Enter Directory Path" variant="standard" onChange={(e) => setDirectory(e.target.value)} />
-            <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)', marginRight: '0.25rem' }} onClick={handleSetMount} />
-            <CancelIcon style={{ color: 'rgba(255, 87, 51, 0.5)' }} onClick={() => {setEditDirManually(!editDirManually)}} />
+        <div style={{display: 'flex', justifyContent: 'middle', alignItems: 'center'}} style={customStyles.container}>
+            <label style={customStyles.labelBetween}>
+                <h3 style={customStyles.h3}>Edit Data Directory</h3>
+                <div>
+                    <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)', marginRight: '0.25rem' }} onClick={handleSetMount} />
+                    <CancelIcon style={{ color: 'rgba(255, 87, 51, 0.5)' }} onClick={() => {setEditDirManually(!editDirManually)}} />
+                </div>
+            </label>
+            <TextareaAutosize style={{width: '100%'}} id="standard-basic" defaultValue={props.mountDir} onChange={(e) => setDirectory(e.target.value)} />
         </div>
         }
-        {props.mountDir && <div style={customStyles.container}>
+        {!editDirManually && props.mountDir && <div style={customStyles.container}>
             <label style={customStyles.labelBetween}>
                 <h3 style={customStyles.h3}>Data Directory</h3>
-                <IconButton aria-label="delete" size="medium" onClick={(event) => unsetMount()}>
-                    <DeleteIcon fontSize="inherit" />
-                </IconButton>
+                <div>
+                    <FolderIcon style={{ color: 'rgba(0, 0, 0, 0.54)', marginRight: '0.25rem' }} fontSize="medium" onClick={handleUseDirectoryDialog} />
+                    <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} fontSize="medium" onClick={(event) => setEditDirManually(!editDirManually)} />
+                </div> 
             </label>
-            <div style={{fontSize: '0.9rem', marginBottom: '1rem'}}>{props.mountDir}</div>           
-        </div>}
-        {!props.mountDir && directory && !editDirManually && <div style={customStyles.container}>
-            <label style={customStyles.labelBetween}>
-                <h3 style={customStyles.h3}>Selected Directory</h3>
-                <IconButton aria-label="delete" size="medium" onClick={(event) => setDirectory(null)}>
-                    <DeleteIcon fontSize="inherit" />
-                </IconButton>
-            </label>
-            <div style={{fontSize: '0.9rem', marginBottom: '1rem'}}>{directory}</div>
-            {files && <div>
-                <label style={customStyles.labelBetween}>
-                    <h3 style={customStyles.h3}>Files</h3>
-                </label>
-                <label style={customStyles.label}><FolderIcon sx={{fontSize: '18px', margin: '0.4rem'}} /> &nbsp;{'...'+filePathTrail(directory)}</label>
-                <FileTree files={files} />
-                <button style={{width: '100%', borderRadius: '2rem', marginBottom: '1rem'}} onClick={() => handleSetMount()}>Set Mount Directory</button>
-            </div>}            
+            <div style={{
+                width: '100%',
+                fontSize: '0.8rem', 
+                marginBottom: '0.25rem', 
+                position: 'relative', 
+                display: 'inline-block'
+                }}>
+                {props.mountDir} <CancelIcon style={{ color: 'rgba(255, 87, 51, 0.5)', position: 'absolute'}} fontSize="small" onClick={(event) => unsetMount()} />
+            </div>          
         </div>}
     </div>
     )

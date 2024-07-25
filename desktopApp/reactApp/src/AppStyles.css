@@ -13,6 +13,10 @@
     line-height: 1.6;
     padding: 20px;
   }
+
+  header {
+    position: fixed;
+  }
   
   /* Headings */
   h1, h2, h3, h4, h5, h6 {
@@ -186,4 +190,12 @@
   .markdown-wrapper h2 {
     line-height: 1.2;
     margin-bottom: 0.5rem;
+  }
+
+  .toast-container > div {
+    background-color: #001f70 !important; 
+  }
+
+  .toast-container h2 {
+    color: white;
   }

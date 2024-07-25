@@ -1,10 +1,12 @@
 import React from 'react';
 import { useEffect, useState, useCallback } from "react";
-import { ConfigurationForm } from './ConfigurationForm.jsx'
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from  '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Cancel';
 import TerminalIcon from '@mui/icons-material/Terminal';
+import WysiwygIcon from '@mui/icons-material/Wysiwyg';
 import CheckCircleIcon from '@mui/icons-material/CheckCircleOutline';
 import WarningIcon from '@mui/icons-material/Warning';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -20,80 +22,93 @@ const customStyles = {
     }
   };
 
-export function CompConfigAdmin({ consortiumId, parameters, setEditableParams, setParameters }) {
+export function CompConfig({ parameters, setEditableParams, setParameters }) {
 
     const [editMode, setEditMode] = useState(false);
     const [valid, setValid] = useState(false);
-
-    const [content, setContent] = useState({
-        json: null,
-        text: null
-      });
-
-    const handler = useCallback(
-        (content) => {
-            setContent(content);
-            setEditableParams(JSON.stringify(content.json));
-        },
-        [content]
-    )
-
-    const enableEditor = () => {
-        setEditMode(!editMode);
-        setContent({
-            json: JSON.parse(parameters),
-            text: null  
-        });
-    }
+    const [content, setContent] = useState({ json: null });
+    const [ogParameters, setOGParameters] = useState(parameters);
+    const [paramChange, setParamChange] = useState(false);
 
     const saveParameters = () => {
-        setEditMode(!editMode);
         setParameters();
     }
 
-    const validateParameters = (str) => {
+    const validateParameters = (parameters) => {
         try {
-            JSON.parse(str);
+            JSON.parse(parameters);
+            setContent({json: JSON.parse(parameters)});
             setValid(true);
         } catch (e) {
             setValid(false);
         }
     }
 
-    const getPrettyParameters = (parameters) => {
-        let newParameters = "";
-        if(parameters && typeof parameters === 'string'){
-            newParameters = JSON.stringify(JSON.parse(parameters), null, 2)
-        }else{
-            newParameters = JSON.stringify(parameters, null, 2)
-        }
-        if(newParameters){
-            return newParameters;
-        }
-    }
-
     const handleParamChange = (parameters) => {
-        validateParameters(parameters);
+        setEditableParams(parameters);
+        try {
+            JSON.parse(parameters);
+            setContent({ json: JSON.parse(parameters) });
+        } catch (e) {
+            setValid(false);
+        }
     }
 
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         validateParameters(parameters);
-    //     }, 1000);
-    // });
+    const JSONHandler = useCallback(
+        (content) => {
+            setContent(content.json);
+            setEditableParams(JSON.stringify(content.json));
+        },
+        [content]
+    )
+
+    const handleRenderMenu = ((items) => {
+        //Remove all other JSON ui handling. Using only 'Tree' mode.
+        console.log(items);
+        items.splice(0, 4);
+        return [
+          ...items
+        ]
+    });
+
+    useEffect(() => {
+        validateParameters(parameters);
+        if(parameters === ogParameters){
+            setParamChange(false);
+        }else{
+            setParamChange(true);
+        }
+    },[parameters]);
 
     return (
             <div style={{position: 'relative'}}>
-                {!editMode && <IconButton style={{position: 'absolute', top: '-2.5rem', right: '0'}} onClick={enableEditor}><TerminalIcon fontSize="inherit" /></IconButton>}
+                {editMode ?
+                <IconButton style={{position: 'absolute', top: '-2.5rem', right: '0'}} onClick={() => setEditMode(!editMode)}>
+                    <WysiwygIcon fontSize="inherit" />
+                </IconButton> :
+                <IconButton style={{position: 'absolute', top: '-2.5rem', right: '0'}} onClick={() => setEditMode(!editMode)}>
+                    <TerminalIcon fontSize="inherit" />
+                </IconButton>}
                 <div>
                     {editMode && parameters ? 
-                    <JSONEditorPanel content={content} onChange={handler} /> :
-                    <TextareaAutosize className="pre" contenteditable='true' style={{width: '100%'}} onChange={(e) => handleParamChange(e.target.value)}>{getPrettyParameters(parameters)}</TextareaAutosize>}
-                    <div style={{position: 'absolute', bottom: '1.5rem', right: '0.5rem' }}>{valid ? <CheckCircleIcon style={{color: 'lightgreen'}} /> : <WarningIcon style={{color: 'pink'}} />}</div>
-                </div>
-                <div>
-                    {editMode && <Button variant="contained" color="warning" style={{margin: '0.5rem', marginLeft: '0', marginTop: '1rem'}} onClick={() => { setEditMode(!editMode) }}>Cancel</Button>}
-                    {editMode && <Button variant="contained" style={{margin: '0.5rem', marginLeft: '0', marginTop: '1rem'}} onClick={saveParameters}>Save</Button>}
+                    <div>
+                        <JSONEditorPanel mode={'tree'} content={content} onChange={JSONHandler} onRenderMenu={handleRenderMenu} />
+                        <div style={{position: 'absolute', bottom: '0.5rem', right: '0.5rem' }}>
+                            {paramChange && <SaveIcon style={{color: 'grey', marginRight: '0.24rem'}} onClick={saveParameters} />} 
+                        </div>
+                    </div> :
+                    <div>
+                    <TextareaAutosize minRows="3" className="pre" style={{width: '100%'}} defaultValue={valid ? JSON.stringify(JSON.parse(parameters),null,2) : parameters} onChange={(e) => handleParamChange(e.target.value)} />
+                    <div style={{position: 'absolute', top: '1rem', right: '0.5rem' }}>
+                        {valid ? 
+                            <CheckCircleIcon style={{color: 'lightgreen'}} /> : 
+                            <WarningIcon style={{color: 'pink'}} />
+                        }
+                    </div>
+                    <div style={{position: 'absolute', bottom: '1.5rem', right: '0.5rem' }}>
+                        {valid && paramChange && <SaveIcon style={{color: 'lightgrey'}} onClick={saveParameters} />} 
+                    </div>
+                    </div>}
                 </div>
             </div>
     )

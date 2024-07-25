@@ -204,8 +204,6 @@ function Login() {
           >
             {authenticateStatus.loading || connectStatus.loading ? 'Loading...' : 'Submit'}
           </button>
-          {/*renderStatus(authenticateStatus, "Authenticate with Central Server")*/}
-          {/*renderStatus(connectStatus, "Connect to Federated Client")*/}
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           Item Two

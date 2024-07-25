@@ -45,7 +45,8 @@ export default function MemberAvatar(props) {
       <div style={{
         position: 'relative',
         display: 'inline-block',
-        marginRight: '8px',
+        marginRight: '0.5rem',
+        marginBottom: '0.5rem',
         width: '45px',
         textAlign: 'center'
       }}>

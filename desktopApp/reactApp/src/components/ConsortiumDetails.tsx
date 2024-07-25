@@ -10,7 +10,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import parse from 'html-react-parser';
 import DataChooser from './ComputationDetailsElements/DataChooser';
 import MarkDownFromURL from './ComputationDetailsElements/MarkDownFromURL';
-import { CompConfigAdmin } from "./ComputationDetailsElements/CompConfig";
+import { CompConfig } from "./ComputationDetailsElements/CompConfig";
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -177,7 +177,7 @@ export default function ConsortiumDetails(props: any) {
     useEffect(() => {
         if (data && data.getConsortiumDetails) {
             setEditableNotes(data.getConsortiumDetails.studyConfiguration.consortiumLeaderNotes || "");
-            setEditableParameters(data.getConsortiumDetails.studyConfiguration.computationParameters || editableParameters);
+            setEditableParameters(data.getConsortiumDetails.studyConfiguration.computationParameters || "");
         }
     }, [data]);
 
@@ -350,7 +350,7 @@ export default function ConsortiumDetails(props: any) {
 
                 <section>
                     <h3 style={customStyles.h3}>Settings</h3>
-                    <CompConfigAdmin consortiumId={consortiumId} parameters={editableParameters} setEditableParams={setEditableParameters} setParameters={handleSetParameters} /> 
+                    {editableParameters && <CompConfig parameters={editableParameters} setEditableParams={setEditableParameters} setParameters={handleSetParameters} />} 
                 </section>
 
                 <section>
@@ -362,8 +362,15 @@ export default function ConsortiumDetails(props: any) {
                         {renderMembers(consortiumDetails.members, consortiumDetails.leader.username, consortiumDetails.activeMembers)}
                     </div>
                     <div style={customStyles.container}>
-                        <div style={customStyles.labelBetween}><h3 style={customStyles.h3}>Leader Notes</h3>
-                        {editMode ? <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={handleSetNotes} /> : <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setEditMode(!editMode)}} />}</div>
+                        <div style={customStyles.labelBetween}>
+                          <h3 style={customStyles.h3}>Leader Notes</h3>
+                          {editMode ? 
+                          <div>
+                          <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={handleSetNotes} />
+                          <CancelIcon style={{ color: 'lightpink' }} onClick={() => {setEditMode(!editMode)}} />
+                          </div> : 
+                          <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setEditMode(!editMode)}} />}
+                        </div>
                         {editMode ? <ReactQuill theme="snow" value={editableNotes} onChange={setEditableNotes} modules={modules} formats={formats}></ReactQuill> : <div>{parse(editableNotes)}</div>}
                     </div>
                     <DataChooser setMount={setEditableMountDir} handleSetMount={handleSetMountDir} mountDir={editableMountDir} />
