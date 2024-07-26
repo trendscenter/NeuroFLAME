@@ -89,18 +89,6 @@ export const NotificationsProvider = ({ children }: { children: ReactNode }) => 
         }
     };
 
-    // useEffect(() => {
-    //     (async () => {
-    //         await subscribe(); // Automatically subscribe on mount
-    //     })();
-
-    //     return () => {
-    //         (async () => {
-    //             await unsubscribe(); // Cleanup subscription on unmount
-    //         })();
-    //     };
-    // }, []);
-
     return (
         <NotificationsContext.Provider value={{ events, subscribe, unsubscribe }}>
             {children}

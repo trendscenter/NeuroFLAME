@@ -10,10 +10,8 @@ interface ApolloClientsContextType {
 // Create and export the context
 export const ApolloClientsContext = createContext<ApolloClientsContextType>({
   centralApiApolloClient: undefined,
-  edgeClientApolloClient: undefined
+  edgeClientApolloClient: undefined,
 });
 
 // Custom hook for using the Apollo clients context
 export const useApolloClients = () => useContext(ApolloClientsContext);
-
-

@@ -3,6 +3,7 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { createApolloClient } from '../createApolloClient'
 import { ApolloClientsContext } from './ApolloClientsContext' // Ensure this path is correct
 
+
 interface Props {
   config: {
     centralServerQueryUrl: string;
@@ -22,25 +23,46 @@ const ApolloClientsProvider: React.FC<Props> = ({ children, config }) => {
   >()
 
   useEffect(() => {
-    console.log("creating centralApiApolloClient", config.centralServerQueryUrl)
-    setCentralApiApolloClient(
-      createApolloClient({
-        httpUrl: config.centralServerQueryUrl,
-        wsUrl: config.centralServerSubscriptionUrl,
-        getAccessToken: () => localStorage.getItem('accessToken') || '',
-      }),
-    )
-    console.log("creating edgeClientApolloClient", config.edgeClientQueryUrl)
-    setEdgeClientApolloClient(
-      createApolloClient({
-        httpUrl: config.edgeClientQueryUrl,
-        wsUrl: config.edgeClientSubscriptionUrl,
-        getAccessToken: () => localStorage.getItem('accessToken') || '',
-      }),
-    )
-  }, [config])
+    startClients();
+  },
+    [config]
+  )
 
-  if(!centralApiApolloClient || !edgeClientApolloClient) {
+  const startClients = async () => {
+    if (centralApiApolloClient) {
+      console.log("stopping centralApiApolloClient")
+      centralApiApolloClient.stop();
+    }
+
+    if (edgeClientApolloClient) {
+      console.log("stopping edgeClientApolloClient")
+      edgeClientApolloClient.stop();
+    }
+
+    console.log("creating centralApiApolloClient", config.centralServerQueryUrl)
+    const central = createApolloClient({
+      httpUrl: config.centralServerQueryUrl,
+      wsUrl: config.centralServerSubscriptionUrl,
+      getAccessToken: () => {
+        return localStorage.getItem('accessToken') || ''
+      }
+    })
+    setCentralApiApolloClient(central)
+
+
+    console.log("creating edgeClientApolloClient", config.edgeClientQueryUrl)
+    const edge = createApolloClient({
+      httpUrl: config.edgeClientQueryUrl,
+      wsUrl: config.edgeClientSubscriptionUrl,
+      getAccessToken: () => {
+        return localStorage.getItem('accessToken') || ''
+      }
+    })
+
+    setEdgeClientApolloClient(edge)
+  }
+
+  if (!centralApiApolloClient || !edgeClientApolloClient) {
     return <div>Loading...</div>
   }
 

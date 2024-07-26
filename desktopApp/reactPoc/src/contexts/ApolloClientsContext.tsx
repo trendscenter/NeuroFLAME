@@ -15,5 +15,3 @@ export const ApolloClientsContext = createContext<ApolloClientsContextType>({
 
 // Custom hook for using the Apollo clients context
 export const useApolloClients = () => useContext(ApolloClientsContext);
-
-
