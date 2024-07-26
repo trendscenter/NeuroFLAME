@@ -11,6 +11,7 @@ const RUN_EVENT_SUBSCRIPTION = gql`
       consortiumTitle
       runId
       status
+      timestamp
     }
   }
 `;
@@ -26,12 +27,13 @@ interface RunEvent {
     consortiumTitle: string;
     runId: string;
     status: string;
+    timestamp: string;
 }
 
 export const NotificationsContext = React.createContext<NotificationsContextType>({
     events: [],
-    subscribe: async () => {},
-    unsubscribe: async () => {},
+    subscribe: async () => { },
+    unsubscribe: async () => { },
 });
 
 export const NotificationsProvider = ({ children }: { children: ReactNode }) => {
@@ -40,44 +42,40 @@ export const NotificationsProvider = ({ children }: { children: ReactNode }) => 
     const subscriptionRef = useRef<any>(null);
 
     const subscribe = async (): Promise<void> => {
+        console.log("Subscribing to run events...");
         if (subscriptionRef.current) {
             return; // Already subscribed
         }
 
-        return new Promise((resolve, reject) => {
-            const observable = centralApiApolloClient?.subscribe({
-                query: RUN_EVENT_SUBSCRIPTION,
-            });
+        const observable = centralApiApolloClient?.subscribe({
+            query: RUN_EVENT_SUBSCRIPTION,
+        });
 
-            subscriptionRef.current = observable?.subscribe({
-                next: ({ data }: any) => {
-                    console.log("Subscription data:", data)
-                    if (data) {
-                        const newEvent: RunEvent = data.runEvent;
-                        setEvents(prevEvents => [newEvent, ...prevEvents]);
-                        toast.info(
+        subscriptionRef.current = observable?.subscribe({
+            next: ({ data }: any) => {
+                if (data) {
+                    const newEvent: RunEvent = data.runEvent;
+                    setEvents(prevEvents => [newEvent, ...prevEvents]);
+                    toast.info(
+                        <div>
+                            <h2>Notification</h2>
                             <div>
-                                <h2>Notification</h2>
-                                <div>
-                                    Consortium: {newEvent.consortiumTitle}
-                                </div>
-                                <div>
-                                    Status: {newEvent.status}
-                                </div>
-                                <div>
-                                    Run ID: {newEvent.runId}
-                                </div>
+                                Consortium: {newEvent.consortiumTitle}
                             </div>
-                        );
-                    }
-                    resolve();
-                },
-                error: (err: any) => {
-                    console.error("Subscription error:", err.message);
-                    toast.error(`Subscription error: ${err.message}`);
-                    reject(err);
+                            <div>
+                                Status: {newEvent.status}
+                            </div>
+                            <div>
+                                Run ID: {newEvent.runId}
+                            </div>
+                        </div>
+                    );
                 }
-            });
+            },
+            error: (err: any) => {
+                console.error("Subscription error:", err.message);
+                toast.error(`Subscription error: ${err.message}`);
+            }
         });
     };
 
@@ -88,35 +86,10 @@ export const NotificationsProvider = ({ children }: { children: ReactNode }) => 
         }
     };
 
-    useEffect(() => {
-        (async () => {
-            await subscribe(); // Automatically subscribe on mount
-        })();
-
-        return () => {
-            (async () => {
-                await unsubscribe(); // Cleanup subscription on unmount
-            })();
-        };
-    }, []);
-
     return (
         <NotificationsContext.Provider value={{ events, subscribe, unsubscribe }}>
             {children}
-            <ToastContainer 
-                position="bottom-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="colored"
-                className="toast-container"
-                toastClassName="dark-toast"
-            /> {/* Ensure this is included */}
+            <ToastContainer /> {/* Ensure this is included */}
         </NotificationsContext.Provider>
     );
 };

@@ -14,7 +14,6 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import Paper from '@mui/material/Paper';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ConsortiaList from './components/ConsortiaList';
 import Login from './components/Login';
@@ -26,8 +25,7 @@ import NotificationList from './components/NotificationList';
 import RunsList from './components/RunsList';
 import RunDetails from './components/RunDetails';
 import UserAvatar from './components/UserAvatar';
-import { AuthContext, useAuthStateHandler, useAuthContext } from './contexts/AuthContext.tsx';
-import { NotificationsProvider } from './contexts/NotificationsContext';
+import { useUserState } from './contexts/UserStateContext';
 import logoSM from './components/assets/coinstac-logo-sm.png';
 import './AppStyles.css';
 
@@ -36,7 +34,6 @@ import {
   Route,
   Routes,
   MemoryRouter,
-  useLocation,
 } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
 
@@ -96,12 +93,12 @@ interface ListItemFuncProps {
 
 const ListItemFunc: React.FC<ListItemFuncProps> = ({ icon, primary, onClick }) => {
   return (
-  <li>
-    <ListItem button component={Link} onClick={e => { onClick() }}>
-      {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
-      <ListItemText primary={primary} />
-    </ListItem>
-  </li>
+    <li>
+      <ListItem button component={Link} onClick={e => { onClick() }}>
+        {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+        <ListItemText primary={primary} />
+      </ListItem>
+    </li>
   )
 }
 
@@ -110,15 +107,6 @@ ListItemFunc.propTypes = {
   primary: PropTypes.string.isRequired,
   onClick: PropTypes.func,
 };
-
-function Content() {
-  const location = useLocation();
-  return (
-    <Typography variant="body2" sx={{ pb: 2 }} color="text.secondary">
-      Current route: {location.pathname}
-    </Typography>
-  );
-}
 
 const drawerWidth = 240;
 
@@ -145,8 +133,8 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const Drawer = styled(MuiDrawer, { 
-  shouldForwardProp: (prop) => prop !== 'open' 
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== 'open'
 })(
   ({ theme, open }) => ({
     '& .MuiDrawer-paper': {
@@ -185,9 +173,8 @@ function App() {
     setOpen(!open);
   };
 
-  const authStateHandler = useAuthStateHandler();
-  const isLoggedIn = authStateHandler.authData.accessToken !== null;
-  const auth = useAuthContext();
+  const { username } = useUserState();
+  const isLoggedIn = !!username;
 
   interface AuthInfo {
     accessToken: string | null;
@@ -222,103 +209,99 @@ function App() {
   };
 
   return (
-    <AuthContext.Provider value={authStateHandler}>
-      <NotificationsProvider>
-        <Router>
-          <ThemeProvider theme={defaultTheme}>
-            <Box sx={{ display: 'flex' }}>
-              <CssBaseline />
-              {isLoggedIn && <AppBar position="absolute" open={open}>
-              <Toolbar
+    <Router>
+      <ThemeProvider theme={defaultTheme}>
+        <Box sx={{ display: 'flex' }}>
+          <CssBaseline />
+          {isLoggedIn && <AppBar position="absolute" open={open}>
+            <Toolbar
+              sx={{
+                pr: '24px', // keep right padding when drawer closed
+                backgroundColor: '#001f70'
+              }}
+            >
+              <Typography
+                sx={{ flexGrow: 1 }}
+              >
+              </Typography>
+              <img
+                src={logoSM}
+                alt="Logo"
+                style={{
+                  marginRight: '2px',
+                  width: '28px',
+                  height: '28px',
+                }}
+              />
+              <Typography
+                component="h1"
+                variant="h6"
+                color="inherit"
                 sx={{
-                  pr: '24px', // keep right padding when drawer closed
-                  backgroundColor: '#001f70'
+                  fontFamily: 'Lato',
+                  fontWeight: '600'
+                }}
+                noWrap
+              >
+                COINSTAC
+              </Typography>
+              <UserAvatar username={username} />
+              <IconButton
+                edge="end"
+                color="inherit"
+                aria-label="open drawer"
+                onClick={toggleDrawer}
+                sx={{
+                  ...(open && { display: 'none' }),
                 }}
               >
-                <Typography
-                  sx={{ flexGrow: 1 }}
-                >
-                </Typography>
-                <img 
-                  src={logoSM} 
-                  alt="Logo" 
-                  style={{
-                    marginRight: '2px',
-                    width: '28px', 
-                    height: '28px',
-                  }}
-                />
-                <Typography
-                  component="h1"
-                  variant="h6"
-                  color="inherit"
-                  sx={{ 
-                    fontFamily: 'Lato',
-                    fontWeight: '600'
-                    }}
-                  noWrap
-                >
-                  COINSTAC
-                </Typography>
-                <UserAvatar username={authStateHandler.authData.username} />
-                <IconButton
-                  edge="end"
-                  color="inherit"
-                  aria-label="open drawer"
-                  onClick={toggleDrawer}
-                  sx={{
-                    ...(open && { display: 'none' }),
-                  }}
-                >
-                  <MenuIcon />
-                </IconButton>
-              </Toolbar>
-            </AppBar>}
-            <div style={styles.content}>
-              <Routes>
-                <Route index path="/" element={<Login></Login>} />
-                <Route index path="/login" element={<Login></Login>} />
-                <Route path="/consortia" element={<ConsortiaList />} />
-                <Route path="/consortia/:consortiumId" element={<ConsortiumDetails />} />
-                <Route path="/runs" element={<RunsList></RunsList>} />
-                <Route path="/runs/:runId" element={<RunDetails></RunDetails>} />
-                <Route path="/computations" element={<ComputationsList />} />
-                <Route path="/computations/:computationId" element={<ComputationDetails />} />
-                <Route path="/invites" element={<div>inviteslist</div>} />
-                <Route path="/notifications" element={<NotificationList />} />
-              </Routes>
+                <MenuIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>}
+          <div style={styles.content}>
+            <Routes>
+              <Route index path="/" element={<Login></Login>} />
+              <Route index path="/login" element={<Login></Login>} />
+              <Route path="/consortia" element={<ConsortiaList />} />
+              <Route path="/consortia/:consortiumId" element={<ConsortiumDetails />} />
+              <Route path="/runs" element={<RunsList></RunsList>} />
+              <Route path="/runs/:runId" element={<RunDetails></RunDetails>} />
+              <Route path="/computations" element={<ComputationsList />} />
+              <Route path="/computations/:computationId" element={<ComputationDetails />} />
+              <Route path="/invites" element={<div>inviteslist</div>} />
+              <Route path="/notifications" element={<NotificationList />} />
+            </Routes>
+          </div>
+          <Drawer variant="permanent" anchor="right" open={open}>
+            <Toolbar
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                px: [1],
+              }}
+            >
+              <IconButton onClick={toggleDrawer}>
+                <ChevronLeftIcon sx={{ color: '#ffffff' }} />
+              </IconButton>
+            </Toolbar>
+            <Divider />
+            <div>
+              <Box sx={{ width: 360 }}>
+                <List aria-label="main mailbox folders" sx={{ color: '#ffffff', borderTop: '1px solid rgba(255,255,255,0.33)' }}>
+                  <ListItemLink onClick={() => setOpen(!open)} to="/consortia" primary="Consortia" />
+                  <ListItemLink onClick={() => setOpen(!open)} to="/computations" primary="Computations" />
+                  {/*<ListItemLink onClick={() => setOpen(!open)} to="/runs" primary="Runs" />*/}
+                  <ListItemLink onClick={() => setOpen(!open)} to="/notifications" primary="Notifications" />
+                  <ListItemFunc onClick={onLogout} primary="Logout" />
+                </List>
+              </Box>
             </div>
-            <Drawer variant="permanent" anchor="right" open={open}>
-              <Toolbar
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'flex-end',
-                  px: [1],
-                }}
-              >
-                <IconButton onClick={toggleDrawer}>
-                  <ChevronLeftIcon sx={{color: '#ffffff'}} />
-                </IconButton>
-              </Toolbar>
-              <Divider />
-              <div>
-                <Box sx={{ width: 360 }}>
-                  <List aria-label="main mailbox folders" sx={{color: '#ffffff', borderTop: '1px solid rgba(255,255,255,0.33)'}}>
-                    <ListItemLink onClick={() => setOpen(!open)} to="/consortia" primary="Consortia" />
-                    <ListItemLink onClick={() => setOpen(!open)} to="/computations" primary="Computations" />
-                    {/*<ListItemLink onClick={() => setOpen(!open)} to="/runs" primary="Runs" />*/}
-                    <ListItemLink onClick={() => setOpen(!open)} to="/notifications" primary="Notifications" />
-                    <ListItemFunc onClick={onLogout} primary="Logout" />
-                  </List>
-                </Box>
-              </div>
-            </Drawer>
-            </Box>
-          </ThemeProvider>
-        </Router>
-      </NotificationsProvider>
-    </AuthContext.Provider>
+          </Drawer>
+        </Box>
+      </ThemeProvider>
+    </Router>
   );
 }
 

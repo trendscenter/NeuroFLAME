@@ -1,23 +1,31 @@
 export interface Config {
-    centralServerUrl: string;
-    edgeClientUrl: string;
+  centralServerQueryUrl: string;
+  centralServerSubscriptionUrl: string;
+  edgeClientQueryUrl: string;
+  edgeClientSubscriptionUrl: string;
+  startEdgeClientOnLaunch: boolean;
+  edgeClientConfig: {
+    httpUrl: string,
+    wsUrl: string,
+    path_base_directory: string,
+    authenticationEndpoint: string,
+    hostingPort: number
   }
+}
 
-  interface OpenFile {
-    filepath: string;
-    filelist: object;
+interface ElectronAPI {
+  getConfigPath: () => Promise<string>;
+  getConfig: () => Promise<Config>;
+  openConfig: (filePath?: string) => Promise<void>;
+  applyDefaultConfig: () => Promise<void>;
+  useDirectoryDialog: (pathString?: string) => Promise<{ directoryPath: undefined | string, canceled: boolean, error: string | null }>;
+}
+
+declare global {
+  interface Window {
+    ElectronAPI: ElectronAPI;
   }
-  
-  interface ElectronAPI {
-    getConfig: () => Promise<Config>;
-    openFile: () => Promise<OpenFile>; 
-  }
-  
-  declare global {
-    interface Window {
-      ElectronAPI: ElectronAPI;
-    }
-  }
+}
 
 export const fetchConfig = async (): Promise<Config | undefined> => {
   try {

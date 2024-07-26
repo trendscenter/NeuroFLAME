@@ -2,16 +2,13 @@ import React from 'react';
 import { useState } from "react";
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import IconButton from '@mui/material/IconButton';
 import CancelIcon from '@mui/icons-material/Cancel';
-import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FolderIcon from '@mui/icons-material/Folder';
 import SaveIcon from  '@mui/icons-material/Save';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import TextareaAutosize from 'react-textarea-autosize';
-import { LineWeight } from '@mui/icons-material';
 
 // Define custom styles
 const customStyles = {
@@ -96,7 +93,7 @@ export default function OpenDialog(props: any) {
             </div>
         </div>}
         {editDirManually && 
-        <div style={{display: 'flex', justifyContent: 'middle', alignItems: 'center'}} style={customStyles.container}>
+        <div style={{display: 'flex', justifyContent: 'middle', alignItems: 'center', ...customStyles.container}}>
             <label style={customStyles.labelBetween}>
                 <h3 style={customStyles.h3}>Edit Data Directory</h3>
                 <div>

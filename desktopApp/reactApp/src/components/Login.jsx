@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { useLogin } from './UseLogin';
+import { useLoginAndConnect } from './useLoginAndConnect';
 import { useNavigate } from 'react-router-dom';
 import logo from '../components/assets/coinstac-logo.png';
 import { Typography } from '@mui/material';
+import { useUserState } from '../contexts/UserStateContext';
 
 const styles = {
   inputContainer: {
@@ -103,57 +104,46 @@ function a11yProps(index) {
 
 
 const InputField = ({ placeholder, value, type, onChange }) => (
-  <div style={styles.inputContainer}> {/* Wrap input in a div with the container style */}
-    <input
-      style={styles.input}
-      type={type}
-      placeholder={placeholder}
-      value={value}
-      onChange={e => onChange(e.target.value)}
-    />
-  </div>
+  // Wrapping in div causes a warning in the dev console: validateDOMNesting(...): <div> cannot appear as a descendant of <p>.
+  // <div style={styles.inputContainer}> {/* Wrap input in a div with the container style */}
+  <input
+    style={styles.input}
+    type={type}
+    placeholder={placeholder}
+    value={value}
+    onChange={e => onChange(e.target.value)}
+  />
+  // </div>
 );
 
 function Login() {
   const [value, setValue] = React.useState(0);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login, authenticateStatus, connectStatus } = useLogin(onSuccess);
-  
+  const { loginToCentral, connectAsUser } = useLoginAndConnect();
+  const [loginStatus, setloginStatus] = useState({ loading: false, error: null, data: null });
+  const [connectStatus, setConnectStatus] = useState({ loading: false, error: null, data: null });
+
+  const { username: userStateUsername } = useUserState();
   const navigate = useNavigate();
-  const [auth, setAuth] = useState(false);
-  //const auth = useAuthContext();
+
+  const handleLogin = async () => {
+    setloginStatus({ loading: true, error: null, data: null });
+    await loginToCentral(username, password);
+    setloginStatus({ loading: false, error: null, data: true });
+
+    setConnectStatus({ loading: true, error: null, data: null });
+    await connectAsUser();
+    setConnectStatus({ loading: false, error: null, data: true });
+
+    navigate('/consortia');
+  }
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  function onSuccess() {
-    navigate('/consortia');
-  }
-
-  // function onLogout() {
-  //   auth.setAuthInfo({ accessToken: null, refreshToken: null, userId: null });
-  // }
-
-  const renderStatus = (status, action) => {
-    const { loading, error, data } = status;
-    const isVisible = loading || error || data;
-
-    if (!isVisible) {
-      return null;
-    }
-    return (
-      <div style={styles.statusMessage}>
-        <span>{action}: </span>
-        {loading && <span style={styles.loading}>Loading...</span>}
-        {error && <span style={styles.error}>Error: {error.message}</span>}
-        {data && <span style={styles.success}>Success</span>}
-      </div>
-    );
-  };
-
-  if (auth) {
+  if (userStateUsername) {
     return (
       <div style={styles.container}>
         <button style={styles.button}>
@@ -199,10 +189,10 @@ function Login() {
           />
           <button
             style={styles.button}
-            onClick={() => login(username, password)}
-            disabled={authenticateStatus.loading || connectStatus.loading}
+            onClick={() => handleLogin()}
+            disabled={loginStatus.loading || connectStatus.loading}
           >
-            {authenticateStatus.loading || connectStatus.loading ? 'Loading...' : 'Submit'}
+            {loginStatus.loading || connectStatus.loading ? 'Loading...' : 'Submit'}
           </button>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
