@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../components/assets/coinstac-logo.png';
 import { Typography } from '@mui/material';
 import { useUserState } from '../contexts/UserStateContext';
+import { useNotifications } from '../contexts/NotificationsContext';
 
 const styles = {
   inputContainer: {
@@ -123,6 +124,7 @@ function Login() {
   const { loginToCentral, connectAsUser } = useLoginAndConnect();
   const [loginStatus, setloginStatus] = useState({ loading: false, error: null, data: null });
   const [connectStatus, setConnectStatus] = useState({ loading: false, error: null, data: null });
+  const { subscribe } = useNotifications();
 
   const { username: userStateUsername } = useUserState();
   const navigate = useNavigate();
@@ -135,6 +137,8 @@ function Login() {
     setConnectStatus({ loading: true, error: null, data: null });
     await connectAsUser();
     setConnectStatus({ loading: false, error: null, data: true });
+
+    await subscribe();
 
     navigate('/consortia');
   }

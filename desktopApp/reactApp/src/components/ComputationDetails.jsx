@@ -1,30 +1,30 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 import { gql, useQuery } from '@apollo/client';
-import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
+import { useApolloClients } from "../contexts/ApolloClientsContext";
 
 const GET_COMPUTATION_DETAILS = gql`
-  query getComputationDetails($computationId: String!) {
+  query GetComputationDetails($computationId: String!) {
     getComputationDetails(computationId: $computationId) {
-      id
       title
-      description
-      compSpec
+      imageName
+      imageDownloadUrl
+      notes
+      owner
     }
   }
 `;
 
 export default function ComputationDetails() {
     const { computationId } = useParams();
-    const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext)
+    const { centralApiApolloClient, edgeClientApolloClient } = useApolloClients();
     const { loading, error, data, refetch } = useQuery(GET_COMPUTATION_DETAILS, {
         variables: { computationId },
-    }, { client: centralApiApolloClient });
+        client: centralApiApolloClient
+    });
 
     return (
         <div>
-            <div>{computationId}</div>
-            {/* <button onClick={refetch}>refetch</button> */}
             {loading && <p>Loading...</p>}
             {error && <p>Error: Please try again</p>}
             {data && <ComputationDetailContent details={data.getComputationDetails} />}
@@ -33,14 +33,14 @@ export default function ComputationDetails() {
 }
 
 function ComputationDetailContent({ details }) {
+    const { title, notes, imageName, imageDownloadUrl } = details;
     return (
         <div>
-            <h1>{details.title}</h1>
-            <div>{details.description}</div>
+            <h1>{title}</h1>
+            <p>imageName: {imageName}</p>
+            <p>imageDownloadUrl: {imageDownloadUrl}</p>
             <pre>
-                <code>
-                    {JSON.stringify(JSON.parse(details.compSpec), null, 2)}
-                </code>
+                {notes}
             </pre>
         </div>
     );

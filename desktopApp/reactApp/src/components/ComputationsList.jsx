@@ -19,7 +19,6 @@ export default function ComputationList() {
 
     return (
         <div>
-            {/* <button onClick={() => { refetch() }}>Get Computations</button> */}
             <h1>Computations</h1>
             {data && data.getComputationList.map((computation) => {
                 return <ComputationsListItem key={computation.id} computation={computation} />

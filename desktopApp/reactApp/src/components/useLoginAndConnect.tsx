@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
 import { gql } from "@apollo/client";
+import { useUserState } from "../contexts/UserStateContext";
 
 const LOGIN_MUTATION = gql`
   mutation Login($username: String!, $password: String!) {
@@ -34,7 +35,7 @@ const USER_CREATE = gql`
 
 export const useLoginAndConnect = () => {
   const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext);
-
+  const { setUserData } = useUserState()
 
   const loginToCentral = async (username: string, password: string) => {
     const result = await centralApiApolloClient?.mutate({
@@ -49,6 +50,8 @@ export const useLoginAndConnect = () => {
 
     const { accessToken, userId, username: user, roles } = result?.data?.login;
     localStorage.setItem('accessToken', accessToken);
+
+    setUserData({ accessToken, userId, username: user, roles }, false);
 
     return { accessToken, userId, username: user, roles }
   };
