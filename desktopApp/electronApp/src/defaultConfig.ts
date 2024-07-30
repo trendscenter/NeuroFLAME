@@ -4,6 +4,7 @@ export const defaultConfig = {
   edgeClientQueryUrl: 'http://localhost:4001/graphql',
   edgeClientSubscriptionUrl: 'ws://localhost:4001/graphql',
   startEdgeClientOnLaunch: true,
+  logPath: '',
   edgeClientConfig: {
     httpUrl: 'http://localhost:4000/graphql',
     wsUrl: 'ws://localhost:4000/graphql',

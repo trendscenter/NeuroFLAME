@@ -12,14 +12,12 @@ import {
 } from './config.js'
 import { useDirectoryDialog } from './dialogs.js'
 
-const logPath = path.join(app.getPath('userData'), './logs')
-logToPath(logPath)
+const configPath: string = getConfigPath()
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 let mainWindow: BrowserWindow | null = null
 
 // Get the configuration file path based on command-line arguments or default location
-const configPath: string = getConfigPath()
 
 // Function to create the main application window
 async function createWindow(): Promise<void> {
@@ -38,6 +36,9 @@ async function createWindow(): Promise<void> {
 
   // Load configuration and start the edge client if configured
   const config = await getConfig()
+  const logPath = config.logPath || path.join(app.getPath('userData'), './logs')
+  logToPath(logPath)
+
   if (config.startEdgeClientOnLaunch) {
     config.edgeClientConfig.logPath = path.join(logPath, './edgeClient')
     startEdgeFederatedClient(config.edgeClientConfig)
