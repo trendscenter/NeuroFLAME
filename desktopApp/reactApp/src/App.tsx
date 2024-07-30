@@ -289,6 +289,7 @@ function App() {
               <Route path="/adminEditUser" element={<AdminEditUser />} />
               <Route path="/pageLogin" element={<PageLogin />} />
               <Route path="/changePassword" element={<ChangePassword />} />
+              <Route path="/runs/details/:runId" element={<RunDetails />} />
             </Routes>
           </div>
           <Drawer variant="permanent" anchor="right" open={open}>
