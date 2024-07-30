@@ -1,6 +1,8 @@
 import { gql } from '@apollo/client';
 import { ApolloClientsContext } from '../contexts/ApolloClientsContext';
 import { useContext, useState } from 'react';
+import Card from '@mui/material/Card';
+import styles from './styles';
 
 const COMPUTATION_CREATE_MUTATION = gql`
   mutation ComputationCreate($title: String!, $imageName: String!, $imageDownloadUrl: String!, $notes: String!) {
@@ -44,59 +46,61 @@ export default function ComputationCreate() {
     return (
         <div>
             <h1>Create Computation</h1>
-            <div className="form-group">
-                <div>
-                    <label>Title</label>
+            <Card sx={styles}>
+                <div className="form-group">
+                    <div>
+                        <label>Title</label>
+                    </div>
+                    <input
+                        style={{ width: '100%' }}
+                        type="text"
+                        placeholder="Title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
                 </div>
-                <input
-                    style={{ width: '100%' }}
-                    type="text"
-                    placeholder="Title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <div>
-                    <label>Image Name</label>
+                <div className="form-group">
+                    <div>
+                        <label>Image Name</label>
+                    </div>
+                    <input
+                        style={{ width: '100%' }}
+                        type="text"
+                        placeholder="Image Name"
+                        value={imageName}
+                        onChange={(e) => setImageName(e.target.value)}
+                    />
                 </div>
-                <input
-                    style={{ width: '100%' }}
-                    type="text"
-                    placeholder="Image Name"
-                    value={imageName}
-                    onChange={(e) => setImageName(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <div>
-                    <label>Image Download URL</label>
+                <div className="form-group">
+                    <div>
+                        <label>Image Download URL</label>
+                    </div>
+                    <input
+                        style={{ width: '100%' }}
+                        type="text"
+                        placeholder="Image Download URL"
+                        value={imageDownloadUrl}
+                        onChange={(e) => setImageDownloadUrl(e.target.value)}
+                    />
                 </div>
-                <input
-                    style={{ width: '100%' }}
-                    type="text"
-                    placeholder="Image Download URL"
-                    value={imageDownloadUrl}
-                    onChange={(e) => setImageDownloadUrl(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <div>
-                    <label>Notes</label>
+                <div className="form-group">
+                    <div>
+                        <label>Notes</label>
+                    </div>
+                    <textarea
+                        style={{ width: '100%' }}
+                        placeholder="Notes"
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                        rows={10} // Adjust the number of rows as needed to make the textarea larger
+                    />
                 </div>
-                <textarea
-                    style={{ width: '100%' }}
-                    placeholder="Notes"
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                    rows={10} // Adjust the number of rows as needed to make the textarea larger
-                />
-            </div>
-            <button onClick={createComputation} disabled={loading}>
-                {loading ? 'Creating...' : 'Create'}
-            </button>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            {success && <p style={{ color: 'green' }}>Computation created successfully!</p>}
+                <button onClick={createComputation} disabled={loading}>
+                    {loading ? 'Creating...' : 'Create'}
+                </button>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {success && <p style={{ color: 'green' }}>Computation created successfully!</p>}
+            </Card>
         </div>
     );
 }

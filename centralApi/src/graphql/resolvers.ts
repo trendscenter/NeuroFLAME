@@ -570,7 +570,7 @@ export default {
       _: unknown,
       { title, description }: { title: string; description: string },
       context: Context,
-    ): Promise<boolean> => {
+    ): Promise<any> => {
       if (!title || !description) {
         throw new Error('Title and description are required')
       }
@@ -584,7 +584,7 @@ export default {
         }
       }
 
-      await Consortium.create({
+      const consortium = await Consortium.create({
         title,
         description,
         leader: context.userId,
@@ -597,7 +597,7 @@ export default {
         },
       })
 
-      return true
+      return consortium._id.toString()
     },
     computationCreate: async (
       _: unknown,

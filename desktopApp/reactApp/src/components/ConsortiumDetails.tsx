@@ -220,6 +220,7 @@ export default function ConsortiumDetails(props: any) {
       setUserIsLeader(data?.getConsortiumDetails?.leader?.id === userId)
       setUserIsActive(data?.getConsortiumDetails?.activeMembers.some((member: any) => member.id === userId))
       setUserIsMember(data?.getConsortiumDetails?.members.some((member: any) => member.id === userId))
+      setSelectComputation(!data?.getConsortiumDetails?.studyConfiguration.computation)
     }, [userId, data])
 
     const handleStartRun = async () => {
@@ -397,7 +398,7 @@ export default function ConsortiumDetails(props: any) {
                     </div>}
                 </div>
                 <div>
-                {consortiumDetails && <h3 style={{color: '#000000'}}>
+                {consortiumDetails.studyConfiguration.computation && consortiumDetails.studyConfiguration.computation.imageDownloadUrl && <h3 style={{color: '#000000'}}>
                     <a href={consortiumDetails.studyConfiguration.computation.imageDownloadUrl} style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                     <LinkIcon style={{color: 'black'}} /> {consortiumDetails.studyConfiguration.computation.imageDownloadUrl}
                     </a>
@@ -411,7 +412,7 @@ export default function ConsortiumDetails(props: any) {
                         <div>
                             {consortiumDetails.studyConfiguration.computation && (
                               <div>
-                              {consortiumDetails.studyConfiguration.computation.imageDownloadUrl.includes("github") ?
+                              {consortiumDetails.studyConfiguration.computation.imageDownloadUrl && consortiumDetails.studyConfiguration.computation.imageDownloadUrl.includes("github") ?
                               <div>{<MarkDownFromURL url={consortiumDetails.studyConfiguration.computation.imageDownloadUrl} />}</div> :
                               <div><p>{consortiumDetails.studyConfiguration.computation.notes}</p></div>}
                               </div>
@@ -423,7 +424,7 @@ export default function ConsortiumDetails(props: any) {
 
                 <section>
                     <h3 style={customStyles.h3}>Settings</h3>
-                    {editableParameters && <CompConfig parameters={editableParameters} setEditableParams={setEditableParameters} setParameters={handleSetParameters} isLeader={userIsLeader} />} 
+                    <CompConfig parameters={editableParameters} setEditableParams={setEditableParameters} setParameters={handleSetParameters} isLeader={userIsLeader} />
                 </section>
 
                 <section>
