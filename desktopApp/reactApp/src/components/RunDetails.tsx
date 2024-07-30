@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { gql } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import { ApolloClientsContext } from '../contexts/ApolloClientsContext';
+import Card from '@mui/material/Card';
+import styles from './styles';
 
 // types.ts
 export interface IRunDetails {
@@ -98,35 +100,29 @@ export default function RunDetails() {
         <div>
             <h1>Run Details</h1>
 
-            <section>
+            <Card sx={styles.card}>
                 <h2>Consortium</h2>
                 <p><strong>Title:</strong> {runDetails.consortiumTitle}</p>
                 <p><strong>ID:</strong> {runDetails.consortiumId}</p>
-            </section>
+            </Card>
 
-            <hr />
-
-            <section>
+            <Card sx={styles.card}>
                 <h2>Run Information</h2>
                 <p><strong>ID:</strong> {runDetails.runId}</p>
                 <p><strong>Status:</strong> {runDetails.status}</p>
                 <p><strong>Last Updated:</strong> {new Date(Number(runDetails.lastUpdated)).toLocaleString()}</p>
-            </section>
+            </Card>
 
-            <hr />
-
-            <section>
+            <Card sx={styles.card}>
                 <h2>Members</h2>
                 <ul>
                     {runDetails.members.map((member) => (
                         <li key={member.id}>{member.username}</li>
                     ))}
                 </ul>
-            </section>
+            </Card>
 
-            <hr />
-
-            <section>
+            <Card sx={styles.card}>
                 <h2>Study Configuration</h2>
                 <div>
                     <p><strong>Consortium Leader Notes:</strong></p>
@@ -145,7 +141,7 @@ export default function RunDetails() {
                     <pre>{runDetails.studyConfiguration.computation.notes}</pre>
                     <p><strong>Owner:</strong> {runDetails.studyConfiguration.computation.owner}</p>
                 </div>
-            </section>
+            </Card>
         </div>
     );
 }

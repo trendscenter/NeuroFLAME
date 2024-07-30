@@ -3,6 +3,8 @@ import React, { useContext } from 'react';
 import { useQuery } from '@apollo/client';
 import { ApolloClientsContext } from '../contexts/ApolloClientsContext';
 import { Link } from 'react-router-dom';
+import Card from '@mui/material/Card';
+import styles from './styles';
 
 export const GET_RUN_LIST = gql`
   query GetRunList {
@@ -39,14 +41,17 @@ const RunList: React.FC = () => {
         <div>
             <h1>Run List</h1>
             {data?.getRunList.map((run) => (
-                <div key={run.runId}>
+                <Card 
+                    key={run.runId} 
+                    sx={styles.card}
+                >
                     <h2>{run.consortiumTitle}</h2>
 
                     <h3>RunId:   <Link to={`/runs/details/${run.runId}`}>{run.runId}    </Link></h3>
 
                     <p>Status: {run.status}</p>
                     <p>Last Updated: {new Date(Number(run.lastUpdated)).toLocaleString()}</p>
-                </div>
+                </Card>
             ))
             }
         </div >

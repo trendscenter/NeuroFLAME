@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNotifications } from '../contexts/NotificationsContext';
 import { Link } from 'react-router-dom';
+import Card from '@mui/material/Card';
+import styles from './styles';
 
 interface RunEvent {
   consortiumId: string;
@@ -19,11 +21,13 @@ const NotificationList: React.FC<NotificationListProps> = () => {
   return (
     <div>
       <h2>Notifications</h2>
-      <ul>
         {events.map((event, index) => (
-          <li key={index}>
+            <Card 
+            key={index} 
+            sx={styles.card}
+            >
             <p>
-              <Link to={`/consortia/${event.consortiumId}`}>
+              <Link to={`/consortia/details/${event.consortiumId}`}>
                 <strong>
                   {event.consortiumTitle}
                 </strong>
@@ -31,9 +35,8 @@ const NotificationList: React.FC<NotificationListProps> = () => {
             </p>
             <p><strong>Run ID:</strong> {event.runId}</p>
             <p><strong>Status:</strong> {event.status}</p>
-          </li>
+          </Card>
         ))}
-      </ul>
     </div>
   );
 };
