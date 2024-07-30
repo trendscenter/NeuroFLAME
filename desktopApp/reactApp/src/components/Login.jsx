@@ -121,12 +121,14 @@ function Login() {
   const [value, setValue] = React.useState(0);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { loginToCentral, connectAsUser } = useLoginAndConnect();
+  const [rememberMe, setRememberMe] = useState(false);
+  const { loginToCentral, connectAsUser, createUser } = useLoginAndConnect();
   const [loginStatus, setloginStatus] = useState({ loading: false, error: null, data: null });
   const [connectStatus, setConnectStatus] = useState({ loading: false, error: null, data: null });
-  const { subscribe } = useNotifications();
+  const [errorMessage, setErrorMessage] = useState('');
+  const { subscribe, unsubscribe } = useNotifications();
 
-  const { username: userStateUsername } = useUserState();
+  const { username: loggedInUsername, setUserData, clearUserData } = useUserState();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -141,21 +143,36 @@ function Login() {
     await subscribe();
 
     navigate('/consortia');
-  }
+  };
+
+  const connectAndSubscribe = async () => {
+    try {
+        await unsubscribe();
+        await connectAsUser();
+        await subscribe();
+    } catch (e) {
+        console.error(`Error connecting: ${e}`);
+        setErrorMessage('Failed to connect. Please try again later.');
+    }
+  };
+
+  const handleCreateUser = async (username, password, rememberMe) => {
+    setErrorMessage(''); // Clear previous error messages
+    try {
+        const { accessToken, userId, username: returnedUserName, roles } = await createUser(username, password);
+        setUserData({ accessToken, userId, username: returnedUserName, roles }, rememberMe);
+        await connectAndSubscribe();
+        navigate('/consortia/');
+    } catch (e) {
+        console.error(`Error logging in: ${e.message}`);
+        setErrorMessage(`Failed to login: ${e.message}`);
+        clearUserData();
+    }
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  if (userStateUsername) {
-    return (
-      <div style={styles.container}>
-        <button style={styles.button}>
-          Logout
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div style={styles.container}>
@@ -191,6 +208,17 @@ function Login() {
             value={password}
             onChange={setPassword}
           />
+          <div>
+              <label style={{fontSize: '0.9rem'}}>
+                  <input
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      style={{marginRight: '0.25rem'}}
+                  />
+                  Remember me
+              </label>
+          </div>
           <button
             style={styles.button}
             onClick={() => handleLogin()}
@@ -200,7 +228,36 @@ function Login() {
           </button>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          Item Two
+          <InputField
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={setUsername}
+            />
+            <InputField
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={setPassword}
+            />
+            <div>
+                <label style={{fontSize: '0.9rem'}}>
+                    <input
+                        type="checkbox"
+                        checked={rememberMe}
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                        style={{marginRight: '0.25rem'}}
+                    />
+                    Remember me
+                </label>
+            </div>
+            <button
+              style={styles.button}
+              onClick={async () => {
+                await handleCreateUser(username, password, rememberMe)
+              }}
+              disabled={loginStatus.loading || connectStatus.loading}
+            >Create User</button>
         </CustomTabPanel>
       </Box>
     </div>

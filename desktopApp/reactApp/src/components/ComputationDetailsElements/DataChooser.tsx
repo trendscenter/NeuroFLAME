@@ -93,15 +93,17 @@ export default function OpenDialog(props: any) {
             </div>
         </div>}
         {editDirManually && 
-        <div style={{display: 'flex', justifyContent: 'middle', alignItems: 'center', ...customStyles.container}}>
-            <label style={customStyles.labelBetween}>
-                <h3 style={customStyles.h3}>Edit Data Directory</h3>
-                <div>
-                    <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)', marginRight: '0.25rem' }} onClick={handleSetMount} />
-                    <CancelIcon style={{ color: 'rgba(255, 87, 51, 0.5)' }} onClick={() => {setEditDirManually(!editDirManually)}} />
-                </div>
-            </label>
-            <TextareaAutosize style={{width: '100%'}} id="standard-basic" defaultValue={props.mountDir} onChange={(e) => setDirectory(e.target.value)} />
+        <div style={customStyles.container}>
+            <div>
+                <label style={customStyles.labelBetween}>
+                    <h3 style={customStyles.h3}>Edit Data Directory</h3>
+                    <div>
+                        <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)', marginRight: '0.25rem' }} onClick={handleSetMount} />
+                        <CancelIcon style={{ color: 'rgba(255, 87, 51, 0.5)' }} onClick={() => {setEditDirManually(!editDirManually)}} />
+                    </div>
+                </label>
+            </div>
+            <TextareaAutosize style={{position: 'relative', width: '100%'}} id="standard-basic" defaultValue={props.mountDir} onChange={(e) => setDirectory(e.target.value)} />
         </div>
         }
         {!editDirManually && props.mountDir && <div style={customStyles.container}>
