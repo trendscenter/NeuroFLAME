@@ -298,6 +298,14 @@ export default function ConsortiumDetails(props: any) {
         }
     };
 
+    const handleJoinConsortium = async (consortiumId: string) => {
+      centralApiApolloClient?.mutate({
+        mutation: JOIN_CONSORTIUM,
+        variables: { consortiumId: consortiumId }
+      })
+      handleGetConsortiumDetails();
+    }
+
     const handleLeaveConsortium = async (consortiumId: string) => {
       console.log({ consortiumId })
       centralApiApolloClient?.mutate({
@@ -422,6 +430,9 @@ export default function ConsortiumDetails(props: any) {
                     {editableMountDir && userIsLeader && <div>
                         <button onClick={handleStartRun} style={{width: '100%', borderRadius: '2rem', marginBottom: '1rem', backgroundColor: '#2FB600'}}>Start Run</button>
                     </div>}
+                    {!userIsMember &&
+                        <button onClick={async () => { await handleJoinConsortium(consortiumDetails.id) }} style={{width: '100%', borderRadius: '2rem', marginBottom: '1rem', backgroundColor: '#2FB600'}}>Join</button>
+                    }
                     <div style={customStyles.container}>
                       <div style={customStyles.labelBetween}>
                         <h3 style={customStyles.h3}>Members</h3>

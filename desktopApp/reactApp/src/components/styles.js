@@ -26,6 +26,14 @@ const styles = {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'left'
+    },
+    cardRow: {
+        marginBottom: '1rem',
+        padding: '2rem',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     }
 };
 

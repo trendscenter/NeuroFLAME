@@ -5,6 +5,7 @@ import Card from '@mui/material/Card';
 import { useQuery } from '@apollo/client';
 import { ApolloClientsContext } from '../contexts/ApolloClientsContext';
 import { Link } from 'react-router-dom';
+import styles from './styles';
 
 export const GET_COMPUTATION_LIST = gql`
   query GetComputationList {
@@ -42,14 +43,7 @@ const ComputationList: React.FC = () => {
             {data?.getComputationList.map((computation) => (
                     <Card 
                         key={computation.title} 
-                        style={{
-                            marginBottom: '1rem',
-                            padding: '2rem',
-                            display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            alignItems: 'center'
-                        }}
+                        sx={styles.cardRow}
                     >
                     <Link to={`/computations/details/${computation.id}`}>
                         <h2>{computation.title}</h2>
