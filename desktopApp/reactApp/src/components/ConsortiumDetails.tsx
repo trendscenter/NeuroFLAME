@@ -468,7 +468,7 @@ export default function ConsortiumDetails(props: any) {
                         </div>
                         {editMode ? <ReactQuill theme="snow" value={editableNotes} onChange={setEditableNotes} modules={modules} formats={formats}></ReactQuill> : <div>{parse(editableNotes)}</div>}
                     </div>
-                    <DataChooser setMount={setEditableMountDir} handleSetMount={handleSetMountDir} mountDir={editableMountDir} />
+                    {userIsMember && <DataChooser setMount={setEditableMountDir} handleSetMount={handleSetMountDir} mountDir={editableMountDir} />}
                 </section>
             </div>
         </div>
