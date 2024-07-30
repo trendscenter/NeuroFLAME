@@ -14,7 +14,8 @@ export default function UserAvatar(props: any) {
           width: '32px', 
           height: '32px',
           marginLeft: '1rem',
-          marginRight: '0.5rem'  
+          marginRight: '0.5rem',  
+          fontStyle: 'none'
         }}
       >{username && username.charAt(0).toUpperCase()}
       </Avatar>

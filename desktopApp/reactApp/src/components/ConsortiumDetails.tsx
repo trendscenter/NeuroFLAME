@@ -3,10 +3,14 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
 import MemberAvatar from './MemberAvatar';
+import Button from '@mui/material/Button';
+import IconButton from "@mui/material/IconButton";
 import LinkIcon from '@mui/icons-material/Link';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from  '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
+import CheckedIcon from '@mui/icons-material/CheckCircle';
+import UnpublishedIcon from '@mui/icons-material/Unpublished';
 import parse from 'html-react-parser';
 import DataChooser from './ComputationDetailsElements/DataChooser';
 import MarkDownFromURL from './ComputationDetailsElements/MarkDownFromURL';
@@ -15,10 +19,13 @@ import { CompConfig } from "./ComputationDetailsElements/CompConfig";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
+import { useUserState } from '../contexts/UserStateContext';
+
 // Define the GraphQL queries and mutations
 const GET_CONSORTIUM_DETAILS = gql`
   query GetConsortiumDetails($consortiumId: String!) {
     getConsortiumDetails(consortiumId: $consortiumId) {
+      id
       title
       description
       leader {
@@ -88,8 +95,6 @@ const GET_MOUNT_DIR = gql`
   }
 `;
 
-
-
 const START_RUN = gql`
   mutation StartRun($input: StartRunInput!) {
     startRun(input: $input) {
@@ -97,6 +102,31 @@ const START_RUN = gql`
     }
   }
 `;
+
+const CONSORTIUM_SET_MEMBER_ACTIVE = gql`
+    mutation consortiumSetmMemberActive($consortiumId: String!, $active: Boolean!) {
+        consortiumSetMemberActive(consortiumId: $consortiumId, active: $active)
+    }
+`;
+
+export const JOIN_CONSORTIUM = gql`
+  mutation consortiumJoin($consortiumId: String!) {
+    consortiumJoin(consortiumId: $consortiumId)
+  }
+`;
+
+export const LEAVE_CONSORTIUM = gql`
+  mutation consortiumLeave($consortiumId: String!) {
+    consortiumLeave(consortiumId: $consortiumId)
+  }
+`;
+
+const CONSORTIUM_EDIT_MUTATION = gql`
+  mutation ConsortiumEdit($consortiumId: String!, $title: String!, $description: String!) {
+    consortiumEdit(consortiumId: $consortiumId, title: $title, description: $description)
+  }
+`;
+
 
 // Define custom styles
 const customStyles = {
@@ -150,6 +180,9 @@ export default function ConsortiumDetails(props: any) {
     const [selectableComputation, setSelectableComputation] = useState("");
     const [editableMountDir, setEditableMountDir] = useState("");
     const [selectComputation, setSelectComputation] = useState(false);
+    const [userIsLeader, setUserIsLeader] = useState(false)
+    const [userIsActive, setUserIsActive] = useState(false)
+    const [userIsMember, setUserIsMember] = useState(false)
 
     // Use useLazyQuery for consortium details query
     const [getConsortiumDetails, { loading, error, data }] = useLazyQuery(GET_CONSORTIUM_DETAILS, {
@@ -169,6 +202,8 @@ export default function ConsortiumDetails(props: any) {
     const [studySetNotes] = useMutation(STUDY_SET_NOTES, { client: centralApiApolloClient });
     const [editMode, setEditMode] = useState(false);
 
+    const { userId } = useUserState();
+
     useEffect(() => {
         handleGetConsortiumDetails();
         handleGetMountDir()
@@ -180,6 +215,12 @@ export default function ConsortiumDetails(props: any) {
             setEditableParameters(data.getConsortiumDetails.studyConfiguration.computationParameters || "");
         }
     }, [data]);
+
+    useEffect(() => {
+      setUserIsLeader(data?.getConsortiumDetails?.leader?.id === userId)
+      setUserIsActive(data?.getConsortiumDetails?.activeMembers.some((member: any) => member.id === userId))
+      setUserIsMember(data?.getConsortiumDetails?.members.some((member: any) => member.id === userId))
+    }, [userId, data])
 
     const handleStartRun = async () => {
         startRun({
@@ -245,7 +286,6 @@ export default function ConsortiumDetails(props: any) {
         }
     };
 
-
     const handleSetMountDir = async () => {
         try {
             await setMountDir({
@@ -256,6 +296,29 @@ export default function ConsortiumDetails(props: any) {
             console.error('Error setting mount directory:', e);
             console.log('Failed to set mount directory');
         }
+    };
+
+    const handleLeaveConsortium = async (consortiumId: string) => {
+      console.log({ consortiumId })
+      centralApiApolloClient?.mutate({
+          mutation: LEAVE_CONSORTIUM,
+          variables: { consortiumId: consortiumId }
+      })
+      handleGetConsortiumDetails();
+    };
+
+    const handleSetActive = async (newActiveValue: boolean) => {
+      try {
+          await centralApiApolloClient?.mutate({
+              mutation: CONSORTIUM_SET_MEMBER_ACTIVE,
+              variables: { consortiumId, active: newActiveValue }
+          });
+          console.log('Consortium set active successfully');
+          handleGetConsortiumDetails();
+      } catch (e) {
+          console.error('Error setting consortium active:', e);
+          console.log('Failed to set consortium active');
+      }
     };
 
     const modules = {
@@ -303,9 +366,11 @@ export default function ConsortiumDetails(props: any) {
                       <h3 style={{color: '#000000', marginBottom: '0', marginRight: '0.5rem'}}>
                           {consortiumDetails.studyConfiguration.computation.title}
                       </h3>
+                      {userIsLeader && <div>
                       {!selectComputation ? 
                       <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setSelectComputation(!selectComputation)}} /> :
                       <CancelIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setSelectComputation(!selectComputation)}} />}
+                      </div>}
                     </div>} 
                     {selectComputation && <div style={{display: 'flex', alignItems: 'center', width: '34svw', marginBottom: '1rem'}}>
                         <select
@@ -350,26 +415,45 @@ export default function ConsortiumDetails(props: any) {
 
                 <section>
                     <h3 style={customStyles.h3}>Settings</h3>
-                    {editableParameters && <CompConfig parameters={editableParameters} setEditableParams={setEditableParameters} setParameters={handleSetParameters} />} 
+                    {editableParameters && <CompConfig parameters={editableParameters} setEditableParams={setEditableParameters} setParameters={handleSetParameters} isLeader={userIsLeader} />} 
                 </section>
 
                 <section>
-                    {editableMountDir && <div>
+                    {editableMountDir && userIsLeader && <div>
                         <button onClick={handleStartRun} style={{width: '100%', borderRadius: '2rem', marginBottom: '1rem', backgroundColor: '#2FB600'}}>Start Run</button>
                     </div>}
                     <div style={customStyles.container}>
-                      <h3 style={customStyles.h3}>Members</h3>
-                        {renderMembers(consortiumDetails.members, consortiumDetails.leader.username, consortiumDetails.activeMembers)}
+                      <div style={customStyles.labelBetween}>
+                        <h3 style={customStyles.h3}>Members</h3>
+                        <div>
+                          <span style={{marginRight: '0.25rem'}}>
+                              {userId && userIsActive && 
+                                  <UnpublishedIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => { handleSetActive(false) }} />
+                              }
+                              {userId && userIsMember && !userIsActive && 
+                                  <CheckedIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => { handleSetActive(true) }} />
+                              }
+                          </span>
+                          <span>
+                              {userIsMember && !userIsLeader && 
+                                <CancelIcon style={{ color: 'lightpink' }} onClick={() => { handleLeaveConsortium(consortiumDetails.id) }} />
+                              }
+                          </span>
+                        </div>
+                      </div>
+                      {renderMembers(consortiumDetails.members, consortiumDetails.leader.username, consortiumDetails.activeMembers)}
                     </div>
                     <div style={customStyles.container}>
                         <div style={customStyles.labelBetween}>
                           <h3 style={customStyles.h3}>Leader Notes</h3>
-                          {editMode ? 
-                          <div>
-                          <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={handleSetNotes} />
-                          <CancelIcon style={{ color: 'lightpink' }} onClick={() => {setEditMode(!editMode)}} />
-                          </div> : 
-                          <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setEditMode(!editMode)}} />}
+                          {userIsLeader && <div>
+                            {editMode ? 
+                            <div>
+                            <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={handleSetNotes} />
+                            <CancelIcon style={{ color: 'lightpink' }} onClick={() => {setEditMode(!editMode)}} />
+                            </div> : 
+                            <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setEditMode(!editMode)}} />}
+                          </div>}
                         </div>
                         {editMode ? <ReactQuill theme="snow" value={editableNotes} onChange={setEditableNotes} modules={modules} formats={formats}></ReactQuill> : <div>{parse(editableNotes)}</div>}
                     </div>

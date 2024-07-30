@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,17 +15,21 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ConsortiaList from './components/ConsortiaList';
+import ConsortiumList from './components/ConsortiumList';
 import Login from './components/Login';
 import styles from './components/styles';
 import ConsortiumDetails from './components/ConsortiumDetails';
-import ComputationsList from './components/ComputationsList';
+import ComputationsList from './components/ComputationList';
 import ComputationDetails from './components/ComputationDetails';
+import ComputationsCreate from './components/ComputationsCreate';
 import NotificationList from './components/NotificationList';
-import RunsList from './components/RunsList';
+import RunsList from './components/RunList';
 import RunDetails from './components/RunDetails';
 import UserAvatar from './components/UserAvatar';
+import AdminEditUser from './components/AdminEditUser';
+import PageLogin from './components/PageLogin';
 import { useUserState } from './contexts/UserStateContext';
+import { useNotifications } from './contexts/NotificationsContext';
 import logoSM from './components/assets/coinstac-logo-sm.png';
 import './AppStyles.css';
 
@@ -36,6 +40,9 @@ import {
   MemoryRouter,
 } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
+import { AppConfig } from './components/AppConfig';
+import ConsortiumCreate from './components/ConsortiumCreate';
+import ChangePassword from './components/ChangePassword';
 
 function Router(props) {
   const { children } = props;
@@ -173,7 +180,8 @@ function App() {
     setOpen(!open);
   };
 
-  const { username } = useUserState();
+  const { username, clearUserData } = useUserState();
+  const { subscribe, unsubscribe } = useNotifications();
   const isLoggedIn = !!username;
 
   interface AuthInfo {
@@ -205,7 +213,9 @@ function App() {
   const { updateAuthInfo } = useAuth();
 
   const onLogout = () => {
-    updateAuthInfo({ accessToken: null, refreshToken: null, userId: null });
+    clearUserData();
+    unsubscribe();
+    setOpen(!open);
   };
 
   return (
@@ -245,7 +255,9 @@ function App() {
               >
                 COINSTAC
               </Typography>
-              <UserAvatar username={username} />
+              <Link to="/pageLogin" style={{textDecoration: 'none'}}>
+                <UserAvatar username={username} />
+              </Link>
               <IconButton
                 edge="end"
                 color="inherit"
@@ -263,14 +275,20 @@ function App() {
             <Routes>
               <Route index path="/" element={<Login></Login>} />
               <Route index path="/login" element={<Login></Login>} />
-              <Route path="/consortia" element={<ConsortiaList />} />
-              <Route path="/consortia/:consortiumId" element={<ConsortiumDetails />} />
+              <Route path="/consortia" element={<ConsortiumList />} />
+              <Route path="/consortia/create" element={<ConsortiumCreate />} />
+              <Route path="/consortia/details/:consortiumId" element={<ConsortiumDetails />} />
               <Route path="/runs" element={<RunsList></RunsList>} />
               <Route path="/runs/:runId" element={<RunDetails></RunDetails>} />
               <Route path="/computations" element={<ComputationsList />} />
-              <Route path="/computations/:computationId" element={<ComputationDetails />} />
+              <Route path="/computations/create" element={<ComputationsCreate />} />
+              <Route path="/computations/details/:computationId" element={<ComputationDetails />} />
               <Route path="/invites" element={<div>inviteslist</div>} />
               <Route path="/notifications" element={<NotificationList />} />
+              <Route path="/appConfig" element={<AppConfig />} />
+              <Route path="/adminEditUser" element={<AdminEditUser />} />
+              <Route path="/pageLogin" element={<PageLogin />} />
+              <Route path="/changePassword" element={<ChangePassword />} />
             </Routes>
           </div>
           <Drawer variant="permanent" anchor="right" open={open}>
@@ -292,9 +310,10 @@ function App() {
                 <List aria-label="main mailbox folders" sx={{ color: '#ffffff', borderTop: '1px solid rgba(255,255,255,0.33)' }}>
                   <ListItemLink onClick={() => setOpen(!open)} to="/consortia" primary="Consortia" />
                   <ListItemLink onClick={() => setOpen(!open)} to="/computations" primary="Computations" />
-                  {/*<ListItemLink onClick={() => setOpen(!open)} to="/runs" primary="Runs" />*/}
+                  <ListItemLink onClick={() => setOpen(!open)} to="/runs" primary="Runs" />
                   <ListItemLink onClick={() => setOpen(!open)} to="/notifications" primary="Notifications" />
-                  <ListItemFunc onClick={onLogout} primary="Logout" />
+                  <ListItemLink onClick={() => setOpen(!open)} to="/appConfig" primary="App Config" />
+                  <ListItemLink onClick={() => onLogout()} to="/" primary="Logout" />
                 </List>
               </Box>
             </div>

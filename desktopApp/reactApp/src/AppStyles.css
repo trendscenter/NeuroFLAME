@@ -58,6 +58,10 @@
     border-radius: 4px;
     font-size: 16px;
   }
+
+  button a {
+    color: white;
+  }
   
   button:disabled {
     background-color: #ccc;
@@ -143,7 +147,7 @@
     padding: 16px; /* Padding inside the code block */
     padding-bottom: 2rem;
     overflow-x: auto; /* Horizontal scroll for long lines */
-    color: #ffffff;
+    color: #ffffff !important;
     margin-bottom: 1rem;
     height: auto;
   }
@@ -198,4 +202,14 @@
 
   .toast-container h2 {
     color: white;
+  }
+
+  a > div.MuiAvatar-root:hover {
+    text-decoration: none;
+    background-color: white;
+    color: #001f70;
+  }
+
+  a:hover > div.MuiAvatar-root {
+    text-decoration: none;
   }

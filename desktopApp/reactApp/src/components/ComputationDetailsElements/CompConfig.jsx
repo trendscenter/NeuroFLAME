@@ -22,7 +22,7 @@ const customStyles = {
     }
   };
 
-export function CompConfig({ parameters, setEditableParams, setParameters }) {
+export function CompConfig({ parameters, setEditableParams, setParameters, isLeader }) {
 
     const [editMode, setEditMode] = useState(false);
     const [valid, setValid] = useState(false);
@@ -82,15 +82,17 @@ export function CompConfig({ parameters, setEditableParams, setParameters }) {
 
     return (
             <div style={{position: 'relative'}}>
-                {editMode ?
-                <IconButton style={{position: 'absolute', top: '-2.5rem', right: '0'}} onClick={() => setEditMode(!editMode)}>
-                    <WysiwygIcon fontSize="inherit" />
-                </IconButton> :
-                <IconButton style={{position: 'absolute', top: '-2.5rem', right: '0'}} onClick={() => setEditMode(!editMode)}>
-                    <TerminalIcon fontSize="inherit" />
-                </IconButton>}
+                {isLeader && <div>
+                    {editMode ?
+                    <IconButton style={{position: 'absolute', top: '-2.5rem', right: '0'}} onClick={() => setEditMode(!editMode)}>
+                        <WysiwygIcon fontSize="inherit" />
+                    </IconButton> :
+                    <IconButton style={{position: 'absolute', top: '-2.5rem', right: '0'}} onClick={() => setEditMode(!editMode)}>
+                        <TerminalIcon fontSize="inherit" />
+                    </IconButton>}
+                </div>}
                 <div>
-                    {editMode && parameters ? 
+                    {isLeader && editMode && parameters ? 
                     <div>
                         <JSONEditorPanel mode={'tree'} content={content} onChange={JSONHandler} onRenderMenu={handleRenderMenu} />
                         <div style={{position: 'absolute', bottom: '0.5rem', right: '0.5rem' }}>
@@ -98,7 +100,14 @@ export function CompConfig({ parameters, setEditableParams, setParameters }) {
                         </div>
                     </div> :
                     <div>
-                    <TextareaAutosize minRows="3" className="pre" style={{width: '100%'}} defaultValue={valid ? JSON.stringify(JSON.parse(parameters),null,2) : parameters} onChange={(e) => handleParamChange(e.target.value)} />
+                    <TextareaAutosize 
+                        minRows="3" 
+                        className="pre" 
+                        style={{width: '100%'}} 
+                        defaultValue={valid ? JSON.stringify(JSON.parse(parameters),null,2) : parameters} 
+                        onChange={(e) => handleParamChange(e.target.value)} 
+                        disabled={!isLeader}
+                    />
                     <div style={{position: 'absolute', top: '1rem', right: '0.5rem' }}>
                         {valid ? 
                             <CheckCircleIcon style={{color: 'lightgreen'}} /> : 
