@@ -48,8 +48,8 @@ export function AppConfig() {
                 </pre>
             </div>
             <div>
-                <button onClick={handleOpenConfig} style={{marginRight: '0.5rem'}}>open config</button>
-                <button onClick={handleApplyDefaultConfig}>apply default config</button>
+                <button onClick={handleOpenConfig} style={{marginRight: '0.5rem'}}>Open Config</button>
+                <button onClick={handleApplyDefaultConfig}>Apply Default Config</button>
             </div>
         </div>
     );

@@ -6,6 +6,7 @@ import Card from '@mui/material/Card';
 import { ApolloClientsContext } from '../contexts/ApolloClientsContext';
 import { useUserState } from '../contexts/UserStateContext';
 import MemberAvatar from './MemberAvatar';
+import styles from './styles';
 
 interface PublicUser {
   id: string;
@@ -137,14 +138,7 @@ const ConsortiumListItem = ({ consortium, handleJoinConsortium, handleLeaveConso
 
   return <Card 
             key={consortium.title} 
-            style={{
-              marginBottom: '1rem',
-              padding: '2rem',
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}
+            sx={styles.cardRow}
           >
     <div>
       <h2>
