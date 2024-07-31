@@ -8,7 +8,8 @@ import WebSocket, { WebSocketServer } from 'ws'
 import { useServer } from 'graphql-ws/lib/use/ws'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import {logger} from '../logger.js'
+import { logger } from '../logger.js'
+import runResultsRoute from './routes/runResultsRoutes.js'
 
 import { typeDefs } from './graphql/typeDefs.js'
 import { resolvers } from './graphql/resolvers.js'
@@ -70,6 +71,8 @@ export async function start({ port }: { port: number }) {
       context: httpServerContext,
     }),
   )
+
+  app.use('/run-results', runResultsRoute);
 
   // Now that our HTTP server is fully set up, actually listen.
   httpServer.listen(PORT, () => {
