@@ -1010,7 +1010,7 @@ export default {
           )
           const isActiveMember = activeMemberIds.includes(userId)
 
-          logger.info(`Emitting a run event to userId:`, { userId })
+          logger.info(`Emitting a run event to userId: ${userId}`, )
           return isActiveMember
         },
       ),

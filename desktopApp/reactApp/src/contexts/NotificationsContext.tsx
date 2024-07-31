@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import React, { ReactNode, useContext, useEffect, useState, useRef } from "react";
+import React, { ReactNode, useContext, useState, useRef } from "react";
 import { ApolloClientsContext } from "./ApolloClientsContext";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';

@@ -127,7 +127,6 @@ function Login() {
   const [connectStatus, setConnectStatus] = useState({ loading: false, error: null, data: null });
   const [errorMessage, setErrorMessage] = useState('');
   const { subscribe, unsubscribe } = useNotifications();
-
   const { username: loggedInUsername, setUserData, clearUserData } = useUserState();
   const navigate = useNavigate();
 
