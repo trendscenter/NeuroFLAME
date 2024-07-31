@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { gql } from '@apollo/client';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { ApolloClientsContext } from '../contexts/ApolloClientsContext';
 
 // types.ts
@@ -146,6 +146,7 @@ export default function RunDetails() {
                     <p><strong>Owner:</strong> {runDetails.studyConfiguration.computation.owner}</p>
                 </div>
             </section>
+            <Link to={`/runs/results/${runDetails.consortiumId}/${runId}`}>View Results</Link>
         </div>
     );
 }

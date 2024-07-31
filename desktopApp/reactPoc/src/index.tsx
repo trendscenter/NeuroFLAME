@@ -23,6 +23,7 @@ import ChangePassword from './components/ChangePassword';
 import AdminEditUser from './components/AdminEditUser';
 import RunList from './components/RunList';
 import RunDetails from './components/RunDetails';
+import { RunResults } from './components/RunResults';
 
 const router = createHashRouter([
   {
@@ -64,6 +65,10 @@ const router = createHashRouter([
       {
         path: "runs/details/:runId",
         element: <RunDetails></RunDetails>
+      },
+      {
+        path: "runs/results/:consortiumId/:runId",
+        element: <RunResults></RunResults>
       },
       {
         path: "appConfig",

@@ -3,6 +3,7 @@ export const defaultConfig = {
   centralServerSubscriptionUrl: 'ws://localhost:4000/graphql',
   edgeClientQueryUrl: 'http://localhost:4001/graphql',
   edgeClientSubscriptionUrl: 'ws://localhost:4001/graphql',
+  edgeClientRunResultsUrl: 'http://localhost:4001/run-results',
   startEdgeClientOnLaunch: true,
   logPath: '',
   edgeClientConfig: {

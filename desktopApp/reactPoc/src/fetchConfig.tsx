@@ -4,6 +4,7 @@ export interface Config {
   edgeClientQueryUrl: string;
   edgeClientSubscriptionUrl: string;
   startEdgeClientOnLaunch: boolean;
+  edgeClientRunResultsUrl: string;
   edgeClientConfig: {
     httpUrl: string,
     wsUrl: string,
