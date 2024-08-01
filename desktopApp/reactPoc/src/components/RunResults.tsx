@@ -7,13 +7,21 @@ export function RunResults() {
     const [fileList, setFileList] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [edgeClientRunResultsUrl, setEdgeClientRunResultsUrl] = useState<string | null>(null);
 
+    useEffect(() => {
+        const fetchEdgeClientRunResultsUrl = async () => {
+            const { edgeClientRunResultsUrl } = await window.ElectronAPI.getConfig()
+            setEdgeClientRunResultsUrl(edgeClientRunResultsUrl);
+        };
+        fetchEdgeClientRunResultsUrl();
+    })
 
 
     useEffect(() => {
+        if (!edgeClientRunResultsUrl) return;
         const fetchResultsFilesList = async () => {
             const accessToken = localStorage.getItem('accessToken');
-            const { edgeClientRunResultsUrl } = await window.ElectronAPI.getConfig()
             try {
                 const response = await axios.get(`${edgeClientRunResultsUrl}/${consortiumId}/${runId}`, {
                     headers: {
@@ -30,7 +38,7 @@ export function RunResults() {
         };
 
         fetchResultsFilesList();
-    }, [consortiumId, runId]);
+    }, [consortiumId, runId, edgeClientRunResultsUrl]);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -42,7 +50,7 @@ export function RunResults() {
                 <div key={index}>
                     <h2>{file.name}</h2>
                     <iframe
-                        src={`${file.url}`} // Attach token as a query parameter
+                        src={`${edgeClientRunResultsUrl}/${file.url}`} // Attach token as a query parameter
                         title={`Run Result ${index}`}
                         width="100%"
                         height="600px"
