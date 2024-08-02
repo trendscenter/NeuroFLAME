@@ -43,14 +43,22 @@ export function RunResults() {
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
 
+     
     return (
         <div>
             <h1>Run Results</h1>
             {fileList.map((file, index) => (
+
                 <div key={index}>
                     <h2>{file.name}</h2>
+                  <p>
+                    {
+                        `${edgeClientRunResultsUrl}${file.url}`   
+                    }
+                  </p>
                     <iframe
-                        src={`${edgeClientRunResultsUrl}/${file.url}`} // Attach token as a query parameter
+                    // put the token in the URL to authenticate the request
+                        src={`${edgeClientRunResultsUrl}/${file.url}?x-access-token=${localStorage.getItem('accessToken')}`}
                         title={`Run Result ${index}`}
                         width="100%"
                         height="600px"

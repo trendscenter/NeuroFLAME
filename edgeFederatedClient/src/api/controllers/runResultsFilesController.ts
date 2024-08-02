@@ -30,7 +30,7 @@ export const listRunFiles = async (req: Request, res: Response) => {
           size: stats.size,
           isDirectory: stats.isDirectory(),
           lastModified: stats.mtime,
-          url: `/run-results/${consortiumId}/${runId}/${file}`,
+          url: `${consortiumId}/${runId}/${file}`,
         }
       })
 
