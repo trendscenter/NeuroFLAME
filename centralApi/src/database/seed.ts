@@ -5,8 +5,9 @@ import Run from './models/Run.js'
 import User from './models/User.js'
 import bcrypt from 'bcrypt'
 import getConfig from '../config/getConfig.js'
-import {logger} from '../logger.js'
-import { exampleMarkdownContent } from './exampleMarkdownContent.js'
+import { logger } from '../logger.js'
+import computationNotesMarkdownExample from './computationNotesMarkdownExample.js'
+import computationNotesNvflareBoilerplate from './computationNotesNvflareBoilerplate.js'
 
 const { databaseDetails } = await getConfig()
 const { url, user, pass } = databaseDetails
@@ -76,21 +77,15 @@ const seedDatabase = async () => {
         title: 'NVFLARE boilerplate average',
         imageName: 'boilerplate_average_app',
         imageDownloadUrl: 'https://example.com/boilerplate_average_app',
-        notes: `
-Repository: https://github.com/dylanmartin/nvflare_app_boilerplate
-Parameters example:
-{
-  "decimal_places": 2
-}
-`,
+        notes: computationNotesNvflareBoilerplate,
         owner: user1Id.toString(),
       },
       {
         _id: computation2Id,
         title: 'Markdown Example',
-        imageName: 'boilerplate_average_app',
-        imageDownloadUrl: 'https://example.com/boilerplate_average_app',
-        notes: exampleMarkdownContent,
+        imageName: 'markdown_example',
+        imageDownloadUrl: 'https://www.markdownguide.org/cheat-sheet/',
+        notes: computationNotesMarkdownExample,
         owner: user2Id.toString(),
       },
     ]
