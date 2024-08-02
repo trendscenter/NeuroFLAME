@@ -3,6 +3,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
 import { useUserState } from "../contexts/UserStateContext";
+import ComputationNotesDisplay from "./ComputationNotesDisplay";
 
 
 
@@ -389,10 +390,8 @@ export default function ConsortiumDetails(props: any) {
                                 <p><strong>Image Name:</strong> {consortiumDetails.studyConfiguration.computation.imageName}</p>
                                 <p><strong>Image Download URL:</strong> <a href={consortiumDetails.studyConfiguration.computation.imageDownloadUrl}>{consortiumDetails.studyConfiguration.computation.imageDownloadUrl}</a></p>
                                 <div>
-                                <strong>Computation Notes:</strong>
-                                    <pre>
-                                        {consortiumDetails.studyConfiguration.computation.notes}
-                                    </pre>
+                                    <strong>Computation Notes:</strong>
+                                    <ComputationNotesDisplay computationNotes={consortiumDetails.studyConfiguration.computation.notes} />
                                 </div>
                                 <p><strong>Owner:</strong> {consortiumDetails.studyConfiguration.computation.owner}</p>
                             </div>
@@ -465,3 +464,4 @@ export default function ConsortiumDetails(props: any) {
         </div>
     );
 }
+

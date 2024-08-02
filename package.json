@@ -2,8 +2,7 @@
     "name": "project",
     "private": true,
     "workspaces": [
-      "desktopApp/electronApp",
-      "edgeFederatedClient"
+        "desktopApp/electronApp",
+        "edgeFederatedClient"
     ]
-  }
-  
+}

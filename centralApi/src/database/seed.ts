@@ -6,6 +6,7 @@ import User from './models/User.js'
 import bcrypt from 'bcrypt'
 import getConfig from '../config/getConfig.js'
 import {logger} from '../logger.js'
+import { exampleMarkdownContent } from './exampleMarkdownContent.js'
 
 const { databaseDetails } = await getConfig()
 const { url, user, pass } = databaseDetails
@@ -86,10 +87,10 @@ Parameters example:
       },
       {
         _id: computation2Id,
-        title: 'Computation B',
+        title: 'Markdown Example',
         imageName: 'boilerplate_average_app',
         imageDownloadUrl: 'https://example.com/boilerplate_average_app',
-        notes: 'Notes for Computation B',
+        notes: exampleMarkdownContent,
         owner: user2Id.toString(),
       },
     ]
