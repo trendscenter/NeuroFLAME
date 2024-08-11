@@ -3,16 +3,13 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
 import MemberAvatar from './MemberAvatar';
-import LinkIcon from '@mui/icons-material/Link';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from  '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckedIcon from '@mui/icons-material/CheckCircle';
-import DownloadIcon from '@mui/icons-material/Download';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
 import parse from 'html-react-parser';
 import DataChooser from './ComputationDetailsElements/DataChooser';
-import MarkDownFromURL from './ComputationDetailsElements/MarkDownFromURL';
 import RunListByConsortiumId from './ComputationDetailsElements/RunListByConsortiumId';
 import ReactMarkdown from 'react-markdown'
 import { CompConfig } from "./ComputationDetailsElements/CompConfig";
