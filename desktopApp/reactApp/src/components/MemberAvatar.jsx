@@ -43,13 +43,29 @@ export default function MemberAvatar(props) {
     const { index, username, admin, active } = props;
     return (
       <div style={{
-        position: 'relative',
-        display: 'inline-block',
-        marginRight: '0.5rem',
-        marginBottom: '0.5rem',
-        width: '45px',
-        textAlign: 'center'
+        position: "relative",
+        display: "inline-flex",
+        marginRight: "0.5rem",
+        marginBottom: "0.5rem",
+        textAlign: "center",
+        flexDirection: "column",
+        justifyContent: "space-evenly",
+        alignItems: "center",
       }}>
+        {active ? 
+          <CheckCircleIcon 
+            sx={{ 
+              position: 'absolute',
+              backgroundColor: '#ffffff',
+              borderRadius: '16px',
+              color: '#2FA84F', 
+              width: '16px', 
+              height: '16px', 
+              top: '-2px',
+              marginLeft: '2rem',
+              zIndex: '3',
+            }}
+          /> : ''}
         <UserAvatar admin={admin} index={index}>
           <span
             style={{ 
@@ -76,20 +92,6 @@ export default function MemberAvatar(props) {
          ''}
         </UserAvatar>
         <b style={{fontSize: '14px'}}>{username}</b>
-        {active ? 
-          <CheckCircleIcon 
-            sx={{ 
-              position: 'absolute',
-              backgroundColor: '#ffffff',
-              borderRadius: '16px',
-              color: '#2FA84F', 
-              width: '16px', 
-              height: '16px', 
-              top: '-2px',
-              right: '-3px',
-              zIndex: '3',
-            }}
-          /> : ''}
       </div>
     )
 }
