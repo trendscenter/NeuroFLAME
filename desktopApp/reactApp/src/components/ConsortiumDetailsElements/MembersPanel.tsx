@@ -4,7 +4,7 @@ import CheckedIcon from '@mui/icons-material/CheckCircle';
 import UnpublishedIcon from '@mui/icons-material/Unpublished';
 
 export default function MembersPanel({
-    panelCustomStyles,
+    panelstyles,
     panelConsortiumDetails,
     panelUserId,
     panelUserIsActive,
@@ -27,9 +27,9 @@ export default function MembersPanel({
     });
 
     return (
-        <div style={panelCustomStyles.container}>
-        <div style={panelCustomStyles.labelBetween}>
-        <h3 style={panelCustomStyles.h3}>Members</h3>
+        <div style={panelstyles.container}>
+        <div style={panelstyles.labelBetween}>
+        <h3 style={panelstyles.h3}>Members</h3>
         <div>
             <span style={{marginRight: '0.25rem'}}>
                 {panelUserId && panelUserIsActive && 

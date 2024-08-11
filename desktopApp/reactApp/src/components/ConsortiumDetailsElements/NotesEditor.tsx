@@ -6,7 +6,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 export default function NotesEditor({
-    editorCustomStyles,
+    editorstyles,
     editorHandleSetNotes,
     editorEditMode,
     editorSetEditMode,
@@ -30,9 +30,9 @@ export default function NotesEditor({
     ];
 
     return (
-        <div style={editorCustomStyles.container}>
-            <div style={editorCustomStyles.labelBetween}>
-                <h3 style={editorCustomStyles.h3}>Leader Notes</h3>
+        <div style={editorstyles.container}>
+            <div style={editorstyles.labelBetween}>
+                <h3 style={editorstyles.h3}>Leader Notes</h3>
                 {editorUserIsLeader && <div>
                     {editorEditMode ? 
                     <div>

@@ -25,29 +25,6 @@ interface RunListItem {
     lastUpdated: string;
 }
 
-// Define custom styles
-const customStyles = {
-    h3: {
-      marginBottom: '0.5rem'
-    },
-    button: {
-      fontSize: '14px',
-      padding: '10px 14px',
-      marginLeft: '1rem'
-    },
-    container: {
-      background: '#ffffff',
-      borderRadius: '1rem',
-      padding: '1rem',
-      marginBottom: '1rem'
-    },
-    containerOverflow: {
-      height: 'auto',
-      maxHeight: '340px',
-      overflow: 'scroll'
-    }
-  };  
-
 export default function RunListByConsortiumId(props: any) {
     const { centralApiApolloClient } = useContext(ApolloClientsContext);
 
@@ -69,9 +46,9 @@ export default function RunListByConsortiumId(props: any) {
 
     return (
         <div>
-            {runs && runs.length > 0  && <div style={customStyles.container}>
-                <h3 style={customStyles.h3}>Runs</h3>
-                <div style={customStyles.containerOverflow}>
+            {runs && runs.length > 0  && <div style={styles.container}>
+                <h3 style={styles.h3}>Runs</h3>
+                <div style={styles.containerOverflow}>
                     {runs.map((run) => (
                         <Card 
                             key={run.runId} 
@@ -95,7 +72,7 @@ export default function RunListByConsortiumId(props: any) {
                                 <Link 
                                     to={`/runs/results/${run.consortiumId}/${run.runId}`}
                                 >
-                                    <button style={customStyles.button}>View Results</button>
+                                    <button style={styles.buttonSmall}>View Results</button>
                                 </Link>
                             }
                         </Card>

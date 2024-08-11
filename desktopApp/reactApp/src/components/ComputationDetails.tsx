@@ -3,7 +3,6 @@ import { useContext, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
 import { useUserState } from "../contexts/UserStateContext";
-import TextareaAutosize from 'react-textarea-autosize';
 import Card from '@mui/material/Card';
 import styles from './styles';
 
@@ -36,16 +35,6 @@ const COMPUTATION_EDIT_MUTATION = gql`
     )
   }
 `;
-
-// Define custom styles
-const customStyles = {
-    labelBetween: {
-    whiteSpace: 'nowrap',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignContent: 'center',
-    }
-}; 
 
 export default function ComputationDetails() {
     const { centralApiApolloClient } = useContext(ApolloClientsContext);
@@ -124,7 +113,7 @@ export default function ComputationDetails() {
 
     return (
         <div>
-            <div style={customStyles.labelBetween}>
+            <div style={styles.labelBetween}>
                 <h1>Computation Details</h1>
                 <div>
                     <button onClick={() => navigate('/computations')}>Back to Computations List</button>

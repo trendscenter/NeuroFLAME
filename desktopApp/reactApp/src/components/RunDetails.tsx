@@ -108,7 +108,7 @@ export default function RunDetails() {
 
     return (
         <div>
-            <div style={customStyles.labelBetween}>
+            <div style={styles.labelBetween}>
                 <h1>Details for Run: <span style={{color: 'black'}}>{runId}</span></h1>
                 <div>
                 <Link 

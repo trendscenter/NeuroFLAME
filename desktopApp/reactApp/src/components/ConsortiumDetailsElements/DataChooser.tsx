@@ -1,47 +1,11 @@
-import React from 'react';
 import { useState } from "react";
-import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import CancelIcon from '@mui/icons-material/Cancel';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import FolderIcon from '@mui/icons-material/Folder';
 import SaveIcon from  '@mui/icons-material/Save';
-import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import TextareaAutosize from 'react-textarea-autosize';
-
-// Define custom styles
-const customStyles = {
-    h3 : {
-        margin: '0',
-        padding: '0',
-        lineHeight: '1.5',
-    },
-    container: {
-        background: '#ffffff',
-        borderRadius: '1rem',
-        padding: '1rem',
-        marginBottom: '1rem',
-    },
-    label: {
-        whiteSpace: 'nowrap',
-        display: 'flex',
-        justifyContent: 'flex-start',
-        alignContent: 'center',
-        lineHeight: '2',
-    },
-    labelBetween: {
-        whiteSpace: 'nowrap',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignContent: 'center'
-    },
-    files: {
-        height: '200px',
-        overflow: 'scroll',
-        marginBottom: '1rem'
-    }
-  };
+import styles from '../styles';
 
 export default function OpenDialog(props: any) {
 
@@ -95,10 +59,10 @@ export default function OpenDialog(props: any) {
             </div>
         </div>}
         {editDirManually && 
-        <div style={customStyles.container}>
+        <div style={styles.container}>
             <div>
-                <label style={customStyles.labelBetween}>
-                    <h3 style={customStyles.h3}>Edit Data Directory</h3>
+                <label style={styles.labelBetween}>
+                    <h3 style={styles.h3}>Edit Data Directory</h3>
                     <div>
                         {directory && props.mountDir !== directory && <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)', marginRight: '0.25rem' }} onClick={handleSetMount} />}
                         <CancelIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setEditDirManually(!editDirManually)}} />
@@ -108,66 +72,21 @@ export default function OpenDialog(props: any) {
             <TextareaAutosize style={{position: 'relative', width: '100%'}} id="standard-basic" defaultValue={props.mountDir} onChange={(e) => setDirectory(e.target.value)} />
         </div>
         }
-        {!editDirManually && props.mountDir && <div style={customStyles.container}>
-            <label style={customStyles.labelBetween}>
-                <h3 style={customStyles.h3}>Data Directory</h3>
+        {!editDirManually && props.mountDir && <div style={styles.container}>
+            <label style={styles.labelBetween}>
+                <h3 style={styles.h3}>Data Directory</h3>
                 <div>
                     <FolderIcon style={{ color: 'rgba(0, 0, 0, 0.54)', marginRight: '0.25rem' }} fontSize="medium" onClick={handleUseDirectoryDialog} />
                     <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} fontSize="medium" onClick={(event) => setEditDirManually(!editDirManually)} />
                 </div> 
             </label>
-            <div style={customStyles.labelBetween}>
+            <div style={styles.labelBetween}>
                 <span>
                     {filePathTrail(props.mountDir)}
                 </span>
-                <CancelIcon style={{ color: 'rgba(255, 87, 51, 0.5)'}} fontSize="small" onClick={(event) => unsetMount()} />  
+                <DeleteIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} fontSize="small" onClick={(event) => unsetMount()} />  
             </div>        
         </div>}
     </div>
     )
-}
-
-function FileTree(files){
-    let filesArray = files.files;
-    filesArray = filesArray.slice(0, 4);
-    const structure = makeTree(filesArray);
-    if(structure.length > 0){
-        return(
-            <SimpleTreeView
-                style={customStyles.files}
-                slots={{
-                    expandIcon: FolderIcon,
-                    collapseIcon: FolderOpenIcon,
-                    endIcon: TextSnippetIcon,
-                }}
-                sx={{paddingLeft: '0.75rem', paddingRight: '0.75rem'}}
-            >
-                <BuildTree nodes={structure} />
-                <div style={{marginLeft: "10px", marginBottom: "10px"}}>...</div>
-            </SimpleTreeView>
-        )
-    } 
-}
-
-function BuildTree(nodes){
-    nodes = nodes.nodes;
-    const list = [];
-    nodes.map((node, index) => {
-        node.children 
-        ? list.push(<TreeItem itemId={index+'-'+node.name} label={node.name}><BuildTree nodes={node.children} /></TreeItem>)
-        : list.push(<TreeItem itemId={index+'-'+node.name} label={node.name}></TreeItem>)
-    });
-    return list;
-}
-
-function makeTree(paths) {
-    const tree = paths.reduce((parent, path) => {
-        path.split('/').reduce((r, name, i, { length }) => {
-            let temp = (r.children ??= []).find(q => q.name === name);
-            if (!temp) r.children.push(temp = { name, ...(i + 1 === length && { isLeaf: true }) });
-            return temp;
-        }, parent);
-        return parent;
-    }, { children: [] }).children;
-    return tree;
 }

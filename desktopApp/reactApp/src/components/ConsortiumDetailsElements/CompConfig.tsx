@@ -6,10 +6,10 @@ import WysiwygIcon from '@mui/icons-material/Wysiwyg';
 import CheckCircleIcon from '@mui/icons-material/CheckCircleOutline';
 import WarningIcon from '@mui/icons-material/Warning';
 import TextareaAutosize from 'react-textarea-autosize';
-import { JSONEditorPanel } from './JSONEditorPanel.jsx';
+import JSONEditorPanel from './JSONEditorPanel';
 
 // Define custom styles
-const customStyles = {
+const styles = {
     labelBetween: {
         whiteSpace: 'nowrap',
         display: 'flex',

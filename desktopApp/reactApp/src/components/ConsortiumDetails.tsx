@@ -119,7 +119,7 @@ const CONSORTIUM_EDIT_MUTATION = gql`
 
 
 // Define custom styles
-const customStyles = {
+const styles = {
     h3 : {
       marginBottom: '0.5rem'
     },
@@ -348,7 +348,7 @@ export default function ConsortiumDetails(props: any) {
 
     return (
         <div>
-            <div style={customStyles.rowStyleThreeCols}>
+            <div style={styles.rowStyleThreeCols}>
                 <section>
                     <div style={{marginBottom: '1rem'}}>
                       <small>Consortium:</small>
@@ -371,7 +371,7 @@ export default function ConsortiumDetails(props: any) {
                     }
                     {userIsMember && <DataChooser setMount={setEditableMountDir} handleSetMount={handleSetMountDir} mountDir={editableMountDir} />}
                     <MembersPanel     
-                      panelCustomStyles={customStyles}
+                      panelstyles={styles}
                       panelConsortiumDetails={consortiumDetails}
                       panelUserId={userId}
                       panelUserIsActive={userIsActive}
@@ -381,7 +381,7 @@ export default function ConsortiumDetails(props: any) {
                       panelHandleLeaveConsortium={handleLeaveConsortium}
                     />
                     {showNotes && <NotesEditor 
-                      editorCustomStyles={customStyles} 
+                      editorstyles={styles} 
                       editorHandleSetNotes={handleSetNotes} 
                       editorEditMode={editMode}
                       editorSetEditMode={setEditMode} 
@@ -393,8 +393,8 @@ export default function ConsortiumDetails(props: any) {
 
                 <section>
                   <RunListByConsortiumId consortiumId={consortiumId} />
-                  <div style={customStyles.container}>
-                    <h3 style={customStyles.h3}>Settings</h3>
+                  <div style={styles.container}>
+                    <h3 style={styles.h3}>Settings</h3>
                     <CompConfig 
                       configEditableParameters={editableParameters} 
                       configSetEditableParams={setEditableParameters} 
@@ -403,7 +403,7 @@ export default function ConsortiumDetails(props: any) {
                   </div>
                 </section>
 
-                <section style={customStyles.containerSelfHeight}>
+                <section style={styles.containerSelfHeight}>
                     {consortiumDetails && consortiumDetails.studyConfiguration.computation && 
                       <ComputationPanel 
                         panelComputation={consortiumDetails.studyConfiguration.computation} 

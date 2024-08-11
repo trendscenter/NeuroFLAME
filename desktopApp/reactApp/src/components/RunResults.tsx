@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import styles from './styles';
 
 export default function RunResults() {
     const { consortiumId, runId } = useParams<{ consortiumId: string, runId: string }>();
@@ -8,16 +9,6 @@ export default function RunResults() {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [edgeClientRunResultsUrl, setEdgeClientRunResultsUrl] = useState<string | null>(null);
-
-    // Define custom styles
-    const customStyles = {
-        labelBetween: {
-        whiteSpace: 'nowrap',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignContent: 'center',
-        }
-    }; 
 
     useEffect(() => {
         const fetchEdgeClientRunResultsUrl = async () => {
@@ -55,7 +46,7 @@ export default function RunResults() {
      
     return (
         <div>
-            <div style={customStyles.labelBetween}>
+            <div style={styles.labelBetween}>
                 <h1>Results for Run: <span style={{color: 'black'}}>{runId}</span></h1>
                 <div>
                 <Link 
