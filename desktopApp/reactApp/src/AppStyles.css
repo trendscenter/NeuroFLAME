@@ -144,15 +144,21 @@
   
   pre, code, .pre {
     display: inline-block;
-    background-color: #1A2948; /* Light grey background */
+    background-color: #eef2f2; /* Light grey background */
     border-radius: 8px; /* Rounded corners */
-    padding: 1rem; /* Padding inside the code block */
+    padding: 0.5rem; /* Padding inside the code block */
     overflow-x: auto; /* Horizontal scroll for long lines */
     font-size: 0.9rem;
-    color: #ffffff !important;
+    color: #000 !important;
     margin-bottom: 1rem;
     height: auto;
     width: 100%;
+  }
+
+  textarea.pre {
+    background-color: #1A2948; /* Light grey background */   
+    color: #ffffff !important;
+    padding: 1rem;
   }
   
   pre {

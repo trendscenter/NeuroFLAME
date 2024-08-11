@@ -386,7 +386,7 @@ export default function ConsortiumDetails(props: any) {
                 <section>
                     <div style={{marginBottom: '1rem'}}>
                       <small>Consortium:</small>
-                      <h1 style={{fontSize: '2.25rem', marginBottom: '0'}}>{consortiumDetails.title}</h1>
+                      <h1 style={{fontSize: '2.25rem', marginBottom: '0.5rem', lineHeight: '1'}}>{consortiumDetails.title}</h1>
                       <div style={{whiteSpace: 'normal'}}>{consortiumDetails.description}</div>
                     </div>
                     {editableMountDir && userIsLeader && <div>

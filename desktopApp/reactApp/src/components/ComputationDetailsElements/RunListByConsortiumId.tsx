@@ -82,7 +82,7 @@ export default function RunListByConsortiumId(props: any) {
                                 justifyContent: 'space-between',
                                 padding: '1rem', 
                                 marginBottom: '1rem',
-                                backgroundColor: 'rgba(0,0,0,0.05)',
+                                backgroundColor: '#edf2f2',
                                 boxShadow: 'none',
                                 fontSize: '1rem'
                             }}
