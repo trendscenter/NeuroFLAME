@@ -1,4 +1,5 @@
 import { Document, Types } from 'mongoose'
+import { ObjectId } from 'mongodb'
 import {
   generateTokens,
   compare,
@@ -31,6 +32,7 @@ interface Context {
   userId: string
   roles: string[]
   error: string
+  consortiumId: string
 }
 
 export default {
@@ -190,7 +192,36 @@ export default {
         throw new Error('Failed to fetch run list')
       }
     },
+    getRunListByConsortiumId: async (
+      _: unknown,
+      { consortiumId }: { consortiumId: string },
+    ): Promise<RunListItem[]> => {
+      try {
+        const runs = await Run.find({ consortium: new ObjectId(consortiumId) })
+          .populate('consortium', 'title')
+          .populate('members', 'id username')
+          .sort({ lastUpdated: -1 })
+          .lean()
+          .exec()
 
+        return runs.map((run) => {
+          if (!('title' in run.consortium)) {
+            throw new Error('Consortium data is missing or incomplete')
+          }
+
+          return {
+            consortiumId: run.consortium._id.toString(),
+            consortiumTitle: run.consortium.title as string,
+            runId: run._id.toString(),
+            status: run.status,
+            lastUpdated: run.lastUpdated,
+          }
+        })
+      } catch (error) {
+        logger.error('Error fetching run list:', error)
+        throw new Error('Failed to fetch run list')
+      }
+    },
     getRunDetails: async (
       _: unknown,
 

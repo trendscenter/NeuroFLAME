@@ -63,7 +63,7 @@ export default function OpenDialog(props: any) {
         if(directory){
             setDirectory(null);
             setFiles(null);
-            setEditDirManually(false);
+            setEditDirManually(false)
             props.setMount(directory);
             props.handleSetMount();
         }
@@ -76,10 +76,12 @@ export default function OpenDialog(props: any) {
         props.handleSetMount();
     }
 
-    function filePathTrail(path){
+    const filePathTrail = (path) => {
         var parts = path.split('/').slice(-3);
-        return ( parts.length == 3 ? '/' : '' ) + parts.join('/');
-      }
+        var newPath = ( parts.length == 3 ? '/' : '' ) + parts.join('/');
+        return '...'+newPath;
+    }
+
 
     return(
     <div>
@@ -88,7 +90,7 @@ export default function OpenDialog(props: any) {
             <button onClick={handleUseDirectoryDialog} style={{width: '100%', borderRadius: '2rem'}}>
                 Select Data Directory
             </button>
-            <div style={{marginTop: '0.5rem', textAlign: 'center'}}>
+            <div style={{margin: '0.5rem 0 1rem', textAlign: 'center'}}>
                 <a style={{fontSize: '0.8rem', cursor: 'pointer'}} onClick={() => setEditDirManually(!editDirManually)}>Enter Data Directory Manually</a>
             </div>
         </div>}
@@ -98,8 +100,8 @@ export default function OpenDialog(props: any) {
                 <label style={customStyles.labelBetween}>
                     <h3 style={customStyles.h3}>Edit Data Directory</h3>
                     <div>
-                        <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)', marginRight: '0.25rem' }} onClick={handleSetMount} />
-                        <CancelIcon style={{ color: 'rgba(255, 87, 51, 0.5)' }} onClick={() => {setEditDirManually(!editDirManually)}} />
+                        {directory && props.mountDir !== directory && <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)', marginRight: '0.25rem' }} onClick={handleSetMount} />}
+                        <CancelIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setEditDirManually(!editDirManually)}} />
                     </div>
                 </label>
             </div>
@@ -114,15 +116,12 @@ export default function OpenDialog(props: any) {
                     <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} fontSize="medium" onClick={(event) => setEditDirManually(!editDirManually)} />
                 </div> 
             </label>
-            <div style={{
-                width: '100%',
-                fontSize: '0.8rem', 
-                marginBottom: '0.25rem', 
-                position: 'relative', 
-                display: 'inline-block'
-                }}>
-                {props.mountDir} <CancelIcon style={{ color: 'rgba(255, 87, 51, 0.5)', position: 'absolute'}} fontSize="small" onClick={(event) => unsetMount()} />
-            </div>          
+            <div style={customStyles.labelBetween}>
+                <span>
+                    {filePathTrail(props.mountDir)}
+                </span>
+                <CancelIcon style={{ color: 'rgba(255, 87, 51, 0.5)'}} fontSize="small" onClick={(event) => unsetMount()} />  
+            </div>        
         </div>}
     </div>
     )

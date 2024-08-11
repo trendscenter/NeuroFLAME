@@ -204,6 +204,7 @@ export default `#graphql
     getConsortiumDetails(consortiumId: String): ConsortiumDetails
     getComputationDetails(computationId: String): Computation
     getRunList: [RunListItem]
+    getRunListByConsortiumId(consortiumId: String): [RunListItem]
     getRunDetails(runId: String): RunDetails
   }
 

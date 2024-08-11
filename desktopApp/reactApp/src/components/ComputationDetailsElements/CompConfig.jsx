@@ -51,6 +51,7 @@ export function CompConfig({ parameters, setEditableParams, setParameters, isLea
             setContent({ json: JSON.parse(parameters) });
         } catch (e) {
             setValid(false);
+            setContent({ json: {} });
         }
     }
 
@@ -80,6 +81,15 @@ export function CompConfig({ parameters, setEditableParams, setParameters, isLea
         }
     },[parameters]);
 
+    const isJSON = (string) => {
+        try {
+          JSON.parse(string);
+          return true
+        } catch (e) {
+          return false;
+        }
+      }
+
     return (
             <div style={{position: 'relative'}}>
                 {isLeader && <div>
@@ -104,7 +114,7 @@ export function CompConfig({ parameters, setEditableParams, setParameters, isLea
                         minRows="3" 
                         className="pre" 
                         style={{width: '100%'}} 
-                        defaultValue={valid ? JSON.stringify(JSON.parse(parameters),null,2) : parameters} 
+                        value={isJSON(parameters) ? JSON.stringify(JSON.parse(parameters),null,2) : parameters} 
                         onChange={(e) => handleParamChange(e.target.value)} 
                         disabled={!isLeader}
                     />
@@ -115,7 +125,7 @@ export function CompConfig({ parameters, setEditableParams, setParameters, isLea
                         }
                     </div>
                     <div style={{position: 'absolute', bottom: '1.5rem', right: '0.5rem' }}>
-                        {valid && paramChange && <SaveIcon style={{color: 'lightgrey'}} onClick={saveParameters} />} 
+                        {valid && paramChange && isLeader && <SaveIcon style={{color: 'lightgrey'}} onClick={saveParameters} />} 
                     </div>
                     </div>}
                 </div>

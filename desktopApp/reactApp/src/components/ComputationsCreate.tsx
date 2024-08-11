@@ -1,7 +1,9 @@
 import { gql } from '@apollo/client';
 import { ApolloClientsContext } from '../contexts/ApolloClientsContext';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
+import Switch from '@mui/material/Switch';
+import TextareaAutosize from 'react-textarea-autosize';
 import styles from './styles';
 
 const COMPUTATION_CREATE_MUTATION = gql`
@@ -15,7 +17,7 @@ export default function ComputationCreate() {
     const [title, setTitle] = useState('');
     const [imageName, setImageName] = useState('');
     const [imageDownloadUrl, setImageDownloadUrl] = useState('');
-    const [notes, setNotes] = useState('');
+    const [notes, setNotes] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
@@ -46,7 +48,7 @@ export default function ComputationCreate() {
     return (
         <div>
             <h1>Create Computation</h1>
-            <Card sx={styles}>
+            <Card sx={styles.card}>
                 <div className="form-group">
                     <div>
                         <label>Title</label>
@@ -66,7 +68,7 @@ export default function ComputationCreate() {
                     <input
                         style={{ width: '100%' }}
                         type="text"
-                        placeholder="Image Name"
+                        placeholder="nvflare-algorithm-dataformat"
                         value={imageName}
                         onChange={(e) => setImageName(e.target.value)}
                     />
@@ -78,7 +80,7 @@ export default function ComputationCreate() {
                     <input
                         style={{ width: '100%' }}
                         type="text"
-                        placeholder="Image Download URL"
+                        placeholder="https://hub.docker.com/repository/docker/username/imagename"
                         value={imageDownloadUrl}
                         onChange={(e) => setImageDownloadUrl(e.target.value)}
                     />
@@ -94,7 +96,7 @@ export default function ComputationCreate() {
                         onChange={(e) => setNotes(e.target.value)}
                         rows={10} // Adjust the number of rows as needed to make the textarea larger
                     />
-                </div>
+                </div> 
                 <button onClick={createComputation} disabled={loading}>
                     {loading ? 'Creating...' : 'Create'}
                 </button>

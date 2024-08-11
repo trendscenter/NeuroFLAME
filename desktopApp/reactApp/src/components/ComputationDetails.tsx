@@ -1,8 +1,11 @@
 import { gql } from "@apollo/client";
 import { useContext, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
 import { useUserState } from "../contexts/UserStateContext";
+import TextareaAutosize from 'react-textarea-autosize';
+import Card from '@mui/material/Card';
+import styles from './styles';
 
 const GET_COMPUTATION_DETAILS_QUERY = gql`
   query GetComputationDetails($computationId: String!) {
@@ -34,6 +37,16 @@ const COMPUTATION_EDIT_MUTATION = gql`
   }
 `;
 
+// Define custom styles
+const customStyles = {
+    labelBetween: {
+    whiteSpace: 'nowrap',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignContent: 'center',
+    }
+}; 
+
 export default function ComputationDetails() {
     const { centralApiApolloClient } = useContext(ApolloClientsContext);
     const { userId } = useUserState();
@@ -46,6 +59,8 @@ export default function ComputationDetails() {
     const [editableImageDownloadUrl, setEditableImageDownloadUrl] = useState("");
     const [editableNotes, setEditableNotes] = useState("");
     const [computationOwnerId, setComputationOwnerId] = useState("");
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchComputationDetails = async () => {
@@ -100,6 +115,7 @@ export default function ComputationDetails() {
             setError(err.message);
         } finally {
             setLoading(false);
+            navigate('/computations')
         }
     };
 
@@ -108,58 +124,65 @@ export default function ComputationDetails() {
 
     return (
         <div>
-            <h1>Computation Details</h1>
-            <div className="form-group">
-                <div><label>Title:</label></div>
-                <input
-                    style={{ width: "100%" }}
+            <div style={customStyles.labelBetween}>
+                <h1>Computation Details</h1>
+                <div>
+                    <button onClick={() => navigate('/computations')}>Back to Computations List</button>
+                </div>
+            </div>
+            <Card sx={styles.card}>
+                <div className="form-group" style={{marginBottom: '1rem'}}>
+                    <label><b>Owner: </b></label>
+                    <span>{computationOwnerId}</span>
+                </div>
+                <div className="form-group">
+                    <label><b>Title:</b></label>
+                    <input
+                        style={{ width: "100%" }}
 
-                    disabled={!isOwner}
-                    type="text"
-                    value={editableTitle}
-                    onChange={(e) => setEditableTitle(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <div><label>Image Name:</label></div>
-                <input
-                    style={{ width: "100%" }}
-                    disabled={!isOwner}
-                    type="text"
-                    value={editableImageName}
-                    onChange={(e) => setEditableImageName(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <div><label>Image Download URL:</label></div>
-                <input
-                    style={{ width: "100%" }}
-                    disabled={!isOwner}
-                    type="text"
-                    value={editableImageDownloadUrl}
-                    onChange={(e) => setEditableImageDownloadUrl(e.target.value)}
-                />
-            </div>
-            <div className="form-group">
-                <div><label>Notes:</label></div>
-                <textarea
-                    disabled={!isOwner}
-                    value={editableNotes}
-                    onChange={(e) => setEditableNotes(e.target.value)}
-                    style={{ width: "100%" }}
-                    rows={10} // Adjust the number of rows as needed to make the textarea larger
-                    cols={50} // Adjust the number of columns as needed to make the textarea wider
-                />
-            </div>
-            {isOwner && (
-                <button onClick={updateComputation} disabled={loading}>
-                    {loading ? "Updating..." : "Update"}
-                </button>
-            )}
-            <div className="form-group">
-                <div><label>Owner: </label></div>
-                <span>{computationOwnerId}</span>
-            </div>
+                        disabled={!isOwner}
+                        type="text"
+                        value={editableTitle}
+                        onChange={(e) => setEditableTitle(e.target.value)}
+                    />
+                </div>
+                <div className="form-group">
+                    <label><b>Image Name:</b></label>
+                    <input
+                        style={{ width: "100%" }}
+                        disabled={!isOwner}
+                        type="text"
+                        value={editableImageName}
+                        onChange={(e) => setEditableImageName(e.target.value)}
+                    />
+                </div>
+                <div className="form-group">
+                    <label><b>Image Download URL:</b></label>
+                    <input
+                        style={{ width: "100%" }}
+                        disabled={!isOwner}
+                        type="text"
+                        value={editableImageDownloadUrl}
+                        onChange={(e) => setEditableImageDownloadUrl(e.target.value)}
+                    />
+                </div>
+                <div className="form-group">
+                    <label><b>Notes:</b></label>
+                    <textarea
+                        disabled={!isOwner}
+                        value={editableNotes}
+                        onChange={(e) => setEditableNotes(e.target.value)}
+                        style={{ width: "100%" }}
+                        rows={10} // Adjust the number of rows as needed to make the textarea larger
+                        cols={50} // Adjust the number of columns as needed to make the textarea wider
+                    />
+                </div>
+                {isOwner && (
+                    <button onClick={updateComputation} disabled={loading}>
+                        {loading ? "Updating..." : "Update"}
+                    </button>
+                )}
+            </Card>
         </div>
     );
 }

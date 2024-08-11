@@ -25,6 +25,7 @@ import ComputationsCreate from './components/ComputationsCreate';
 import NotificationList from './components/NotificationList';
 import RunsList from './components/RunList';
 import RunDetails from './components/RunDetails';
+import RunResults from './components/RunResults';
 import UserAvatar from './components/UserAvatar';
 import AdminEditUser from './components/AdminEditUser';
 import PageLogin from './components/PageLogin';
@@ -290,6 +291,7 @@ function App() {
               <Route path="/pageLogin" element={<PageLogin />} />
               <Route path="/changePassword" element={<ChangePassword />} />
               <Route path="/runs/details/:runId" element={<RunDetails />} />
+              <Route path="/runs/results/:consortiumId/:runId" element={<RunResults />} />
             </Routes>
           </div>
           <Drawer variant="permanent" anchor="right" open={open}>
@@ -313,8 +315,13 @@ function App() {
                   <ListItemLink onClick={() => setOpen(!open)} to="/computations" primary="Computations" />
                   <ListItemLink onClick={() => setOpen(!open)} to="/runs" primary="Runs" />
                   <ListItemLink onClick={() => setOpen(!open)} to="/notifications" primary="Notifications" />
-                  <ListItemLink onClick={() => setOpen(!open)} to="/appConfig" primary="App Config" />
+                </List>
+              </Box>
+              <Box sx={{ width: 360, position: 'absolute', bottom: 0 }}>
+                <List aria-label="main mailbox folders" sx={{ color: '#ffffff', background: 'rgba(0,0,0,0.1)', borderTop: '1px solid rgba(255,255,255,0.33)' }}>
                   <ListItemLink onClick={() => onLogout()} to="/" primary="Logout" />
+                  <ListItemLink onClick={() => setOpen(!open)} to="/appConfig" primary="App Config" />
+                  <ListItemLink onClick={() => setOpen(!open)} to="/pageLogin" primary="User Config" />
                 </List>
               </Box>
             </div>
