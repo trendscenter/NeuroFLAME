@@ -44,7 +44,7 @@ const customStyles = {
     containerOverflow: {
       height: 'auto',
       maxHeight: '340px',
-      overflowX: 'scroll'
+      overflow: 'scroll'
     }
   };  
 
@@ -55,7 +55,7 @@ export default function RunListByConsortiumId(props: any) {
         client: centralApiApolloClient,
     });
 
-    const [runs, setRuns] = useState<object | null>(null);
+    const [runs, setRuns] = useState(null);
 
     useEffect(() => {
         handleGetRunListByConsortiumId(props);

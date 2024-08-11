@@ -2,20 +2,12 @@ import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
-import MemberAvatar from './MemberAvatar';
-import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from  '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Cancel';
-import CheckedIcon from '@mui/icons-material/CheckCircle';
-import UnpublishedIcon from '@mui/icons-material/Unpublished';
-import parse from 'html-react-parser';
-import DataChooser from './ComputationDetailsElements/DataChooser';
-import RunListByConsortiumId from './ComputationDetailsElements/RunListByConsortiumId';
-import ReactMarkdown from 'react-markdown'
-import { CompConfig } from "./ComputationDetailsElements/CompConfig";
-
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import CompConfig from "./ConsortiumDetailsElements/CompConfig";
+import ComputationPanel from "./ConsortiumDetailsElements/ComputationPanel";
+import DataChooser from './ConsortiumDetailsElements/DataChooser';
+import MembersPanel from "./ConsortiumDetailsElements/MembersPanel";
+import NotesEditor from './ConsortiumDetailsElements/NotesEditor';
+import RunListByConsortiumId from './ConsortiumDetailsElements/RunListByConsortiumId';
 
 import { useUserState } from '../contexts/UserStateContext';
 
@@ -345,20 +337,6 @@ export default function ConsortiumDetails(props: any) {
       }
     };
 
-    const modules = {
-        toolbar: [
-          [{ 'header': [1, 2, false] }],
-          ['bold', 'italic', 'underline'],
-          [{'list': 'bullet'}],
-        ],
-      };
-    
-      const formats = [
-        'header',
-        'bold', 'italic', 'underline', 'strike', 'blockquote',
-        'list', 'bullet', 'indent',
-      ];
-
     // Handle loading and error states for the queries
     if (loading || computationsLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
@@ -367,18 +345,6 @@ export default function ConsortiumDetails(props: any) {
     // Extract data from the query result
     const consortiumDetails = data?.getConsortiumDetails;
     const computations = computationsData?.getComputationList;
-
-    const renderMembers = (members, admin, active) =>
-        members.map((member, index) => {
-        return( 
-            <MemberAvatar 
-                key={index}
-                index={index}
-                username={member.username} 
-                admin={member.username === admin} 
-                active={active.find(el => el['username'] === member.username)} />
-        )
-    });
 
     return (
         <div>
@@ -390,97 +356,64 @@ export default function ConsortiumDetails(props: any) {
                       <div style={{whiteSpace: 'normal'}}>{consortiumDetails.description}</div>
                     </div>
                     {editableMountDir && userIsLeader && <div>
-                        <button onClick={handleStartRun} style={{width: '100%', borderRadius: '2rem', marginBottom: '1rem', backgroundColor: '#2FB600'}}>Start Run</button>
+                        <button 
+                          onClick={handleStartRun} 
+                          style={{width: '100%', borderRadius: '2rem', marginBottom: '1rem', backgroundColor: '#2FB600'}}>
+                            Start Run
+                        </button>
                     </div>}
                     {!userIsMember &&
-                        <button onClick={async () => { await handleJoinConsortium(consortiumDetails.id) }} style={{width: '100%', borderRadius: '2rem', marginBottom: '1rem', backgroundColor: '#2FB600'}}>Join</button>
+                        <button 
+                          onClick={async () => { await handleJoinConsortium(consortiumDetails.id) }} 
+                          style={{width: '100%', borderRadius: '2rem', marginBottom: '1rem', backgroundColor: '#2FB600'}}>
+                            Join
+                        </button>
                     }
                     {userIsMember && <DataChooser setMount={setEditableMountDir} handleSetMount={handleSetMountDir} mountDir={editableMountDir} />}
-                    <div style={customStyles.container}>
-                      <div style={customStyles.labelBetween}>
-                        <h3 style={customStyles.h3}>Members</h3>
-                        <div>
-                          <span style={{marginRight: '0.25rem'}}>
-                              {userId && userIsActive && 
-                                  <UnpublishedIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => { handleSetActive(false) }} />
-                              }
-                              {userId && userIsMember && !userIsActive && 
-                                  <CheckedIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => { handleSetActive(true) }} />
-                              }
-                          </span>
-                          <span>
-                              {userIsMember && !userIsLeader && 
-                                <CancelIcon style={{ color: 'lightpink' }} onClick={() => { handleLeaveConsortium(consortiumDetails.id) }} />
-                              }
-                          </span>
-                        </div>
-                      </div>
-                      {renderMembers(consortiumDetails.members, consortiumDetails.leader.username, consortiumDetails.activeMembers)}
-                    </div>
-                    {showNotes && <div style={customStyles.container}>
-                        <div style={customStyles.labelBetween}>
-                          <h3 style={customStyles.h3}>Leader Notes</h3>
-                          {userIsLeader && <div>
-                            {editMode ? 
-                            <div>
-                            <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={handleSetNotes} />
-                            <CancelIcon style={{ color: 'lightpink' }} onClick={() => {setEditMode(!editMode)}} />
-                            </div> : 
-                            <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setEditMode(!editMode)}} />}
-                          </div>}
-                        </div>
-                        {editMode ? <ReactQuill theme="snow" value={editableNotes} onChange={setEditableNotes} modules={modules} formats={formats}></ReactQuill> : <div>{parse(editableNotes)}</div>}
-                    </div>}
+                    <MembersPanel     
+                      panelCustomStyles={customStyles}
+                      panelConsortiumDetails={consortiumDetails}
+                      panelUserId={userId}
+                      panelUserIsActive={userIsActive}
+                      panelUserIsLeader={userIsLeader}
+                      panelUserIsMember={userIsMember}
+                      panelHandleSetActive={handleSetActive}
+                      panelHandleLeaveConsortium={handleLeaveConsortium}
+                    />
+                    {showNotes && <NotesEditor 
+                      editorCustomStyles={customStyles} 
+                      editorHandleSetNotes={handleSetNotes} 
+                      editorEditMode={editMode}
+                      editorSetEditMode={setEditMode} 
+                      editorEditableNotes={editableNotes} 
+                      editorSetEditableNotes={setEditableNotes} 
+                      editorUserIsLeader={userIsLeader}
+                    />}
                 </section>
 
                 <section>
                   <RunListByConsortiumId consortiumId={consortiumId} />
                   <div style={customStyles.container}>
                     <h3 style={customStyles.h3}>Settings</h3>
-                    <CompConfig parameters={editableParameters} setEditableParams={setEditableParameters} setParameters={handleSetParameters} isLeader={userIsLeader} />
+                    <CompConfig 
+                      configEditableParameters={editableParameters} 
+                      configSetEditableParams={setEditableParameters} 
+                      configHandleSetParameters={handleSetParameters} 
+                      configUserIsLeader={userIsLeader} />
                   </div>
                 </section>
 
                 <section style={customStyles.containerSelfHeight}>
                     {consortiumDetails && consortiumDetails.studyConfiguration.computation && 
-                      <div>
-                        <small>Computation:</small>
-                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}>
-                          <h2 style={{color: '#000000', marginBottom: '0', marginRight: '0.5rem'}}>
-                              {consortiumDetails.studyConfiguration.computation.title}
-                          </h2>
-                          {userIsLeader && <div>
-                          {!selectComputation ? 
-                          <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setSelectComputation(!selectComputation)}} /> :
-                          <CancelIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setSelectComputation(!selectComputation)}} />}
-                          </div>}
-                        </div>
-                      </div>}
-                      {selectComputation && <div style={{display: 'flex', alignItems: 'center', marginBottom: '1rem', justifyContent: 'flex-start'}}>
-                        <select
-                            value={selectableComputation}
-                            onChange={(e) => setSelectableComputation(e.target.value)}
-                            style={{marginRight: '1rem', height: '2.5rem', width: 'auto'}}
-                        >
-                            <option value="" disabled>Select computation</option>
-                            {computations && computations.map((comp: any) => (
-                                <option key={comp.id} value={comp.id}>
-                                    {comp.title}
-                                </option>
-                            ))}
-                        </select>
-                        <button style={{height: '2.5rem'}} onClick={handleSetComputation}>Set</button>
-                    </div>}
-                    {consortiumDetails && (
-                        <div>
-                            {consortiumDetails.studyConfiguration.computation && (
-                              <div>
-                              {consortiumDetails.studyConfiguration.computation.notes && 
-                              <div><ReactMarkdown children={consortiumDetails.studyConfiguration.computation.notes} /></div>}
-                              </div>
-                            )}
-                        </div>
-                    )}
+                      <ComputationPanel 
+                        panelComputation={consortiumDetails.studyConfiguration.computation} 
+                        panelComputations={computations} 
+                        panelSelectComputation={selectComputation} 
+                        panelSetSelectComputation={setSelectComputation} 
+                        panelSelectableComputation={selectableComputation} 
+                        panelSetSelectableComputation={setSelectableComputation} 
+                        panelHandleSetComputation={handleSetComputation} 
+                        panelUserIsLeader={userIsLeader} />}
                 </section>
 
             </div>

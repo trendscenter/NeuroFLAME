@@ -1,10 +1,6 @@
-import React from 'react';
 import { useEffect, useState, useCallback } from "react";
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from  '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Cancel';
 import TerminalIcon from '@mui/icons-material/Terminal';
 import WysiwygIcon from '@mui/icons-material/Wysiwyg';
 import CheckCircleIcon from '@mui/icons-material/CheckCircleOutline';
@@ -22,43 +18,48 @@ const customStyles = {
     }
   };
 
-export function CompConfig({ parameters, setEditableParams, setParameters, isLeader }) {
+export default function CompConfig({ 
+    configEditableParameters, 
+    configSetEditableParams, 
+    configHandleSetParameters, 
+    configUserIsLeader
+}) {
 
-    const [editMode, setEditMode] = useState(false);
-    const [valid, setValid] = useState(false);
-    const [content, setContent] = useState({ json: null });
-    const [ogParameters, setOGParameters] = useState(parameters);
-    const [paramChange, setParamChange] = useState(false);
+    const [editMode, configSetEditMode] = useState(false);
+    const [valid, configSetValid] = useState(false);
+    const [content, configSetContent] = useState({ json: null });
+    const [ogParameters, configSetOGParameters] = useState(configEditableParameters);
+    const [paramChange, configSetParamChange] = useState(false);
 
     const saveParameters = () => {
-        setParameters();
+        configHandleSetParameters();
     }
 
-    const validateParameters = (parameters) => {
+    const validateParameters = (configEditableParameters) => {
         try {
-            JSON.parse(parameters);
-            setContent({json: JSON.parse(parameters)});
-            setValid(true);
+            JSON.parse(configEditableParameters);
+            configSetContent({json: JSON.parse(configEditableParameters)});
+            configSetValid(true);
         } catch (e) {
-            setValid(false);
+            configSetValid(false);
         }
     }
 
-    const handleParamChange = (parameters) => {
-        setEditableParams(parameters);
+    const handleParamChange = (configEditableParameters) => {
+        configSetEditableParams(configEditableParameters);
         try {
-            JSON.parse(parameters);
-            setContent({ json: JSON.parse(parameters) });
+            JSON.parse(configEditableParameters);
+            configSetContent({ json: JSON.parse(configEditableParameters) });
         } catch (e) {
-            setValid(false);
-            setContent({ json: {} });
+            configSetValid(false);
+            configSetContent({ json: {} });
         }
     }
 
     const JSONHandler = useCallback(
         (content) => {
-            setContent(content.json);
-            setEditableParams(JSON.stringify(content.json));
+            configSetContent(content.json);
+            configSetEditableParams(JSON.stringify(content.json));
         },
         [content]
     )
@@ -73,13 +74,13 @@ export function CompConfig({ parameters, setEditableParams, setParameters, isLea
     });
 
     useEffect(() => {
-        validateParameters(parameters);
-        if(parameters === ogParameters){
-            setParamChange(false);
+        validateParameters(configEditableParameters);
+        if(configEditableParameters === ogParameters){
+            configSetParamChange(false);
         }else{
-            setParamChange(true);
+            configSetParamChange(true);
         }
-    },[parameters]);
+    },[configEditableParameters]);
 
     const isJSON = (string) => {
         try {
@@ -92,17 +93,17 @@ export function CompConfig({ parameters, setEditableParams, setParameters, isLea
 
     return (
             <div style={{position: 'relative'}}>
-                {isLeader && <div>
+                {configUserIsLeader && <div>
                     {editMode ?
-                    <IconButton style={{position: 'absolute', top: '-2.5rem', right: '0'}} onClick={() => setEditMode(!editMode)}>
+                    <IconButton style={{position: 'absolute', top: '-2.5rem', right: '0'}} onClick={() => configSetEditMode(!editMode)}>
                         <WysiwygIcon fontSize="inherit" />
                     </IconButton> :
-                    <IconButton style={{position: 'absolute', top: '-2.5rem', right: '0'}} onClick={() => setEditMode(!editMode)}>
+                    <IconButton style={{position: 'absolute', top: '-2.5rem', right: '0'}} onClick={() => configSetEditMode(!editMode)}>
                         <TerminalIcon fontSize="inherit" />
                     </IconButton>}
                 </div>}
                 <div>
-                    {isLeader && editMode && parameters ? 
+                    {configUserIsLeader && editMode && configEditableParameters ? 
                     <div>
                         <JSONEditorPanel mode={'tree'} content={content} onChange={JSONHandler} onRenderMenu={handleRenderMenu} />
                         <div style={{position: 'absolute', bottom: '0.5rem', right: '0.5rem' }}>
@@ -114,9 +115,9 @@ export function CompConfig({ parameters, setEditableParams, setParameters, isLea
                         minRows="3" 
                         className="pre" 
                         style={{width: '100%'}} 
-                        value={isJSON(parameters) ? JSON.stringify(JSON.parse(parameters),null,2) : parameters} 
+                        value={isJSON(configEditableParameters) ? JSON.stringify(JSON.parse(configEditableParameters),null,2) : configEditableParameters} 
                         onChange={(e) => handleParamChange(e.target.value)} 
-                        disabled={!isLeader}
+                        disabled={!configUserIsLeader}
                     />
                     <div style={{position: 'absolute', top: '1rem', right: '0.5rem' }}>
                         {valid ? 
@@ -125,7 +126,7 @@ export function CompConfig({ parameters, setEditableParams, setParameters, isLea
                         }
                     </div>
                     <div style={{position: 'absolute', bottom: '1.5rem', right: '0.5rem' }}>
-                        {valid && paramChange && isLeader && <SaveIcon style={{color: 'lightgrey'}} onClick={saveParameters} />} 
+                        {valid && paramChange && configUserIsLeader && <SaveIcon style={{color: 'lightgrey'}} onClick={saveParameters} />} 
                     </div>
                     </div>}
                 </div>
