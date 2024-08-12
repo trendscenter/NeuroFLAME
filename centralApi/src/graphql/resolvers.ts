@@ -159,13 +159,21 @@ export default {
     },
     getRunList: async (
       _: unknown,
-      __: unknown,
+      args: { consortiumId?: string }, // Accept consortiumId as an optional argument
       context: Context,
     ): Promise<RunListItem[]> => {
       const { userId } = context
+      const { consortiumId } = args // Extract consortiumId from args
 
       try {
-        const runs = await Run.find({ members: userId })
+        // Build the query filter
+        const query = {
+          members: userId,
+          consortium: consortiumId ?? undefined,
+        }
+
+        // Perform the query with the filter
+        const runs = await Run.find(query)
           .populate('consortium', 'title')
           .populate('members', 'id username')
           .sort({ lastUpdated: -1 })
@@ -1010,7 +1018,7 @@ export default {
           )
           const isActiveMember = activeMemberIds.includes(userId)
 
-          logger.info(`Emitting a run event to userId: ${userId}`, )
+          logger.info(`Emitting a run event to userId: ${userId}`)
           return isActiveMember
         },
       ),
