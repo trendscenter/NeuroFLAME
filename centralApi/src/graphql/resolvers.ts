@@ -1,5 +1,4 @@
 import { Document, Types } from 'mongoose'
-import { ObjectId } from 'mongodb'
 import {
   generateTokens,
   compare,
@@ -32,7 +31,6 @@ interface Context {
   userId: string
   roles: string[]
   error: string
-  consortiumId: string
 }
 
 export default {

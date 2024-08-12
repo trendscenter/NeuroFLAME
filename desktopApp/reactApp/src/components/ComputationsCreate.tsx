@@ -17,7 +17,7 @@ export default function ComputationCreate() {
     const [title, setTitle] = useState('');
     const [imageName, setImageName] = useState('');
     const [imageDownloadUrl, setImageDownloadUrl] = useState('');
-    const [notes, setNotes] = useState(null);
+    const [notes, setNotes] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
