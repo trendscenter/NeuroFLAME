@@ -20,10 +20,10 @@ The central client reports a run as 'complete' if the container for the central 
 The following is an example of how input validation can be included in a computation:
 
 1. **Validation Steps:**
-   - Verify the correct formation of `parameters.json`.
-   - Ensure all sites have identical column names.
-   - Confirm that all sites share the Regions of Interest (ROIs) specified by the study.
-   - Identify any missing rows in the data at any site.
+   - Is `parameters.json` formatted correctly with valid values?
+   - Do all sites have identical column names?
+   - Do all sites share the Regions of Interest (ROIs) specified by the study?
+   - Do any sites have rows with missing data?
 
 2. **Workflow Execution:**
    - The computation workflow executes tasks that perform these validation checks.
