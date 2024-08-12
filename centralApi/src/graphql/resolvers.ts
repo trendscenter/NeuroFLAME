@@ -161,43 +161,21 @@ export default {
     },
     getRunList: async (
       _: unknown,
-      __: unknown,
+      args: { consortiumId?: string }, // Accept consortiumId as an optional argument
       context: Context,
     ): Promise<RunListItem[]> => {
       const { userId } = context
+      const { consortiumId } = args // Extract consortiumId from args
 
       try {
-        const runs = await Run.find({ members: userId })
-          .populate('consortium', 'title')
-          .populate('members', 'id username')
-          .sort({ lastUpdated: -1 })
-          .lean()
-          .exec()
+        // Build the query filter
+        const query = {
+          members: userId,
+          consortium: consortiumId ?? undefined,
+        }
 
-        return runs.map((run) => {
-          if (!('title' in run.consortium)) {
-            throw new Error('Consortium data is missing or incomplete')
-          }
-
-          return {
-            consortiumId: run.consortium._id.toString(),
-            consortiumTitle: run.consortium.title as string,
-            runId: run._id.toString(),
-            status: run.status,
-            lastUpdated: run.lastUpdated,
-          }
-        })
-      } catch (error) {
-        logger.error('Error fetching run list:', error)
-        throw new Error('Failed to fetch run list')
-      }
-    },
-    getRunListByConsortiumId: async (
-      _: unknown,
-      { consortiumId }: { consortiumId: string },
-    ): Promise<RunListItem[]> => {
-      try {
-        const runs = await Run.find({ consortium: new ObjectId(consortiumId) })
+        // Perform the query with the filter
+        const runs = await Run.find(query)
           .populate('consortium', 'title')
           .populate('members', 'id username')
           .sort({ lastUpdated: -1 })
@@ -1041,7 +1019,7 @@ export default {
           )
           const isActiveMember = activeMemberIds.includes(userId)
 
-          logger.info(`Emitting a run event to userId: ${userId}`, )
+          logger.info(`Emitting a run event to userId: ${userId}`)
           return isActiveMember
         },
       ),

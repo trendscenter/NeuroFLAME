@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import styles from '../styles';
 
-export const GET_RUN_LIST_BY_CONSORTIUM_ID = gql`
-  query GetRunListByConsortiumId($consortiumId: String!) {
-    getRunListByConsortiumId(consortiumId: $consortiumId) {
+export const GET_RUN_LIST = gql`
+  query GetRunList($consortiumId: String!) {
+    getRunList(consortiumId: $consortiumId) {
       consortiumId
       consortiumTitle
       runId
@@ -28,7 +28,7 @@ interface RunListItem {
 export default function RunListByConsortiumId(props: any) {
     const { centralApiApolloClient } = useContext(ApolloClientsContext);
 
-    const [getRunListByConsortiumId, { loading, error, data }] = useLazyQuery(GET_RUN_LIST_BY_CONSORTIUM_ID, {
+    const [getRunList, { loading, error, data }] = useLazyQuery(GET_RUN_LIST, {
         client: centralApiApolloClient,
     });
 
@@ -40,8 +40,8 @@ export default function RunListByConsortiumId(props: any) {
 
     const handleGetRunListByConsortiumId = (props) => {
         const consortiumId = props.consortiumId;
-        getRunListByConsortiumId({ variables: { consortiumId } });
-        setRuns(data?.getRunListByConsortiumId);
+        getRunList({ variables: { consortiumId } });
+        setRuns(data?.getRunList);
     };
 
     return (
