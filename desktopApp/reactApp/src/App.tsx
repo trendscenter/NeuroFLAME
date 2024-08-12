@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import styles from './components/styles';
 import { useUserState } from './contexts/UserStateContext';
 import { useNotifications } from './contexts/NotificationsContext';
 import AppRoutes from './components/AppRoutes';
 import AppHeader from './components/AppHeader';
 import AppDrawer from './components/AppDrawer';
+import styles from './components/styles';
 import './AppStyles.css';
 
 import {

@@ -56,16 +56,6 @@ const GET_RUN_DETAILS = gql`
   }
 `;
 
-// Define custom styles
-const customStyles = {
-    labelBetween: {
-    whiteSpace: 'nowrap',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignContent: 'center',
-    }
-}; 
-
 export default function RunDetails() {
     const { centralApiApolloClient } = useContext(ApolloClientsContext);
     const { runId } = useParams<{ runId: string }>();

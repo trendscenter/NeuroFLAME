@@ -99,7 +99,6 @@ const styles = {
         maxHeight: '340px',
         overflow: 'scroll'
     }
-
 };
 
 export default styles;
