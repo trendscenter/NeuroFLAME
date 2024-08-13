@@ -11,6 +11,8 @@ import RunListByConsortiumId from './ConsortiumDetailsElements/RunListByConsorti
 
 import { useUserState } from '../contexts/UserStateContext';
 
+import styles from './styles';
+
 // Define the GraphQL queries and mutations
 const GET_CONSORTIUM_DETAILS = gql`
   query GetConsortiumDetails($consortiumId: String!) {
@@ -116,60 +118,6 @@ const CONSORTIUM_EDIT_MUTATION = gql`
     consortiumEdit(consortiumId: $consortiumId, title: $title, description: $description)
   }
 `;
-
-
-// Define custom styles
-const styles = {
-    h3 : {
-      marginBottom: '0.5rem'
-    },
-    rowStyleTwoCols: {
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gridColumn: '1',
-      gap: '2rem',
-      alignItems: 'center',
-      gridAutoRows: 'auto',
-      marginBottom: '10px',
-    },
-    rowStyleThreeCols: {
-      display: 'grid',
-      gridTemplateColumns: '3fr 3fr 3fr',
-      gridColumn: '1',
-      gap: '2rem',
-      gridAutoRows: 'auto',
-      marginBottom: '10px',
-    },
-    rowStyleHeader: {
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gridColumn: '1',
-      gap: '2rem',
-      alignItems: 'center',
-      gridAutoRows: 'auto',
-      marginBottom: '2rem'
-    },
-    container: {
-      background: '#ffffff',
-      borderRadius: '1rem',
-      padding: '1rem',
-      marginBottom: '1rem',
-    },
-    containerSelfHeight: {
-      background: '#ffffff',
-      borderRadius: '1rem',
-      padding: '1rem',
-      marginBottom: '1rem',
-      height: 'fit-content',
-    },
-    labelBetween: {
-      whiteSpace: 'nowrap',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignContent: 'center',
-    }
-  };  
-
 
 export default function ConsortiumDetails(props: any) {
     const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext);

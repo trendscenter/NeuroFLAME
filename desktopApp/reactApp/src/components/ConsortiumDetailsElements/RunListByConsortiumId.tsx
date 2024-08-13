@@ -72,7 +72,14 @@ export default function RunListByConsortiumId(props: any) {
                                 <Link 
                                     to={`/runs/results/${run.consortiumId}/${run.runId}`}
                                 >
-                                    <button style={styles.buttonSmall}>View Results</button>
+                                    <button style={styles.buttonSmall}>Results</button>
+                                </Link>
+                            }
+                            {run.status === 'Ready' &&
+                                <Link 
+                                    to={`/runs/results/${run.consortiumId}/${run.runId}`}
+                                >
+                                    <button style={styles.buttonSmall}>Run Output</button>
                                 </Link>
                             }
                         </Card>
