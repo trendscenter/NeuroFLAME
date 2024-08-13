@@ -28,7 +28,7 @@ async function createWindow(): Promise<void> {
     protocol: 'file:',
     slashes: true,
   })
-  const developmentUrl = 'http://localhost:3001'
+  const developmentUrl = 'http://localhost:3000'
   // Load the correct URL (packaged or development)
   const startUrl = app.isPackaged ? productionUrl : developmentUrl
 
