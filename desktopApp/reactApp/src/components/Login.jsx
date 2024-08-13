@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { useLoginAndConnect } from './useLoginAndConnect';
-import { useNavigate } from 'react-router-dom';
 import logo from '../components/assets/coinstac-logo.png';
 import { Typography } from '@mui/material';
 import { useUserState } from '../contexts/UserStateContext';
+import { useLoginAndConnect } from './useLoginAndConnect';
+import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '../contexts/NotificationsContext';
 
 const styles = {
@@ -64,6 +64,8 @@ const styles = {
   },
   error: {
     color: 'red',
+    fontSize: '0.8rem',
+    margin: '1rem 0'
   },
   success: {
     color: 'green',
@@ -122,26 +124,25 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const { loginToCentral, connectAsUser, createUser } = useLoginAndConnect();
-  const [loginStatus, setloginStatus] = useState({ loading: false, error: null, data: null });
-  const [connectStatus, setConnectStatus] = useState({ loading: false, error: null, data: null });
   const [errorMessage, setErrorMessage] = useState('');
+  const { loginToCentral, connectAsUser, createUser } = useLoginAndConnect();
   const { subscribe, unsubscribe } = useNotifications();
   const { username: loggedInUsername, setUserData, clearUserData } = useUserState();
+  const [isLoggedIn, setIsloggedIn] = useState(false);
   const navigate = useNavigate();
-
-  const handleLogin = async () => {
-    setloginStatus({ loading: true, error: null, data: null });
-    await loginToCentral(username, password);
-    setloginStatus({ loading: false, error: null, data: true });
-
-    setConnectStatus({ loading: true, error: null, data: null });
-    await connectAsUser();
-    setConnectStatus({ loading: false, error: null, data: true });
-
-    await subscribe();
-
-    navigate('/consortia');
+  
+  const handleLogin = async (username, password, rememberMe) => {
+    setErrorMessage(''); // Clear previous error messages
+    try {
+        const { accessToken, userId, username: returnedUserName, roles } = await loginToCentral(username, password);
+        setUserData({ accessToken, userId, username: returnedUserName, roles }, rememberMe);
+        await connectAndSubscribe();
+        navigate('/consortia/');
+    } catch (e) {
+        console.error(`Error logging in: ${e}`);
+        setErrorMessage('Failed to login. Please check your username and password.');
+        clearUserData();
+    }
   };
 
   const connectAndSubscribe = async () => {
@@ -220,13 +221,16 @@ function Login() {
           </div>
           <button
             style={styles.button}
-            onClick={() => handleLogin()}
-            disabled={loginStatus.loading || connectStatus.loading}
-          >
-            {loginStatus.loading || connectStatus.loading ? 'Loading...' : 'Submit'}
+            onClick={async () => {
+              await handleLogin(username, password, rememberMe)
+            }}
+          >Login
           </button>
+          {errorMessage && <div style={styles.error}>{errorMessage}</div>}
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
+          <span>{username}</span>
+          <span>{password}</span>
           <InputField
               type="text"
               placeholder="Username"
@@ -255,8 +259,8 @@ function Login() {
               onClick={async () => {
                 await handleCreateUser(username, password, rememberMe)
               }}
-              disabled={loginStatus.loading || connectStatus.loading}
             >Create User</button>
+            {errorMessage && <div style={styles.error}>{errorMessage}</div>}
         </CustomTabPanel>
       </Box>
     </div>

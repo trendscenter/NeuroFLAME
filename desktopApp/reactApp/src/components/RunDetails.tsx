@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { gql } from '@apollo/client';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { ApolloClientsContext } from '../contexts/ApolloClientsContext';
 import Card from '@mui/material/Card';
 import styles from './styles';
@@ -98,7 +98,22 @@ export default function RunDetails() {
 
     return (
         <div>
-            <h1>Run Details</h1>
+            <div style={styles.labelBetween}>
+                <h1>Details for Run: <span style={{color: 'black'}}>{runId}</span></h1>
+                <div>
+                <Link 
+                    to={`/runs/results/${runDetails.consortiumId}/${runDetails.runId}`}
+                    style={{marginRight: '1rem'}}
+                >
+                    <button>View Run Results</button>
+                </Link>
+                <Link 
+                    to={`/consortia/details/${runDetails.consortiumId}`}
+                >
+                    <button>View Consortium</button>
+                </Link>
+                </div>
+            </div>
 
             <Card sx={styles.card}>
                 <h2>Consortium</h2>

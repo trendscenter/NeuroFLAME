@@ -38,7 +38,7 @@ const ComputationList: React.FC = () => {
         <div style={{position: 'relative'}}>
             <h1>Computation List</h1>
             <Link style={{position: 'absolute', top: 0, right: 0}} to="/computations/create">
-                <Button variant="contained">Create Computation</Button>
+                <button>Create Computation</button>
             </Link>
             {data?.getComputationList.map((computation) => (
                     <Card 

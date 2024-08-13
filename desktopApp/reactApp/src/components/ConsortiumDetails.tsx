@@ -2,24 +2,16 @@ import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ApolloClientsContext } from "../contexts/ApolloClientsContext";
-import MemberAvatar from './MemberAvatar';
-import Button from '@mui/material/Button';
-import IconButton from "@mui/material/IconButton";
-import LinkIcon from '@mui/icons-material/Link';
-import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from  '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Cancel';
-import CheckedIcon from '@mui/icons-material/CheckCircle';
-import UnpublishedIcon from '@mui/icons-material/Unpublished';
-import parse from 'html-react-parser';
-import DataChooser from './ComputationDetailsElements/DataChooser';
-import MarkDownFromURL from './ComputationDetailsElements/MarkDownFromURL';
-import { CompConfig } from "./ComputationDetailsElements/CompConfig";
-
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import CompConfig from "./ConsortiumDetailsElements/CompConfig";
+import ComputationPanel from "./ConsortiumDetailsElements/ComputationPanel";
+import DataChooser from './ConsortiumDetailsElements/DataChooser';
+import MembersPanel from "./ConsortiumDetailsElements/MembersPanel";
+import NotesEditor from './ConsortiumDetailsElements/NotesEditor';
+import RunListByConsortiumId from './ConsortiumDetailsElements/RunListByConsortiumId';
 
 import { useUserState } from '../contexts/UserStateContext';
+
+import styles from './styles';
 
 // Define the GraphQL queries and mutations
 const GET_CONSORTIUM_DETAILS = gql`
@@ -127,51 +119,6 @@ const CONSORTIUM_EDIT_MUTATION = gql`
   }
 `;
 
-
-// Define custom styles
-const customStyles = {
-    h3 : {
-      marginBottom: '0.5rem'
-    },
-    rowStyleThreeCols: {
-      display: 'grid',
-      gridTemplateColumns: '3fr 3fr 2fr',
-      gridColumn: '1',
-      gap: '2rem',
-      gridAutoRows: 'auto',
-      marginBottom: '10px',
-    },
-    rowStyleTwoCols: {
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gridColumn: '1',
-      gap: '2rem',
-      alignItems: 'center',
-      gridAutoRows: 'auto',
-      marginBottom: '10px',
-    },
-    container: {
-      background: '#ffffff',
-      borderRadius: '1rem',
-      padding: '1rem',
-      marginBottom: '1rem',
-    },
-    containerSelfHeight: {
-      background: '#ffffff',
-      borderRadius: '1rem',
-      padding: '1rem',
-      marginBottom: '1rem',
-      height: 'fit-content',
-    },
-    labelBetween: {
-      whiteSpace: 'nowrap',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignContent: 'center',
-    }
-  };  
-
-
 export default function ConsortiumDetails(props: any) {
     const { centralApiApolloClient, edgeClientApolloClient } = useContext(ApolloClientsContext);
     const { consortiumId } = useParams<{ consortiumId: string }>();
@@ -183,6 +130,8 @@ export default function ConsortiumDetails(props: any) {
     const [userIsLeader, setUserIsLeader] = useState(false)
     const [userIsActive, setUserIsActive] = useState(false)
     const [userIsMember, setUserIsMember] = useState(false)
+    const [editMode, setEditMode] = useState(false);
+    const [showNotes, setShowNotes] = useState(false);
 
     // Use useLazyQuery for consortium details query
     const [getConsortiumDetails, { loading, error, data }] = useLazyQuery(GET_CONSORTIUM_DETAILS, {
@@ -200,7 +149,6 @@ export default function ConsortiumDetails(props: any) {
     const [studySetComputation] = useMutation(STUDY_SET_COMPUTATION, { client: centralApiApolloClient });
     const [studySetParameters] = useMutation(STUDY_SET_PARAMETERS, { client: centralApiApolloClient });
     const [studySetNotes] = useMutation(STUDY_SET_NOTES, { client: centralApiApolloClient });
-    const [editMode, setEditMode] = useState(false);
 
     const { userId } = useUserState();
 
@@ -210,17 +158,24 @@ export default function ConsortiumDetails(props: any) {
     }, [consortiumId]);
 
     useEffect(() => {
+        setEditableParameters("");
         if (data && data.getConsortiumDetails) {
-            setEditableNotes(data.getConsortiumDetails.studyConfiguration.consortiumLeaderNotes || "");
-            setEditableParameters(data.getConsortiumDetails.studyConfiguration.computationParameters || "");
+          setEditableNotes(data.getConsortiumDetails.studyConfiguration.consortiumLeaderNotes || "");
+          setEditableParameters(data.getConsortiumDetails.studyConfiguration.computationParameters || "");
+          if(data.getConsortiumDetails.studyConfiguration.consortiumLeaderNotes){
+            setShowNotes(true)       
+          }
         }
     }, [data]);
 
     useEffect(() => {
-      setUserIsLeader(data?.getConsortiumDetails?.leader?.id === userId)
       setUserIsActive(data?.getConsortiumDetails?.activeMembers.some((member: any) => member.id === userId))
       setUserIsMember(data?.getConsortiumDetails?.members.some((member: any) => member.id === userId))
       setSelectComputation(!data?.getConsortiumDetails?.studyConfiguration.computation)
+      if(data?.getConsortiumDetails?.leader?.id === userId){
+        setShowNotes(true)
+        setUserIsLeader(true)
+      }
     }, [userId, data])
 
     const handleStartRun = async () => {
@@ -330,20 +285,6 @@ export default function ConsortiumDetails(props: any) {
       }
     };
 
-    const modules = {
-        toolbar: [
-          [{ 'header': [1, 2, false] }],
-          ['bold', 'italic', 'underline'],
-          [{'list': 'bullet'}],
-        ],
-      };
-    
-      const formats = [
-        'header',
-        'bold', 'italic', 'underline', 'strike', 'blockquote',
-        'list', 'bullet', 'indent',
-      ];
-
     // Handle loading and error states for the queries
     if (loading || computationsLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
@@ -353,124 +294,76 @@ export default function ConsortiumDetails(props: any) {
     const consortiumDetails = data?.getConsortiumDetails;
     const computations = computationsData?.getComputationList;
 
-    const renderMembers = (members, admin, active) =>
-        members.map((member, index) => {
-        return( 
-            <MemberAvatar 
-                key={index}
-                index={index}
-                username={member.username} 
-                admin={member.username === admin} 
-                active={active.find(el => el['username'] === member.username)} />
-        )
-    });
-
     return (
         <div>
-            <div style={customStyles.rowStyleTwoCols}>
-                <div>
-                    <h1 style={{marginBottom: '0'}}>{consortiumDetails.title}</h1>
-                    {consortiumDetails && consortiumDetails.studyConfiguration.computation && 
-                    <div style={{display: 'flex', alignItems: 'center', width: '34svw', marginBottom: '1rem'}}>
-                      <h3 style={{color: '#000000', marginBottom: '0', marginRight: '0.5rem'}}>
-                          {consortiumDetails.studyConfiguration.computation.title}
-                      </h3>
-                      {userIsLeader && <div>
-                      {!selectComputation ? 
-                      <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setSelectComputation(!selectComputation)}} /> :
-                      <CancelIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setSelectComputation(!selectComputation)}} />}
-                      </div>}
-                    </div>} 
-                    {selectComputation && <div style={{display: 'flex', alignItems: 'center', width: '34svw', marginBottom: '1rem'}}>
-                        <select
-                            value={selectableComputation}
-                            onChange={(e) => setSelectableComputation(e.target.value)}
-                            style={{marginRight: '1rem', height: '2.5rem'}}
-                        >
-                            <option value="" disabled>Select computation</option>
-                            {computations && computations.map((comp: any) => (
-                                <option key={comp.id} value={comp.id}>
-                                    {comp.title}
-                                </option>
-                            ))}
-                        </select>
-                        <button style={{height: '2.5rem'}} onClick={handleSetComputation}>Set</button>
-                    </div>}
-                </div>
-                <div>
-                {consortiumDetails.studyConfiguration.computation && consortiumDetails.studyConfiguration.computation.imageDownloadUrl && <h3 style={{color: '#000000'}}>
-                    <a href={consortiumDetails.studyConfiguration.computation.imageDownloadUrl} style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <LinkIcon style={{color: 'black'}} /> {consortiumDetails.studyConfiguration.computation.imageDownloadUrl}
-                    </a>
-                </h3>}
-                </div>
-            </div>
-            <div style={customStyles.rowStyleThreeCols}>
-                <section style={customStyles.containerSelfHeight}>
-                    <h3>Computation Description</h3>
-                    {consortiumDetails && (
-                        <div>
-                            {consortiumDetails.studyConfiguration.computation && (
-                              <div>
-                              {consortiumDetails.studyConfiguration.computation.imageDownloadUrl && consortiumDetails.studyConfiguration.computation.imageDownloadUrl.includes("github") ?
-                              <div>{<MarkDownFromURL url={consortiumDetails.studyConfiguration.computation.imageDownloadUrl} />}</div> :
-                              <div><p>{consortiumDetails.studyConfiguration.computation.notes}</p></div>}
-                              </div>
-                            )}
-                        </div>
-                    )}
-                </section>
-
-
+            <div style={styles.rowStyleThreeCols}>
                 <section>
-                    <h3 style={customStyles.h3}>Settings</h3>
-                    <CompConfig parameters={editableParameters} setEditableParams={setEditableParameters} setParameters={handleSetParameters} isLeader={userIsLeader} />
-                </section>
-
-                <section>
+                    <div style={{marginBottom: '1rem'}}>
+                      <small>Consortium:</small>
+                      <h1 style={{fontSize: '2.25rem', marginBottom: '0.5rem', lineHeight: '1'}}>{consortiumDetails.title}</h1>
+                      <div style={{whiteSpace: 'normal'}}>{consortiumDetails.description}</div>
+                    </div>
                     {editableMountDir && userIsLeader && <div>
-                        <button onClick={handleStartRun} style={{width: '100%', borderRadius: '2rem', marginBottom: '1rem', backgroundColor: '#2FB600'}}>Start Run</button>
+                        <button 
+                          onClick={handleStartRun} 
+                          style={{width: '100%', borderRadius: '2rem', marginBottom: '1rem', backgroundColor: '#2FB600'}}>
+                            Start Run
+                        </button>
                     </div>}
                     {!userIsMember &&
-                        <button onClick={async () => { await handleJoinConsortium(consortiumDetails.id) }} style={{width: '100%', borderRadius: '2rem', marginBottom: '1rem', backgroundColor: '#2FB600'}}>Join</button>
+                        <button 
+                          onClick={async () => { await handleJoinConsortium(consortiumDetails.id) }} 
+                          style={{width: '100%', borderRadius: '2rem', marginBottom: '1rem', backgroundColor: '#2FB600'}}>
+                            Join
+                        </button>
                     }
-                    <div style={customStyles.container}>
-                      <div style={customStyles.labelBetween}>
-                        <h3 style={customStyles.h3}>Members</h3>
-                        <div>
-                          <span style={{marginRight: '0.25rem'}}>
-                              {userId && userIsActive && 
-                                  <UnpublishedIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => { handleSetActive(false) }} />
-                              }
-                              {userId && userIsMember && !userIsActive && 
-                                  <CheckedIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => { handleSetActive(true) }} />
-                              }
-                          </span>
-                          <span>
-                              {userIsMember && !userIsLeader && 
-                                <CancelIcon style={{ color: 'lightpink' }} onClick={() => { handleLeaveConsortium(consortiumDetails.id) }} />
-                              }
-                          </span>
-                        </div>
-                      </div>
-                      {renderMembers(consortiumDetails.members, consortiumDetails.leader.username, consortiumDetails.activeMembers)}
-                    </div>
-                    <div style={customStyles.container}>
-                        <div style={customStyles.labelBetween}>
-                          <h3 style={customStyles.h3}>Leader Notes</h3>
-                          {userIsLeader && <div>
-                            {editMode ? 
-                            <div>
-                            <SaveIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={handleSetNotes} />
-                            <CancelIcon style={{ color: 'lightpink' }} onClick={() => {setEditMode(!editMode)}} />
-                            </div> : 
-                            <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {setEditMode(!editMode)}} />}
-                          </div>}
-                        </div>
-                        {editMode ? <ReactQuill theme="snow" value={editableNotes} onChange={setEditableNotes} modules={modules} formats={formats}></ReactQuill> : <div>{parse(editableNotes)}</div>}
-                    </div>
                     {userIsMember && <DataChooser setMount={setEditableMountDir} handleSetMount={handleSetMountDir} mountDir={editableMountDir} />}
+                    <MembersPanel     
+                      panelstyles={styles}
+                      panelConsortiumDetails={consortiumDetails}
+                      panelUserId={userId}
+                      panelUserIsActive={userIsActive}
+                      panelUserIsLeader={userIsLeader}
+                      panelUserIsMember={userIsMember}
+                      panelHandleSetActive={handleSetActive}
+                      panelHandleLeaveConsortium={handleLeaveConsortium}
+                    />
+                    {showNotes && <NotesEditor 
+                      editorstyles={styles} 
+                      editorHandleSetNotes={handleSetNotes} 
+                      editorEditMode={editMode}
+                      editorSetEditMode={setEditMode} 
+                      editorEditableNotes={editableNotes} 
+                      editorSetEditableNotes={setEditableNotes} 
+                      editorUserIsLeader={userIsLeader}
+                    />}
                 </section>
+
+                <section>
+                  <RunListByConsortiumId consortiumId={consortiumId} />
+                  <div style={styles.container}>
+                    <h3 style={styles.h3}>Settings</h3>
+                    <CompConfig 
+                      configEditableParameters={editableParameters} 
+                      configSetEditableParams={setEditableParameters} 
+                      configHandleSetParameters={handleSetParameters} 
+                      configUserIsLeader={userIsLeader} />
+                  </div>
+                </section>
+
+                <section style={styles.containerSelfHeight}>
+                    {consortiumDetails && consortiumDetails.studyConfiguration.computation && 
+                      <ComputationPanel 
+                        panelComputation={consortiumDetails.studyConfiguration.computation} 
+                        panelComputations={computations} 
+                        panelSelectComputation={selectComputation} 
+                        panelSetSelectComputation={setSelectComputation} 
+                        panelSelectableComputation={selectableComputation} 
+                        panelSetSelectableComputation={setSelectableComputation} 
+                        panelHandleSetComputation={handleSetComputation} 
+                        panelUserIsLeader={userIsLeader} />}
+                </section>
+
             </div>
         </div>
     );

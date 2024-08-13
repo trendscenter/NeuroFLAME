@@ -198,7 +198,6 @@ export default {
         throw new Error('Failed to fetch run list')
       }
     },
-
     getRunDetails: async (
       _: unknown,
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export function AppConfig() {
+export default function AppConfig() {
     const [configPath, setConfigPath] = useState("");
     const [persistentConfig, setPersistentConfig] = useState({});
     const [newConfig, setNewConfig] = useState("");

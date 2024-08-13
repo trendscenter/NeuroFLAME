@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { JSONEditor, JSONEditorPropsOptional } from 'vanilla-jsoneditor'
 
-export function JSONEditorPanel(props){
+export default function JSONEditorPanel(props){
   const refContainer = useRef(null)
   const refEditor = useRef(null)
 
