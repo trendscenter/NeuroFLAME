@@ -3,6 +3,7 @@ import React, { ReactNode, useContext, useState, useRef } from "react";
 import { ApolloClientsContext } from "./ApolloClientsContext";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { Link } from "react-router-dom";
 
 const RUN_EVENT_SUBSCRIPTION = gql`
   subscription OnRunEvent {
@@ -66,7 +67,7 @@ export const NotificationsProvider = ({ children }: { children: ReactNode }) => 
                                 Status: {newEvent.status}
                             </div>
                             <div>
-                                Run ID: {newEvent.runId}
+                                    Run ID: {newEvent.runId}
                             </div>
                         </div>
                     );
