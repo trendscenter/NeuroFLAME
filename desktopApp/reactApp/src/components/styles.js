@@ -47,9 +47,9 @@ const styles = {
     rowStyleTwoCols: {
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
-        gridColumn: '1',
+        gridColumn: 'auto',
         gap: '2rem',
-        alignItems: 'center',
+        alignItems: 'top',
         gridAutoRows: 'auto',
         marginBottom: '10px',
     },

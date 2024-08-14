@@ -3,6 +3,8 @@ import { gql } from '@apollo/client';
 import { useParams, Link } from 'react-router-dom';
 import { ApolloClientsContext } from '../contexts/ApolloClientsContext';
 import Card from '@mui/material/Card';
+import parse from 'html-react-parser';
+import ReactMarkdown from 'react-markdown'
 import styles from './styles';
 
 // types.ts
@@ -132,11 +134,7 @@ export default function RunDetails() {
                 </div>
             </div>
 
-            <Card sx={styles.card}>
-                <h2>Consortium</h2>
-                <p><strong>Title:</strong> {runDetails.consortiumTitle}</p>
-                <p><strong>ID:</strong> {runDetails.consortiumId}</p>
-            </Card>
+            <div style={styles.rowStyleThreeCols}>
 
             <Card sx={styles.card}>
                 <h2>Run Information</h2>
@@ -154,34 +152,47 @@ export default function RunDetails() {
             </Card>
 
             <Card sx={styles.card}>
+                <h2>Consortium</h2>
+                <p><strong>Title:</strong> {runDetails.consortiumTitle}</p>
+                <p><strong>ID:</strong> {runDetails.consortiumId}</p>
+            </Card>
+
+            <Card sx={styles.card}>
                 <h2>Members</h2>
                 <ul>
                     {runDetails.members.map((member) => (
                         <li key={member.id}>{member.username}</li>
                     ))}
                 </ul>
+                <h2>Owner:</h2> 
+                <p>{runDetails.studyConfiguration.computation.owner}</p>
             </Card>
 
+            </div>
+
+            <div style={styles.rowStyleTwoCols}>
             <Card sx={styles.card}>
                 <h2>Study Configuration</h2>
                 <div>
                     <p><strong>Consortium Leader Notes:</strong></p>
-                    <pre>{runDetails.studyConfiguration.consortiumLeaderNotes}</pre>
+                    <pre>{parse(runDetails.studyConfiguration.consortiumLeaderNotes)}</pre>
                 </div>
                 <div>
                     <p><strong>Computation Parameters:</strong></p>
                     <pre>{runDetails.studyConfiguration.computationParameters}</pre>
                 </div>
+            </Card>
+            <Card sx={styles.card}>
                 <div>
                     <h3>Computation</h3>
                     <p><strong>Title:</strong> {runDetails.studyConfiguration.computation.title}</p>
                     <p><strong>Image Name:</strong> {runDetails.studyConfiguration.computation.imageName}</p>
                     <p><strong>Image Download URL:</strong> {runDetails.studyConfiguration.computation.imageDownloadUrl}</p>
                     <p><strong>Notes:</strong></p>
-                    <pre>{runDetails.studyConfiguration.computation.notes}</pre>
-                    <p><strong>Owner:</strong> {runDetails.studyConfiguration.computation.owner}</p>
+                    <pre><ReactMarkdown children={runDetails.studyConfiguration.computation.notes} /></pre>
                 </div>
             </Card>
+            </div>
         </div>
     );
 }

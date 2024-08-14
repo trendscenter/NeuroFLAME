@@ -36,20 +36,27 @@ export default function RunResults() {
                     }
                 });
                 const indexFile = response.data.find(({ name }) => name === "index.html");
-                if(indexFile){
+                if(indexFile && !frameSrc){
                     const initialSrc = `${edgeClientRunResultsUrl}/${indexFile.url}?x-access-token=${localStorage.getItem('accessToken')}`;
                     setFrameSrc(initialSrc);
+                    clearInterval(intervalId);
                 }
                 setFileList(response.data);
+                return;
             } catch (err) {
+                clearInterval(intervalId);
                 setError('Failed to fetch results');
                 console.error('Error fetching results:', err);
+                return;
             } finally {
                 setLoading(false);
+                return;
             }
         };
-        fetchResultsFilesList();
-    }, [consortiumId, runId, edgeClientRunResultsUrl]);
+        const intervalId = setInterval(() => {
+            fetchResultsFilesList();
+        }, 1000);
+    }, [consortiumId, runId, edgeClientRunResultsUrl, frameSrc]);
 
     const handleHideFiles = () => {
         setFilesPanelWidth('2%');
