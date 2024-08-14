@@ -142,7 +142,7 @@ const seedDatabase = async () => {
         consortiumLeader: user1Id,
         studyConfiguration: consortia[0].studyConfiguration,
         members: consortia[0].members,
-        status: 'Active',
+        status: 'Complete',
         runErrors: ['Error encountered during processing Run 1.'],
         lastUpdated: Date.now(),
       },

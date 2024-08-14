@@ -3,6 +3,7 @@ import { getConfig } from '../../config/config.js'
 import path from 'path'
 import fs from 'fs/promises'
 import {logger} from '../../logger.js'
+import inMemoryStore from '../../inMemoryStore.js'
 
 export const resolvers = {
   Query: {
@@ -40,6 +41,8 @@ export const resolvers = {
       logger.info('connectAsUser')
       try {
         // Make the runCoordinator connect to the centralApi
+        inMemoryStore.set('accessToken', context.accessToken)
+        
         const { wsUrl } = getConfig()
         runCoordinator.subscribeToCentralApi({
           wsUrl,

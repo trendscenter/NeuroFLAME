@@ -402,19 +402,22 @@ export default {
       context: Context,
     ): Promise<boolean> => {
       logger.info('reportRunError', runId)
-      // authenticate the user
-      // is the token valid?
+
       if (!context.userId) {
         throw new Error('User not authenticated')
       }
 
-      // authorize the user
-      if (!context.roles.includes('central')) {
+      // is the calling user a member of the run or are they central?
+      const run = await Run.findById(runId)
+      const isUserCentral = context?.roles?.includes('central')
+      const isUserMember = run.members.some((memberId) =>
+        memberId.equals(context.userId),
+      )
+
+      if (!isUserCentral && !isUserMember) {
         throw new Error('User not authorized')
       }
 
-      // get the run's details from the database
-      const run = await Run.findById(runId)
       const result = await Run.updateOne(
         { _id: runId },
         { status: errorMessage, lastUpdated: Date.now() },
