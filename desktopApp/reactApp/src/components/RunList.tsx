@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
-import React, { useContext } from 'react';
+import React from 'react';
 import { useQuery } from '@apollo/client';
-import { ApolloClientsContext } from '../contexts/ApolloClientsContext';
+import { useApolloClients } from '../contexts/ApolloClientsContext';
 import { Link } from 'react-router-dom';
 import Card from '@mui/material/Card';
 import styles from './styles';
@@ -27,7 +27,7 @@ interface RunListItem {
 }
 
 const RunList: React.FC = () => {
-    const { centralApiApolloClient } = useContext(ApolloClientsContext);
+    const { centralApiApolloClient } = useApolloClients();
 
     const { loading, error, data } = useQuery<{ getRunList: RunListItem[] }>(
         GET_RUN_LIST,
