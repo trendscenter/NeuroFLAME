@@ -1,9 +1,11 @@
+//uploadFile.ts
 import { Request, Response, NextFunction } from 'express'
 import multer from 'multer'
 import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
 import getConfig from '../config/getConfig.js'
+import {logger} from '../logger.js'
 
 function generateChecksumSync(filePath: string): string {
   const hash = crypto.createHash('sha256')
@@ -48,11 +50,11 @@ export const uploadFile = async (
       const fileSize = fs.statSync(uploadedFilePath).size
       const checksum = generateChecksumSync(uploadedFilePath)
 
-      console.log(`\n\n`)
-      console.log(`File uploaded to ${uploadedFilePath}`)
-      console.log(`Uploaded file size: ${fileSize} bytes`)
-      console.log(`Uploaded file checksum: ${checksum}`)
-      console.log(`\n\n`)
+      logger.info(`\n\n`)
+      logger.info(`File uploaded to ${uploadedFilePath}`)
+      logger.info(`Uploaded file size: ${fileSize} bytes`)
+      logger.info(`Uploaded file checksum: ${checksum}`)
+      logger.info(`\n\n`)
       
       next()
     } catch (error) {

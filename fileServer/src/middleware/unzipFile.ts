@@ -1,9 +1,10 @@
-import path from 'path'
-import unzipper from 'unzipper'
-import fs from 'fs-extra'
-import { Request, Response, NextFunction } from 'express'
-import getConfig from '../config/getConfig.js'
-import { logger } from '../logger.js'
+//unzipFile.ts
+import path from 'path';
+import unzipper from 'unzipper';
+import fs from 'fs-extra';
+import { Request, Response, NextFunction } from 'express';
+import getConfig from '../config/getConfig.js';
+import { logger } from '../logger.js';
 
 export const unzipFile = async (
   req: Request,
@@ -12,47 +13,36 @@ export const unzipFile = async (
 ): Promise<void> => {
   try {
     if (!req.file) {
-      throw new Error('No file uploaded')
+      throw new Error('No file uploaded');
     }
 
     const zipPath = req.file.path
-    const { consortiumId, runId } = req.params
-    const config = await getConfig()
-    const { baseDir } = config
-    const extractPath = path.join(baseDir, consortiumId, runId)
+    const { consortiumId, runId } = req.params;
+    const config = await getConfig();
+    const { baseDir } = config;
+    const extractPath = path.join(baseDir, consortiumId, runId);
+    const tmpPath = path.join(extractPath, 'tmp.zip');
 
-    // Ensure the extract path exists
-    await fs.ensureDir(extractPath)
+    // Ensure the extraction directory exists and copy the uploaded file to a temporary location
+    await fs.ensureDir(extractPath);
+    await fs.copy(zipPath, tmpPath);
 
-    // copy the file from the zip path to a temporary path
-    const tmpPath = path.join(extractPath, 'tmp.zip')
+    logger.info(`Paths for extraction - tmpPath: ${tmpPath}, zipPath: ${zipPath}, extractPath: ${extractPath}`);
 
-    await fs.copy(zipPath, tmpPath)
-
-    logger.info(JSON.stringify({ tmpPath, zipPath, extractPath }), 'info')
-
-    // Extract the zip file
     try {
+      // Extract the zip file
       await fs
         .createReadStream(tmpPath)
         .pipe(unzipper.Extract({ path: extractPath }))
-        .promise()
-    } catch (e) {
-      // skip the error because the files seem to extract correctly
-      // TODO: investigate why the error is thrown
-      logger.info(`Error extracting the file: ${e}, continuing...`, 'error')
+        .promise();
+    } catch (error) {
+      logger.warn(`Error extracting the file: ${error}. Continuing...`);
     }
 
-    // Delete the temporary zip file
-    // await fs.unlink(tmpPath)
-
-    logger.info(
-      `File uploaded and extracted successfully to ${extractPath}`,
-      'info',
-    )
-    // Continue to the next middleware or route handler
-    next()
+    logger.info(`File uploaded and extracted successfully to ${extractPath}`);
+    next();
   } catch (error) {
-    next(error)
+    logger.error(`Error during file extraction: ${(error as Error).message}`);
+    next(error);
   }
-}
+};

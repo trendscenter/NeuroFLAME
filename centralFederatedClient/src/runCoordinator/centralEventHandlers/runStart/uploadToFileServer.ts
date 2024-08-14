@@ -40,13 +40,16 @@ export default async function uploadFileToServer({
   try {
     await zipDirectory(extractPath, zipPath)
     logger.info(`Zip file created at ${zipPath}`)
+
     await validateZipFile(zipPath)
-    const fileSize = await getFileSize(zipPath) // Get the file size
+
+    const fileSize = await getFileSize(zipPath)
     logger.info(`File size is ${fileSize} bytes`)
-    const checksum = await generateChecksum(zipPath) // Generate and log the checksum
+
+    const checksum = await generateChecksum(zipPath)
     logger.info(`Checksum is ${checksum}`)
+
     await uploadZipFile(url, zipPath, accessToken)
-    logger.info('File uploaded successfully')
   } catch (error) {
     logger.error('Error during file upload:', formatAxiosError(error))
     throw error // Properly propagate errors
@@ -87,10 +90,6 @@ async function uploadZipFile(
   formData.append('file', createReadStream(zipPath))
 
   logger.info('Starting file upload...')
-  // log the url and formData
-  logger.info({
-    url,
-  })
 
   try {
     const response = await axios.post(url, formData, {
@@ -98,6 +97,8 @@ async function uploadZipFile(
         'x-access-token': accessToken,
         ...formData.getHeaders(),
       },
+      maxContentLength: Infinity, // Ensure large files are handled
+      maxBodyLength: Infinity,
     })
 
     if (response.status === 200) {
@@ -118,7 +119,7 @@ export async function zipDirectory(
   return new Promise(async (resolve, reject) => {
     const outputDir = path.dirname(outPath)
     try {
-      await fs.mkdir(outputDir, { recursive: true }) // Ensure the directory exists
+      await fs.mkdir(outputDir, { recursive: true })
     } catch (err) {
       return reject(`Failed to create directory ${outputDir}: ${err}`)
     }
@@ -151,7 +152,7 @@ export async function zipDirectory(
 
     archive.pipe(output)
     archive.directory(sourceDir, false)
-    archive.finalize()
+    await archive.finalize()
   })
 }
 
