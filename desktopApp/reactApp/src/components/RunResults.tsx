@@ -40,12 +40,10 @@ export default function RunResults() {
                 if(indexFile && !frameSrc){
                     const initialSrc = `${edgeClientRunResultsUrl}/${indexFile.url}?x-access-token=${localStorage.getItem('accessToken')}`;
                     setFrameSrc(initialSrc);
-                    clearInterval(intervalId);
                 }
                 setFileList(response.data);
                 return;
             } catch (err) {
-                clearInterval(intervalId);
                 setError('Failed to fetch results');
                 console.error('Error fetching results:', err);
                 return;
@@ -54,9 +52,7 @@ export default function RunResults() {
                 return;
             }
         };
-        const intervalId = setInterval(() => {
-            fetchResultsFilesList();
-        }, 1000);
+        fetchResultsFilesList();
     }, [consortiumId, runId, edgeClientRunResultsUrl, frameSrc]);
 
     const handleHideFiles = () => {

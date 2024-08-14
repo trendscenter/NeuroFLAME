@@ -3,6 +3,7 @@ export interface Config {
   centralServerSubscriptionUrl: string;
   edgeClientQueryUrl: string;
   edgeClientSubscriptionUrl: string;
+  edgeClientRunResultsUrl: string;
   startEdgeClientOnLaunch: boolean;
   edgeClientConfig: {
     httpUrl: string,
