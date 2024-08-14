@@ -196,7 +196,7 @@ export default `#graphql
   }
 
   type RunError {
-    username: String
+    user: PublicUser
     timestamp: String
     message: String
   }
