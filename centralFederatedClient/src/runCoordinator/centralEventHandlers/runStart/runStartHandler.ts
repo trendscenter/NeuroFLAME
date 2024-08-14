@@ -36,9 +36,9 @@ export const runStartHandler = {
         computationParameters,
       })
 
-      // wait a 5 seconds to report run ready
+      // wait a 1 second to report run ready
       // TODO: replace with a more robust solution
-      await new Promise((resolve) => setTimeout(resolve, 5000))
+      await new Promise((resolve) => setTimeout(resolve, 1000))
 
       // report to the central api that the run is ready
       return await reportRunReady({ runId })
