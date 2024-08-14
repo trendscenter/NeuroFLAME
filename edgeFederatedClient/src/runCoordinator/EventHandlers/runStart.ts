@@ -51,13 +51,13 @@ export const runStartHandler = {
       await downloadFile({
         url: downloadUrl,
         accessToken: downloadToken,
-        path_output_dir: runKitPath,
+        pathOutputDir: runKitPath,
         outputFilename: 'kit.zip',
       })
 
       // Unzip the file
       try {
-        await unzipFile(runKitPath, 'kit.zip')
+        await unzipFile({directory: runKitPath, fileName: 'kit.zip'})
       } catch (e) {
         throw new Error(
           `Error unzipping the file: ${
@@ -102,12 +102,11 @@ export const runStartHandler = {
         commandsToRun: ['python', '/workspace/entry_edge.py'],
       })
     } catch (error) {
-      logger.error(`Error in runStartHandler: ${error}`)
-      // report this to the central API
+      logger.error(`Error in runStartHandler: ${JSON.stringify(error)}`)
       
       await reportRunError({
         runId: data.runStartEdge.runId,
-        errorMessage: `Error in runStartHandler: ${error}`,
+        errorMessage: `Error starting run: ${JSON.stringify(error)}`,
       })
     }
   },

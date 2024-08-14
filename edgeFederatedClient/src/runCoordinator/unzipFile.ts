@@ -1,51 +1,62 @@
-import * as unzipper from 'unzipper'
-import * as fs from 'fs'
-import * as path from 'path'
-import { promisify } from 'util'
+import * as unzipper from 'unzipper';
+import * as fs from 'fs';
+import * as path from 'path';
+import { promisify } from 'util';
+import { logger } from '../logger.js';
 
-// Promisify the necessary fs functions
-const readdir = promisify(fs.readdir)
-const chmod = promisify(fs.chmod)
-const stat = promisify(fs.stat)
+const readdir = promisify(fs.readdir);
+const chmod = promisify(fs.chmod);
+const stat = promisify(fs.stat);
 
-/**
- * Recursively sets permissions for all files and directories.
- *
- * @param dir - The directory to set permissions for.
- * @param mode - The permission mode to set.
- */
+type UnzipFileParams = {
+  directory: string;
+  fileName: string;
+};
+
 async function setPermissions(dir: string, mode: number): Promise<void> {
-  const files = await readdir(dir)
+  const files = await readdir(dir);
+
   for (const file of files) {
-    const filePath = path.join(dir, file)
-    const fileStat = await stat(filePath)
+    const filePath = path.join(dir, file);
+    const fileStat = await stat(filePath);
 
     if (fileStat.isDirectory()) {
-      await setPermissions(filePath, mode)
+      await setPermissions(filePath, mode);
     } else {
-      await chmod(filePath, mode)
+      await chmod(filePath, mode);
     }
   }
 }
 
-/**
- * Unzips a file to a specified directory and sets permissions to 0o777 for all extracted files.
- *
- * @param directory - The directory where the zip file is located.
- * @param fileName - The name of the zip file to unzip.
- */
-export async function unzipFile(
-  directory: string,
-  fileName: string,
-): Promise<void> {
-  const zipPath = path.join(directory, fileName)
+export async function unzipFile({ directory, fileName }: UnzipFileParams): Promise<void> {
+  const zipPath = path.join(directory, fileName);
 
-  // Extract the zip file
-  await fs
-    .createReadStream(zipPath)
-    .pipe(unzipper.Extract({ path: directory }))
-    .promise()
+  try {
+    const fileStat = await stat(zipPath);
 
-  // Recursively change the file permissions of all the extracted files to 0o777
-  await setPermissions(directory, 0o777)
+    if (fileStat.size === 0) {
+      throw new Error(`File ${zipPath} is empty.`);
+    }
+  } catch (err) {
+    logger.error(`Error accessing file ${zipPath}: ${(err as Error).message}`);
+    throw err;
+  }
+
+  logger.info(`Starting to unzip file: ${zipPath}`);
+
+  try {
+    await fs.createReadStream(zipPath).pipe(unzipper.Extract({ path: directory })).promise();
+    logger.info(`Successfully unzipped file: ${zipPath}`);
+  } catch (err) {
+    logger.error(`Error unzipping file ${zipPath}: ${(err as Error).message}`);
+    throw err;
+  }
+
+  try {
+    await setPermissions(directory, 0o777);
+    logger.info(`Permissions set to 0o777 for all extracted files in: ${directory}`);
+  } catch (err) {
+    logger.error(`Error setting file permissions: ${(err as Error).message}`);
+    throw err;
+  }
 }

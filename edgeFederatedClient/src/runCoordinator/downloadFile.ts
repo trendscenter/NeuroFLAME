@@ -1,21 +1,23 @@
-import axios from 'axios'
-import fs from 'fs'
-import path from 'path'
-import { logger } from '../logger.js'
+import axios from 'axios';
+import fs from 'fs';
+import path from 'path';
+import { logger } from '../logger.js';
 
-export default async function ({
+interface DownloadFileParams {
+  url: string;
+  accessToken: string;
+  pathOutputDir: string;
+  outputFilename: string;
+}
+
+export default async function downloadFile({
   url,
   accessToken,
-  path_output_dir,
+  pathOutputDir,
   outputFilename,
-}: {
-  url: string
-  accessToken: string
-  path_output_dir: string
-  outputFilename: string
-}) {
+}: DownloadFileParams): Promise<void> {
   try {
-    logger.info(`Attempting to download from URL: ${url}`)
+    logger.info(`Attempting to download from URL: ${url}`);
 
     const response = await axios({
       method: 'POST',
@@ -24,63 +26,60 @@ export default async function ({
         'x-access-token': accessToken,
       },
       responseType: 'stream',
-    })
+    });
 
-    // Log successful receipt of the response
-    logger.info('Response received, streaming to file.')
+    // Ensure the directory exists
+    await fs.promises.mkdir(pathOutputDir, { recursive: true });
+    const pathOutputFile = path.join(pathOutputDir, outputFilename);
+    const writer = fs.createWriteStream(pathOutputFile);
+    logger.info(`Writing to file: ${pathOutputFile}`);
 
-    await fs.promises.mkdir(path_output_dir, { recursive: true })
-    const path_output_file = path.join(path_output_dir, outputFilename)
-    const writer = fs.createWriteStream(path_output_file)
-    logger.info(`Writing to file: ${path_output_file}`)
+    // Pipe the response data to the file
+    response.data.pipe(writer);
 
-    response.data.pipe(writer)
-
-    // Check download completion
+    // Handle download completion and verification
     return new Promise<void>((resolve, reject) => {
       writer.on('finish', async () => {
-        logger.info('File write completed successfully.')
+        logger.info('File write completed successfully.');
 
-        // Verify file size matches expected content-length
-        const fileSize = (await fs.promises.stat(path_output_file)).size
-        const contentLength = response.headers['content-length']
+        try {
+          // Verify file size matches expected content-length
+          const fileSize = (await fs.promises.stat(pathOutputFile)).size;
+          const contentLength = response.headers['content-length'];
 
-        if (contentLength && fileSize !== parseInt(contentLength, 10)) {
-          reject(
-            new Error(
-              `File size mismatch: expected ${contentLength}, but got ${fileSize}`,
-            ),
-          )
-        } else {
-          resolve()
+          if (contentLength && fileSize !== parseInt(contentLength, 10)) {
+            reject(
+              new Error(
+                `File size mismatch: expected ${contentLength}, but got ${fileSize}`,
+              ),
+            );
+          } else {
+            logger.info('File size matches the content-length. Download successful.');
+            resolve();
+          }
+        } catch (error) {
+          logger.error('Error verifying downloaded file:', (error as Error).message);
+          reject(error);
         }
-      })
+      });
 
       writer.on('error', (error) => {
-        logger.error('File write failed:', error.toString())
-        reject(error)
-      })
-    })
+        logger.error('File write failed:', (error as Error).message);
+        reject(error);
+      });
+    });
   } catch (error) {
-    let customError
     if (axios.isAxiosError(error)) {
-      customError = new Error(`Failed to download file: ${error.message}`)
-
-      const errorDetails = {
+      logger.error(`Failed to download file: ${error.message}`, JSON.stringify({
         message: error.message,
         url: error.config?.url,
         method: error.config?.method,
         statusCode: error.response?.status,
         statusText: error.response?.statusText,
-      }
-      logger.error(
-        'Failed to download file:',
-        JSON.stringify(errorDetails, null, 2),
-      )
+      }, null, 2));
     } else {
-      logger.error('Unexpected error:', JSON.stringify(error, null, 2))
-      customError = error
+      logger.error('Unexpected error:', (error as Error).message);
     }
-    throw customError // Rethrow the error after logging it
+    throw new Error(`Download failed: ${(error as Error).message}`);
   }
 }
