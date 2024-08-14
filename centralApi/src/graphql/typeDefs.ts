@@ -95,7 +95,13 @@ export interface RunDetails {
   lastUpdated: string
   members: PublicUser[]
   studyConfiguration: StudyConfiguration
-  runErrors: string[]
+  runErrors: RunError[]
+}
+
+export interface RunError {
+  user: PublicUser
+  timestamp: string
+  message: string
 }
 
 export default `#graphql
@@ -189,6 +195,12 @@ export default `#graphql
     lastUpdated: String
   }
 
+  type RunError {
+    username: String
+    timestamp: String
+    message: String
+  }
+
   type RunDetails {
     runId: String
     consortiumId: String
@@ -197,7 +209,7 @@ export default `#graphql
     lastUpdated: String
     members: [PublicUser]
     studyConfiguration: StudyConfiguration
-    runErrors: [String]
+    runErrors: [RunError]
   }
 
   type Query {

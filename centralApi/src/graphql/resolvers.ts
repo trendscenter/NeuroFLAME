@@ -200,7 +200,6 @@ export default {
     },
     getRunDetails: async (
       _: unknown,
-
       { runId }: { runId: string },
       context: Context,
     ): Promise<RunDetails> => {
@@ -215,6 +214,11 @@ export default {
           .populate({
             path: 'members',
             select: 'id username',
+            model: User,
+          })
+          .populate({
+            path: 'runErrors.user',
+            select: 'id username', // Populate the user field in runErrors with id and username
             model: User,
           })
           .populate(
@@ -259,7 +263,14 @@ export default {
               owner: run.studyConfiguration.computation.owner,
             },
           },
-          runErrors: run.runErrors,
+          runErrors: run.runErrors.map((error: any) => ({
+            user: {
+              id: error.user._id.toString(),
+              username: error.user.username,
+            },
+            timestamp: error.timestamp,
+            message: error.message,
+          })),
         }
       } catch (e) {
         logger.error('Error fetching run details:', e)
@@ -419,18 +430,18 @@ export default {
         throw new Error('User not authorized')
       }
 
- 
-
       const result = await Run.updateOne(
         { _id: runId },
         {
           status: errorMessage,
           lastUpdated: Date.now(),
-          $push: { runErrors: JSON.stringify({
-            userId: context.userId,
-            message: errorMessage,
-            timestamp: Date.now(),
-          }) }, // Append error message to runErrors
+          $push: {
+            runErrors: JSON.stringify({
+              userId: context.userId,
+              message: errorMessage,
+              timestamp: Date.now(),
+            }),
+          }, // Append error message to runErrors
         },
       )
 

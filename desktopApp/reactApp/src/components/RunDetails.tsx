@@ -53,7 +53,14 @@ const GET_RUN_DETAILS = gql`
           owner
         }
       }
-        runErrors
+        runErrors {
+            user {
+                id
+                username
+            }
+            timestamp
+            message
+        }
     }
   }
 `;
@@ -131,7 +138,7 @@ export default function RunDetails() {
                 <p><strong>Run Errors:</strong></p>
                 <ul>
                     {runDetails.runErrors.map((error) => (
-                        <li key={error}>{error}</li>
+                        <li key={error}>{JSON.stringify(error)}</li>
                     ))}
                 </ul>
             </Card>

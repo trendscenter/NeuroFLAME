@@ -4,15 +4,22 @@ import {
   studyConfigurationSchema,
 } from './StudyConfiguration.js'
 
-// Define an interface for the Run document, renaming 'errors' to avoid conflict
+// Define an interface for the error entries in the runErrors array
+interface IRunError {
+  user: mongoose.Types.ObjectId // Reference to the User model
+  timestamp: string // String representing the numeric timestamp
+  message: string // Error message
+}
+
+// Define an interface for the Run document
 export interface IRun extends Document {
   consortium: mongoose.Types.ObjectId // Reference to the Consortium model
   consortiumLeader: mongoose.Types.ObjectId // Reference to the User model
   studyConfiguration: IStudyConfiguration
   members: mongoose.Types.ObjectId[] // Array of User references
   status: string // Could be an enum or simple string
-  runErrors: string[] // Array of error messages, renamed to 'runErrors'
-  lastUpdated: string
+  runErrors: IRunError[] // Array of error objects
+  lastUpdated: string // String representing the numeric timestamp
 }
 
 // Create the Run schema
@@ -30,7 +37,18 @@ const runSchema: Schema = new Schema({
   studyConfiguration: { type: studyConfigurationSchema, required: true },
   members: [{ type: mongoose.Types.ObjectId, ref: 'User', required: true }],
   status: { type: String, required: true, default: 'Pending' },
-  runErrors: [{ type: String, default: [] }], // Using 'runErrors' to store error messages
+  runErrors: [
+    {
+      user: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
+      timestamp: {
+        type: String,
+        default: () => Date.now().toString(), // Store the numeric timestamp as a string
+        required: true,
+      },
+      message: { type: String, required: true },
+    },
+  ],
+
   lastUpdated: { type: String, default: Date.now },
 })
 
