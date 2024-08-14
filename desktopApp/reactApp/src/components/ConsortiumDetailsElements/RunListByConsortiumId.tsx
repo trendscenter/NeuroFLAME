@@ -47,7 +47,7 @@ export default function RunListByConsortiumId(props: any) {
     return (
         <div>
             {runs && runs.length > 0  && <div style={styles.container}>
-                <h3 style={styles.h3}>Runs</h3>
+                <h3 style={styles.h3}>Runs <span style={{color: 'black'}}>({runs.length})</span></h3>
                 <div style={styles.containerOverflow}>
                     {runs.map((run) => (
                         <Card 
