@@ -25,6 +25,7 @@ const consortium1Id = new mongoose.Types.ObjectId('66289c79aebab67040a22000')
 const consortium2Id = new mongoose.Types.ObjectId('66289c79aecab67040a22001')
 const run1Id = new mongoose.Types.ObjectId('66289c79aecab67040a23000')
 const run2Id = new mongoose.Types.ObjectId('66289c79aecab67040a23001')
+const run3Id = new mongoose.Types.ObjectId('66289c79aecab67040a23002')
 
 const seedDatabase = async () => {
   try {
@@ -143,7 +144,7 @@ const seedDatabase = async () => {
         studyConfiguration: consortia[0].studyConfiguration,
         members: consortia[0].members,
         status: 'Complete',
-        runErrors: ['Error encountered during processing Run 1.'],
+        runErrors: [],
         lastUpdated: Date.now(),
       },
       {
@@ -154,6 +155,27 @@ const seedDatabase = async () => {
         members: consortia[1].members,
         status: 'Pending',
         runErrors: [],
+        lastUpdated: Date.now(),
+      },
+      {
+        _id: run3Id,
+        consortium: consortium1Id,
+        consortiumLeader: user1Id,
+        studyConfiguration: consortia[0].studyConfiguration,
+        members: consortia[0].members,
+        status: 'Error',
+        runErrors: [
+          {
+            user: user1Id,
+            timestamp: Date.now().toString(),
+            message: 'Error message for user 1',
+          },
+          {
+            user: user2Id,
+            timestamp: Date.now().toString(),
+            message: 'Error message for user 2',
+          },
+        ],
         lastUpdated: Date.now(),
       },
     ]

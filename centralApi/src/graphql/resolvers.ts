@@ -273,7 +273,7 @@ export default {
           })),
         }
       } catch (e) {
-        logger.error('Error fetching run details:', e)
+        logger.error(`Error fetching run details: ${JSON.stringify(e)}`)
         throw new Error('Failed to fetch run details')
       }
     },
@@ -413,14 +413,18 @@ export default {
       { runId, errorMessage }: { runId: string; errorMessage: string },
       context: Context,
     ): Promise<boolean> => {
-      logger.info('reportRunError', runId)
+      logger.info('reportRunError', { runId })
 
       if (!context.userId) {
         throw new Error('User not authenticated')
       }
 
-      // is the calling user a member of the run or are they central?
+      // Find the run and verify the user's authorization
       const run = await Run.findById(runId)
+      if (!run) {
+        throw new Error(`Run with id ${runId} not found`)
+      }
+
       const isUserCentral = context?.roles?.includes('central')
       const isUserMember = run.members.some((memberId) =>
         memberId.equals(context.userId),
@@ -430,22 +434,26 @@ export default {
         throw new Error('User not authorized')
       }
 
+      // Append the error to the runErrors array and update the run's status and lastUpdated fields
       const result = await Run.updateOne(
         { _id: runId },
         {
-          status: errorMessage,
-          lastUpdated: Date.now(),
+          status: `Error`,
+          lastUpdated: Date.now().toString(), // Store as a string
           $push: {
-            runErrors: JSON.stringify({
-              userId: context.userId,
+            runErrors: {
+              user: context.userId, // Reference to the user who reported the error
               message: errorMessage,
-              timestamp: Date.now(),
-            }),
-          }, // Append error message to runErrors
+              timestamp: Date.now().toString(), // Store as a string
+            },
+          },
         },
       )
 
       const consortium = await Consortium.findById(run.consortium._id)
+      if (!consortium) {
+        throw new Error(`Consortium with id ${run.consortium._id} not found`)
+      }
 
       pubsub.publish('RUN_EVENT', {
         consortiumId: consortium._id.toString(),
@@ -457,6 +465,7 @@ export default {
 
       return true
     },
+
     reportRunComplete: async (
       _: unknown,
       { runId },

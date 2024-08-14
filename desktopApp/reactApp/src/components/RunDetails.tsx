@@ -27,8 +27,16 @@ export interface IRunDetails {
             owner: string;
         };
     };
-    runErrors: string[];
+    runErrors: {
+        user: {
+            id: string;
+            username: string;
+        };
+        timestamp: string;
+        message: string;
+    }[];
 }
+
 
 const GET_RUN_DETAILS = gql`
   query GetRunDetails($runId: String!) {
@@ -138,7 +146,9 @@ export default function RunDetails() {
                 <p><strong>Run Errors:</strong></p>
                 <ul>
                     {runDetails.runErrors.map((error) => (
-                        <li key={error}>{JSON.stringify(error)}</li>
+                        <li key={error.timestamp}>
+                            {new Date(Number(error.timestamp)).toLocaleString()} - {error.user.username} - {error.message}
+                        </li>
                     ))}
                 </ul>
             </Card>
