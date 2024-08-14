@@ -1,9 +1,6 @@
-export default `---
+export default `
 repositoryUrl: "https://www.markdownguide.org/cheat-sheet/"
 imageBuildSource: "https://www.markdownguide.org/cheat-sheet/"
-specialKey: "this is a special key value that gets rendered differently"
-arbitraryKey: "arbitrary value"
----
 
 # Heading 1
 
