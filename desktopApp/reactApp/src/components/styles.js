@@ -1,8 +1,5 @@
 // styles.js
 const styles = {
-    container: {
-        display: 'flex'
-    },
     navbar: {
         flex: '0 0 200px',
         padding: '20px',
@@ -82,12 +79,6 @@ const styles = {
         padding: '1rem',
         marginBottom: '1rem',
         height: 'fit-content',
-    },
-    labelBetween: {
-        whiteSpace: 'nowrap',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignContent: 'center',
     },
     buttonSmall: {
         fontSize: '14px',
