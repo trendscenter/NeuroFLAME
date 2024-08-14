@@ -95,6 +95,7 @@ export interface RunDetails {
   lastUpdated: string
   members: PublicUser[]
   studyConfiguration: StudyConfiguration
+  runErrors: string[]
 }
 
 export default `#graphql
@@ -196,6 +197,7 @@ export default `#graphql
     lastUpdated: String
     members: [PublicUser]
     studyConfiguration: StudyConfiguration
+    runErrors: [String]
   }
 
   type Query {

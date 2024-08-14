@@ -27,6 +27,7 @@ export interface IRunDetails {
             owner: string;
         };
     };
+    runErrors: string[];
 }
 
 const GET_RUN_DETAILS = gql`
@@ -52,6 +53,7 @@ const GET_RUN_DETAILS = gql`
           owner
         }
       }
+        runErrors
     }
   }
 `;
@@ -99,19 +101,19 @@ export default function RunDetails() {
     return (
         <div>
             <div style={styles.labelBetween}>
-                <h1>Details for Run: <span style={{color: 'black'}}>{runId}</span></h1>
+                <h1>Details for Run: <span style={{ color: 'black' }}>{runId}</span></h1>
                 <div>
-                <Link 
-                    to={`/runs/results/${runDetails.consortiumId}/${runDetails.runId}`}
-                    style={{marginRight: '1rem'}}
-                >
-                    <button>View Run Results</button>
-                </Link>
-                <Link 
-                    to={`/consortia/details/${runDetails.consortiumId}`}
-                >
-                    <button>View Consortium</button>
-                </Link>
+                    <Link
+                        to={`/runs/results/${runDetails.consortiumId}/${runDetails.runId}`}
+                        style={{ marginRight: '1rem' }}
+                    >
+                        <button>View Run Results</button>
+                    </Link>
+                    <Link
+                        to={`/consortia/details/${runDetails.consortiumId}`}
+                    >
+                        <button>View Consortium</button>
+                    </Link>
                 </div>
             </div>
 
@@ -126,6 +128,12 @@ export default function RunDetails() {
                 <p><strong>ID:</strong> {runDetails.runId}</p>
                 <p><strong>Status:</strong> {runDetails.status}</p>
                 <p><strong>Last Updated:</strong> {new Date(Number(runDetails.lastUpdated)).toLocaleString()}</p>
+                <p><strong>Run Errors:</strong></p>
+                <ul>
+                    {runDetails.runErrors.map((error) => (
+                        <li key={error}>{error}</li>
+                    ))}
+                </ul>
             </Card>
 
             <Card sx={styles.card}>

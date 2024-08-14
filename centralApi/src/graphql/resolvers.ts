@@ -259,6 +259,7 @@ export default {
               owner: run.studyConfiguration.computation.owner,
             },
           },
+          runErrors: run.runErrors,
         }
       } catch (e) {
         logger.error('Error fetching run details:', e)
@@ -418,18 +419,18 @@ export default {
         throw new Error('User not authorized')
       }
 
+ 
+
       const result = await Run.updateOne(
         { _id: runId },
         {
           status: errorMessage,
           lastUpdated: Date.now(),
-          $push: {
-            runErrors: JSON.stringify({
-              userId: context.userId,
-              message: errorMessage,
-              timestamp: Date.now(),
-            }),
-          }, // Append error message to runErrors
+          $push: { runErrors: JSON.stringify({
+            userId: context.userId,
+            message: errorMessage,
+            timestamp: Date.now(),
+          }) }, // Append error message to runErrors
         },
       )
 
