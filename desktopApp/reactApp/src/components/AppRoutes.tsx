@@ -27,7 +27,8 @@ export default function AppRoutes() {
             <Route path="/consortia/create" element={<ConsortiumCreate />} />
             <Route path="/consortia/details/:consortiumId" element={<ConsortiumDetails />} />
             <Route path="/runs" element={<RunsList></RunsList>} />
-            <Route path="/runs/:runId" element={<RunDetails></RunDetails>} />
+            <Route path="/runs/details/:runId" element={<RunDetails />} />
+            <Route path="/runs/results/:consortiumId/:runId" element={<RunResults />} />
             <Route path="/computations" element={<ComputationsList />} />
             <Route path="/computations/create" element={<ComputationsCreate />} />
             <Route path="/computations/details/:computationId" element={<ComputationDetails />} />
@@ -37,8 +38,6 @@ export default function AppRoutes() {
             <Route path="/adminEditUser" element={<AdminEditUser />} />
             <Route path="/pageLogin" element={<PageLogin />} />
             <Route path="/changePassword" element={<ChangePassword />} />
-            <Route path="/runs/details/:runId" element={<RunDetails />} />
-            <Route path="/runs/results/:consortiumId/:runId" element={<RunResults />} />
         </Routes>
     )
 }

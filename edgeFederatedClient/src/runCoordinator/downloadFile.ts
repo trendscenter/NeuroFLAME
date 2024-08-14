@@ -15,6 +15,8 @@ export default async function ({
   outputFilename: string
 }) {
   try {
+    logger.info(`Attempting to download from URL: ${url}`)
+
     const response = await axios({
       method: 'POST',
       url: url,

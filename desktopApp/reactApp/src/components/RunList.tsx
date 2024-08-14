@@ -41,20 +41,21 @@ const RunList: React.FC = () => {
         <div>
             <h1>Run List</h1>
             {data?.getRunList.map((run) => (
-                <Card 
-                    key={run.runId} 
+                <Card
+                    key={run.runId}
                     sx={styles.card}
                 >
-                    <h2>{run.consortiumTitle}</h2>
-
-                    <h3>RunId:   <Link to={`/runs/details/${run.runId}`}>{run.runId}    </Link></h3>
-
+                    <p>
+                       Run Id: <Link to={`/runs/details/${run.runId}`}>{run.runId}</Link>
+                    </p>
+                    <p>
+                        Consortium: <Link to={`/consortia/details/${run.consortiumId}`}>{run.consortiumTitle}</Link>
+                    </p>
                     <p>Status: {run.status}</p>
                     <p>Last Updated: {new Date(Number(run.lastUpdated)).toLocaleString()}</p>
                 </Card>
-            ))
-            }
-        </div >
+            ))}
+        </div>
     );
 };
 

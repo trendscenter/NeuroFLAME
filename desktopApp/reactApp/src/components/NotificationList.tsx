@@ -21,22 +21,25 @@ const NotificationList: React.FC<NotificationListProps> = () => {
   return (
     <div>
       <h2>Notifications</h2>
-        {events.map((event, index) => (
-            <Card 
-            key={index} 
-            sx={styles.card}
-            >
-            <p>
-              <Link to={`/consortia/details/${event.consortiumId}`}>
-                <strong>
-                  {event.consortiumTitle}
-                </strong>
-              </Link>
-            </p>
-            <p><strong>Run ID:</strong> {event.runId}</p>
-            <p><strong>Status:</strong> {event.status}</p>
-          </Card>
-        ))}
+      {events.map((event, index) => (
+        <Card
+          key={index}
+          sx={styles.card}
+        >
+          <p><strong>Run ID: </strong>
+            <Link to={`/runs/details/${event.runId}`}>
+              {event.runId}
+            </Link>
+          </p>
+          <p>
+            <strong>Consortium: </strong>
+            <Link to={`/consortia/details/${event.consortiumId}`}>
+              {event.consortiumTitle}
+            </Link>
+          </p>
+          <p><strong>Status: </strong> {event.status}</p>
+        </Card>
+      ))}
     </div>
   );
 };
