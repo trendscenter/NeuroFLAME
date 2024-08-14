@@ -104,6 +104,7 @@ export const runStartHandler = {
     } catch (error) {
       logger.error(`Error in runStartHandler: ${error}`)
       // report this to the central API
+      
       await reportRunError({
         runId: data.runStartEdge.runId,
         errorMessage: `Error in runStartHandler: ${error}`,

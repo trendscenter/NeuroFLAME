@@ -420,7 +420,17 @@ export default {
 
       const result = await Run.updateOne(
         { _id: runId },
-        { status: errorMessage, lastUpdated: Date.now() },
+        {
+          status: errorMessage,
+          lastUpdated: Date.now(),
+          $push: {
+            runErrors: JSON.stringify({
+              userId: context.userId,
+              message: errorMessage,
+              timestamp: Date.now(),
+            }),
+          }, // Append error message to runErrors
+        },
       )
 
       const consortium = await Consortium.findById(run.consortium._id)
@@ -440,7 +450,7 @@ export default {
       { runId },
       context: Context,
     ): Promise<boolean> => {
-      logger.info('reportRunError', runId)
+      logger.info('reportRunComplete', runId)
       // authenticate the user
       // is the token valid?
       if (!context.userId) {

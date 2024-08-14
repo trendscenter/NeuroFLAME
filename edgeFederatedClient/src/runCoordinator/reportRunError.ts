@@ -3,16 +3,20 @@ import { logger } from '../logger.js'
 import inMemoryStore from '../inMemoryStore.js'
 
 // TypeScript interfaces for the GraphQL response
+interface GraphQLError {
+  message: string
+  locations?: { line: number; column: number }[]
+  path?: (string | number)[]
+  [key: string]: any
+}
+
 interface GraphQLResponse<T> {
   data?: T
-  errors?: { errorMessage: string }[]
+  errors?: GraphQLError[]
 }
 
 interface ReportRunErrorResponse {
-  reportRunError: {
-    success: boolean
-    errorMessage?: string
-  }
+  reportRunError: boolean
 }
 
 // GraphQL mutation
@@ -29,11 +33,16 @@ export default async function reportRunError({
   runId: string
   errorMessage: string
 }) {
-  const config = await getConfig()
-  const { httpUrl } = config
-  const accessToken = inMemoryStore.get('accessToken')
-
   try {
+    const config = await getConfig()
+    const { httpUrl } = config
+    const accessToken = inMemoryStore.get('accessToken')
+
+    if (!accessToken) {
+      logger.error('No access token found. Aborting reportRunError operation.')
+      throw new Error('Access token is missing.')
+    }
+
     const response = await fetch(httpUrl, {
       method: 'POST',
       headers: {
@@ -50,7 +59,7 @@ export default async function reportRunError({
     if (!response.ok) {
       const responseText = await response.text()
       logger.error(
-        `HTTP Error: ${response.status} - ${response.statusText}, Response: ${responseText}`,
+        `HTTP Error: ${response.status} - ${response.statusText}. Response Body: ${responseText}`,
       )
       throw new Error(
         `Failed to report run error: HTTP ${response.status} - ${response.statusText}`,
@@ -64,31 +73,30 @@ export default async function reportRunError({
 
     // Handle GraphQL errors
     if (responseData.errors && responseData.errors.length > 0) {
-      logger.error(`GraphQL Error: ${JSON.stringify(responseData.errors)}`)
-      throw new Error('Failed to report run error due to GraphQL error')
+      logger.error(
+        `GraphQL Errors: ${JSON.stringify(responseData.errors, null, 2)}`,
+      )
+      throw new Error('Failed to report run error due to GraphQL errors.')
     }
 
-    // Validate response data
-    if (!responseData.data || !responseData.data.reportRunError) {
-      logger.error(`Invalid response data: ${JSON.stringify(responseData)}`)
-      throw new Error('Invalid response data')
+    // Verify the operation's success
+    if (responseData.data?.reportRunError !== true) {
+      logger.error(
+        `reportRunError operation failed. Response Data: ${JSON.stringify(
+          responseData.data,
+          null,
+          2,
+        )}`,
+      )
+      throw new Error('reportRunError operation did not return success.')
     }
 
-    const {
-      success,
-      errorMessage: reportErrorMessage,
-    } = responseData.data.reportRunError
-
-    if (!success) {
-      logger.error(`Report run error failed: ${reportErrorMessage}`)
-      throw new Error(`Report run error failed: ${reportErrorMessage}`)
-    }
-
-    return responseData.data.reportRunError
+    logger.info(`Successfully reported run error for runId: ${runId}`)
+    return true
   } catch (error) {
     logger.error(
-      `Error reporting run error: ${
-        (error as Error).message || JSON.stringify(error)
+      `Error in reportRunError: ${
+        error instanceof Error ? error.message : JSON.stringify(error)
       }`,
     )
     throw error
