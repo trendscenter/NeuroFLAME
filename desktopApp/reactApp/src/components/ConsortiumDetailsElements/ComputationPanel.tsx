@@ -3,7 +3,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import ReactMarkdown from 'react-markdown';
 
 export default function ComputationPanel({
-    panelComputation, 
+    panelConsortiumDetails, 
     panelComputations, 
     panelSelectComputation, 
     panelSetSelectComputation, 
@@ -14,17 +14,20 @@ export default function ComputationPanel({
 }) {
     return (
         <div>
-            <small>Computation:</small>
-            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}>
-                <h2 style={{color: '#000000', marginBottom: '0', marginRight: '0.5rem'}}>
-                    {panelComputation.title}
-                </h2>
-                {panelUserIsLeader && <div>
-                {!panelSelectComputation ? 
-                <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {panelSetSelectComputation(!panelSelectComputation)}} /> :
-                <CancelIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {panelSetSelectComputation(!panelSelectComputation)}} />}
-                </div>}
-            </div>
+            {panelConsortiumDetails.studyConfiguration.computation && 
+            <div>
+                <small>Computation:</small>
+                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}>
+                    <h2 style={{color: '#000000', marginBottom: '0', marginRight: '0.5rem'}}>
+                        {panelConsortiumDetails.studyConfiguration.computation.title}
+                    </h2>
+                    {panelUserIsLeader && <div>
+                    {!panelSelectComputation ? 
+                    <EditIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {panelSetSelectComputation(!panelSelectComputation)}} /> :
+                    <CancelIcon style={{ color: 'rgba(0, 0, 0, 0.54)' }} onClick={() => {panelSetSelectComputation(!panelSelectComputation)}} />}
+                    </div>}
+                </div>
+            </div>}
             {panelSelectComputation && <div style={{display: 'flex', alignItems: 'center', marginBottom: '1rem', justifyContent: 'flex-start'}}>
             <select
                 value={panelSelectableComputation}
@@ -40,6 +43,6 @@ export default function ComputationPanel({
             </select>
             <button style={{height: '2.5rem'}} onClick={panelHandleSetComputation}>Set</button>
             </div>}
-            {panelComputation.notes && <div><ReactMarkdown children={panelComputation.notes} /></div>}
+            {panelConsortiumDetails.studyConfiguration.computation && panelConsortiumDetails.studyConfiguration.computation.notes && <div><ReactMarkdown children={panelConsortiumDetails.studyConfiguration.computation.notes} /></div>}
         </div>)
 }

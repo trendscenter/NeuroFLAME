@@ -242,15 +242,18 @@ export default function ConsortiumDetails(props: any) {
         }
     };
 
-    const handleSetMountDir = async () => {
-        try {
-            await setMountDir({
-                variables: { consortiumId, mountDir: editableMountDir },
-            });
-            console.log('Mount directory set successfully');
-        } catch (e) {
-            console.error('Error setting mount directory:', e);
-            console.log('Failed to set mount directory');
+    const handleSetMountDir = async (mountDir) => {
+        setEditableMountDir(mountDir);
+        if(mountDir){
+          try {
+              await setMountDir({
+                  variables: { consortiumId, mountDir: mountDir },
+              });
+              console.log('Mount directory set successfully');
+          } catch (e) {
+              console.error('Error setting mount directory:', e);
+              console.log('Failed to set mount directory');
+          }
         }
     };
 
@@ -317,7 +320,13 @@ export default function ConsortiumDetails(props: any) {
                             Join
                         </button>
                     }
-                    {userIsMember && <DataChooser setMount={setEditableMountDir} handleSetMount={handleSetMountDir} mountDir={editableMountDir} />}
+                    {userIsMember && 
+                    <div>
+                    <DataChooser 
+                      chooserHandleSetMountDir={handleSetMountDir} 
+                      chooserEditableMountDir={editableMountDir} 
+                    />
+                    </div>}
                     <MembersPanel     
                       panelstyles={styles}
                       panelConsortiumDetails={consortiumDetails}
@@ -352,9 +361,9 @@ export default function ConsortiumDetails(props: any) {
                 </section>
 
                 <section style={styles.containerSelfHeight}>
-                    {consortiumDetails && consortiumDetails.studyConfiguration.computation && 
+                    {consortiumDetails &&  
                       <ComputationPanel 
-                        panelComputation={consortiumDetails.studyConfiguration.computation} 
+                        panelConsortiumDetails={consortiumDetails} 
                         panelComputations={computations} 
                         panelSelectComputation={selectComputation} 
                         panelSetSelectComputation={setSelectComputation} 

@@ -89,7 +89,7 @@ export const NotificationsProvider = ({ children }: { children: ReactNode }) => 
     return (
         <NotificationsContext.Provider value={{ events, subscribe, unsubscribe }}>
             {children}
-            <ToastContainer /> {/* Ensure this is included */}
+            <ToastContainer position="bottom-right" /> {/* Ensure this is included */}
         </NotificationsContext.Provider>
     );
 };

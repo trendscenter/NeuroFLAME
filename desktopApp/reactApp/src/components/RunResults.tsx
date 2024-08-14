@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useNotifications } from '../contexts/NotificationsContext';
 import axios from 'axios';
 import styles from './styles';
 
@@ -59,9 +60,9 @@ export default function RunResults() {
     }, [consortiumId, runId, edgeClientRunResultsUrl, frameSrc]);
 
     const handleHideFiles = () => {
-        setFilesPanelWidth('2%');
+        setFilesPanelWidth('3%');
         setFilesPanelShow('none');
-        setIframePanelWidth('98%');
+        setIframePanelWidth('97%');
         setArrowForwardShow('inline');
     }
 

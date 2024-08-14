@@ -58,7 +58,7 @@ const GET_RUN_DETAILS = gql`
   }
 `;
 
-export default function RunDetails() {
+export default function RunDetails({runEvents}) {
     const { centralApiApolloClient } = useContext(ApolloClientsContext);
     const { runId } = useParams<{ runId: string }>();
     const [runDetails, setRunDetails] = useState<IRunDetails | null>(null);
@@ -67,7 +67,7 @@ export default function RunDetails() {
 
     useEffect(() => {
         getRunDetails();
-    }, []);
+    }, [runEvents]);
 
     const getRunDetails = async () => {
         try {
