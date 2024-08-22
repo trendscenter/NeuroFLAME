@@ -58,7 +58,7 @@ export default async function ({
     directoriesToMount: [
       {
         hostDirectory: path_centralNodeRunKit,
-        containerDirectory: '/runKit/',
+        containerDirectory: '/workspace/runKit/',
       },
     ],
     portBindings: [
