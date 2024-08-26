@@ -74,7 +74,7 @@ export const runStartHandler = {
         },
         {
           hostDirectory: resultsPath,
-          containerDirectory: '/workspace/results',
+          containerDirectory: '/workspace/output',
         },
       ]
 
