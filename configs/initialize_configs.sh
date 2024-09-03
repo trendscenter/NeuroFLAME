@@ -1,19 +1,22 @@
 #!/bin/bash
 
-# Get the directory of the script (which should be the configs directory)
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Get the repository root directory (one level up from the script directory)
+repo_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)"
 
-# Define the source directory (defaults) and the destination directory (configs)
-SOURCE_DIR="$SCRIPT_DIR/defaults"
-DEST_DIR="$SCRIPT_DIR"
+# Define the source and target directories
+config_defaults_directory="$repo_directory/configs/defaults"
+config_directory="$repo_directory/configs"
 
-# Check if the source directory exists
-if [ ! -d "$SOURCE_DIR" ]; then
-  echo "Source directory $SOURCE_DIR does not exist."
+# Ensure the source directory exists
+if [ ! -d "$config_defaults_directory" ]; then
+  echo "Source directory $config_defaults_directory does not exist."
   exit 1
 fi
-#
-# Copy the contents of the defaults directory to the configs directory, overwriting existing files
-cp -r "$SOURCE_DIR/"* "$DEST_DIR/"
 
-echo "Default configuration files have been copied to the configs directory."
+# Copy default configuration files to the target directory
+cp -r "$config_defaults_directory/"* "$config_directory/"
+
+# Replace placeholders in JSON files within the target directory, excluding the source directory
+find "$config_directory" -maxdepth 1 -name "*.json" -type f -exec sed -i "s|{{REPO_DIR}}|$repo_directory|g" {} +
+
+echo "Default configuration files have been copied to the target directory with updated paths."
