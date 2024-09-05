@@ -1,64 +1,12 @@
-# Get Auth Tokens
+# COINSTAC-MINT
 
-- `npm run getTokens`
+**COINSTAC-MINT** (**Modular Infrastructure for Next-gen Technologies**) is a decentralized platform for running computations across multiple sites while preserving data privacy. Its modular design, scalability, and ease of use make it a powerful tool for collaborative research in neuroimaging and other fields.
 
-# Configure the Components
+## Key Features
 
-## Central API
-
-- `centralApi/src/config/defaultConfig.ts`
-- `centralApi/src/environmentVariables.ts`
-
-## File Server
-
-- `fileServer/src/config/defaultConfig.ts`
-
-## Central Federated Client
-
-- `centralFederatedClient/src/defaultConfig.ts`
-
-## Edge Federated Client
-
-- `edgeFederatedClient/src/config/defaultConfig.ts`
-- `edgeFederatedClient/site1-config.json`
-- `edgeFederatedClient/site2-config.json`
-
-# Save Mount Config for Site/Consortium
-
-- `[site base directory]/[consortiumId]/mount_config.json`
-  Example contents:
-
-```json
-{
-  "dataPath": "C:\\development\\nvflare_app_boilerplate\\test_data\\site1"
-}
-```
-
-Example:
-
-- `_devTestDirectories/edgeSite1/testconsortium/mount_config.json`
-
-# Launch the Components
-
-Launch each component in their own VS Code JavaScript debug terminal (Bash shell):
-
-## Central API
-
-- `cd centralApi`
-- `npm start`
-
-## Central Federated Client
-
-- `cd centralFederatedClient`
-- `npm start`
-
-## File Server
-
-- `cd fileServer`
-- `npm start`
-
-## Edge Federated Client
-
-- `cd edgeFederatedClient`
-- `npm start "./edgeFederatedClient/site1-config.json"`
-- `npm start "./edgeFederatedClient/site2-config.json"`
+- **Modular Architecture**: Built to support a wide range of use cases, COINSTAC-MINT’s modular infrastructure allows for easy expansion and customization.
+- **Flexibility**: Suitable for various research needs, from single-site studies to multi-site collaborations.
+- **Reliability**: A focus on ensuring smooth operation across diverse environments, with clear error handling and logging.
+- **User-Friendly Interface**: Designed for ease of use, allowing researchers to focus on their work without unnecessary complexity.
+- **Reproducibility**: Study configurations are captured and preserved, ensuring results can be easily replicated.
+- **Transparency and Control**: Users have full visibility into their computations, inputs, and results.

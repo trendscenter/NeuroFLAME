@@ -1,11 +1,6 @@
-- [ ] Report error and complete from nodes
 - [ ] Organize state and contexts in the UI
 - [ ] consider subscription for live changes to consortium details
 - [ ] further decouple COINSTAC and NVFLARE
   - [ ] provision inside the container
-- [ ] Execute a run between clients on different machines
-- [ ] Host the platform across multiple machines
-- [ ] Make the platform easy to install, configure, and deploy
-- [ ] Display results in the UI
-- [ ] Create public repo
-- [ ] Make subscriptions from multiple desktop apps on the same machine reliable
+- [ ] create guide for starting the platform locally
+- [ ] revisit/refactor configurations and default configuration handling

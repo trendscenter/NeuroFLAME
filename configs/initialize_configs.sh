@@ -1,7 +1,24 @@
 #!/bin/bash
 
-# Get the repository root directory (one level up from the script directory)
-repo_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)"
+# Function to convert Git Bash paths to Windows paths for any drive
+convert_path_to_windows() {
+  local path="$1"
+  # Extract the drive letter and convert it to uppercase (e.g., /c/ -> C:/)
+  echo "$path" | sed 's|^/\([a-zA-Z]\)/|\U\1:/|'
+}
+
+# Determine if the OS is Windows or Linux
+os_type="$(uname -s)"
+
+if [[ "$os_type" == *CYGWIN* || "$os_type" == *MINGW* || "$os_type" == *MSYS* ]]; then
+  echo "Detected Windows environment."
+  # Convert repo directory path to Windows format
+  repo_directory=$(convert_path_to_windows "$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)")
+else
+  echo "Detected Linux/Unix environment."
+  # Use Unix-style path
+  repo_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)"
+fi
 
 # Define the source and target directories
 config_defaults_directory="$repo_directory/configs/defaults"
