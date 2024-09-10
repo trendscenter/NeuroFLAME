@@ -21,3 +21,17 @@
 **5. Centralized Documentation:**
    - Alongside the design snapshots, document key design decisions in Markdown files stored in GitHub.
    - Ensure all final design files and decision logs are stored and versioned in GitHub to provide a clear, traceable history.
+
+
+
+**UI/UX Design and Discussion Processes**
+
+To make COINSTAC reliable, easy to work on, easy to use, and sustainable, we propose the following processes:
+
+### UI/UX Design Workflow:
+- **Design, Discussion, Approval**: Discuss and approve UI/UX designs before implementation to ensure quality.
+- **Tools**:
+  - **GitHub Discussions**: For adding new items, discussing their relevance, proposing solutions, and making decisions before implementation.
+  - **Figma**: For design collaboration with version control.
+  - **Key Design Snapshots**: Document approved designs in the GitHub repository for reference.
+  - **RFCs**: Use RFCs for formal proposals when needed.
