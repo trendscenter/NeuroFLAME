@@ -11,7 +11,7 @@
 - **Reproducibility**: Study configurations are captured and preserved, ensuring results can be easily replicated.
 - **Transparency and Control**: Users have full visibility into their computations, inputs, and results.
 
-## Quick Start
+## Developer Quick Start
 
 1. Clone the repository.
 2. Install dependencies at the top level:
