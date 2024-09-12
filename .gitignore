@@ -4,3 +4,4 @@
 _devTestDirectories/
 configs/*.json
 *.log
+.DS_Store
