@@ -22,7 +22,12 @@
    ```bash
    cd configs && ./initialize_configs.sh
    ```
-4. Open multiple terminals and run the following commands in each:
+4. Launch the database container:
+   ```bash
+   cd _devCentralDatabase/ && docker-compose up
+   ```
+
+5. Open multiple terminals and run the following commands in each:
    - Central API:
      ```bash
      cd centralApi && npm run start-configured
