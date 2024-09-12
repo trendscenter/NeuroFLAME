@@ -61,13 +61,13 @@ export const NotificationsProvider = ({ children }: { children: ReactNode }) => 
                         <div>
                             <h2>Notification</h2>
                             <div>
-                                Consortium: {newEvent.consortiumTitle}
+                                Consortium:<Link to={`/consortia/details/${newEvent.consortiumId}`}> {newEvent.consortiumTitle}</Link>
+                            </div>
+                            <div>
+                                Run ID:  <Link to={`/runs/details/${newEvent.runId}`}>{newEvent.runId}</Link>
                             </div>
                             <div>
                                 Status: {newEvent.status}
-                            </div>
-                            <div>
-                                    Run ID: {newEvent.runId}
                             </div>
                         </div>
                     );
