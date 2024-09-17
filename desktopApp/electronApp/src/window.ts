@@ -6,8 +6,8 @@ export async function createMainWindow(
 ): Promise<BrowserWindow> {
   // TODO: handle sessions
   const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 1000,
+    width: 800,
+    height: 600,
     // frame: false,
     // titleBarStyle: 'hidden',
     // trafficLightPosition: { x: 25, y: 25 },
