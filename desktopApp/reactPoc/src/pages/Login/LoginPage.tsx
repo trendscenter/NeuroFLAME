@@ -1,44 +1,25 @@
 import React, { useState } from 'react';
-import { Button, TextField, Container, Typography } from '@mui/material';
-import { useCentralApi } from "../apis/centralApi/centralApi"
-import { useEdgeApi } from '../apis/edgeApi/edgeApi';
-import { useUserState } from '../contexts/userStateContext';
-import { useNavigate } from 'react-router-dom';
-
+import { Button, TextField, Container, Typography, CircularProgress, Alert } from '@mui/material';
+import { useLogin } from './useLogin';
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const {login} = useCentralApi()
-  const {connectAsUser} = useEdgeApi()
-  const {setUserData} = useUserState()
-  const navigate = useNavigate();
-
-  const handleLogin = async () => {
-    // request to the central api
-    const userData = await login(username, password)
-    // set user data
-    await setUserData(userData)
-    // request to the edge api
-    await connectAsUser();
-    // subscribe to notifications
-    
-    // navigate to the home page
-    navigate('/consortium')
-    
-  };
+  const { handleLogin, loading, error } = useLogin();
 
   return (
     <Container maxWidth="xs">
       <Typography variant="h4" align="center" gutterBottom>
         Login
       </Typography>
+      {error && <Alert severity="error">{error}</Alert>}
       <TextField
         label="Username"
         fullWidth
         margin="normal"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
+        disabled={loading}
       />
       <TextField
         label="Password"
@@ -47,14 +28,16 @@ const LoginPage: React.FC = () => {
         margin="normal"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        disabled={loading}
       />
       <Button
         variant="contained"
         color="primary"
         fullWidth
-        onClick={handleLogin}
+        onClick={() => handleLogin(username, password)}
+        disabled={loading}
       >
-        Log In
+        {loading ? <CircularProgress size={24} /> : 'Log In'}
       </Button>
     </Container>
   );

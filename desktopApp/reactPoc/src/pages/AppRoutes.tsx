@@ -2,7 +2,7 @@ import {
     Route,
     Routes,
   } from 'react-router-dom';
-import LoginPage from './LoginPage';
+import LoginPage from './Login/LoginPage';
 import ConsortiumPage from './ConsortiumPage';
 // import ConsortiumList from './ConsortiumList';
 // import ConsortiumDetails from './ConsortiumDetails';
