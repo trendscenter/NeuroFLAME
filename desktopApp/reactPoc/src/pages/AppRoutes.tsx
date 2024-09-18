@@ -4,6 +4,7 @@ import {
   } from 'react-router-dom';
 import LoginPage from './Login/LoginPage';
 import ConsortiumPage from './ConsortiumPage';
+import ConsortiumListPage from './ConsortiumList/ConsortiumListPage';
 // import ConsortiumList from './ConsortiumList';
 // import ConsortiumDetails from './ConsortiumDetails';
 // import ComputationsList from './ComputationList';
@@ -25,6 +26,7 @@ export default function AppRoutes() {
             <Route index path="/" element={<LoginPage></LoginPage>} />
             <Route index path="/login" element={<LoginPage></LoginPage>} />
             <Route path="/consortium" element={<ConsortiumPage></ConsortiumPage>} />
+            <Route path="/consortiumList" element={<ConsortiumListPage></ConsortiumListPage>} />
             {/* <Route path="/consortia" element={<ConsortiumList />} />
             <Route path="/consortia/create" element={<ConsortiumCreate />} />
             <Route path="/consortia/details/:consortiumId" element={<ConsortiumDetails />} />
@@ -39,7 +41,7 @@ export default function AppRoutes() {
             <Route path="/appConfig" element={<AppConfig />} />
             <Route path="/adminEditUser" element={<AdminEditUser />} />
             <Route path="/pageLogin" element={<PageLogin />} />
-            <Route path="/changePassword" element={<ChangePassword />} /> */}
+            <Route path="/changePassword" element={<ChangePassword />} />  */}
         </Routes>
     )
 }

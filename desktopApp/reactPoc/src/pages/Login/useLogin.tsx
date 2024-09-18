@@ -18,7 +18,7 @@ export const useLogin = () => {
       setLoading(true);
       setError(null);
       // request to the central api
-      const userData = await login(username, password);
+      const userData = await login({username, password});
       await setUserData(userData);
       await connectAsUser();
       navigate('/consortium');

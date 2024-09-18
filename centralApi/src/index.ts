@@ -11,7 +11,7 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import { logger, logToPath } from './logger.js'
 
-import typeDefs from './graphql/typeDefs.js'
+import { typeDefs } from './graphql/generated/typeDefs.js'
 import resolvers from './graphql/resolvers.js'
 
 import { httpServerContext, wsServerContext } from './serverContexts.js'

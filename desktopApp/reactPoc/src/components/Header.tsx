@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Drawer, List, ListItem, ListItemText } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
+import NavDrawer from './NavDrawer';
 
 const Header: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -25,20 +26,7 @@ const Header: React.FC = () => {
           <Typography variant="h6">My App</Typography>
         </Toolbar>
       </AppBar>
-      <Drawer
-        anchor="left"
-        open={drawerOpen}
-        onClose={() => toggleDrawer(false)}
-      >
-        <List>
-          <ListItem component={Link} to="/" onClick={() => toggleDrawer(false)}>
-            <ListItemText primary="Home" />
-          </ListItem>
-          <ListItem component={Link} to="/consortium" onClick={() => toggleDrawer(false)}>
-            <ListItemText primary="Consortium" />
-          </ListItem>
-        </List>
-      </Drawer>
+      <NavDrawer open={drawerOpen} onClose={() => toggleDrawer(false)} />
     </>
   );
 };

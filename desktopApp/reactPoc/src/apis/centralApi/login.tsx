@@ -1,17 +1,10 @@
 import { ApolloClient, gql, NormalizedCacheObject } from '@apollo/client';
-
-interface LoginResponse {
-  accessToken: string;
-  userId: string;
-  username: string;
-  roles: string[];
-}
+import { MutationLoginArgs, LoginOutput } from './generated/graphql'; // Use generated types
 
 export const login = async (
   apolloClient: ApolloClient<NormalizedCacheObject>,
-  username: string,
-  password: string
-): Promise<LoginResponse> => {
+  input: MutationLoginArgs // Use MutationLoginArgs type for input
+): Promise<LoginOutput> => {
   const LOGIN_MUTATION = gql`
     mutation Login($username: String!, $password: String!) {
       login(username: $username, password: $password) {
@@ -23,9 +16,9 @@ export const login = async (
     }
   `;
 
-  const { data, errors } = await apolloClient.mutate<{ login: LoginResponse }>({
+  const { data, errors } = await apolloClient.mutate<{ login: LoginOutput }>({
     mutation: LOGIN_MUTATION,
-    variables: { username, password },
+    variables: input, // Pass input directly
   });
 
   // Throw GraphQL errors if present

@@ -14,8 +14,8 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ open, onClose }) => {
         <ListItem component={Link} to="/">
           <ListItemText primary="Home" />
         </ListItem>
-        <ListItem component={Link} to="/consortium">
-          <ListItemText primary="Consortium" />
+        <ListItem component={Link} to="/consortiumList">
+          <ListItemText primary="Consortium List" />
         </ListItem>
       </List>
     </Drawer>
