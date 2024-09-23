@@ -14,18 +14,26 @@ import PropTypes from 'prop-types';
 
 import {
     Link as RouterLink,
-    Route,
-    Routes,
-    MemoryRouter,
   } from 'react-router-dom';
+import { useUserState } from '../contexts/UserStateContext';
+import { useNotifications } from '../contexts/NotificationsContext';
 
 export default function AppDrawer({
     appDrawerWidth,
     appToggleDrawer,
     appOpen, 
     appSetOpen,
-    appOnLogout
-}) {   
+}) {  
+
+  const { clearUserData } = useUserState();
+  const { unsubscribe } = useNotifications();
+  
+  const onLogout = () => {
+    clearUserData();
+    unsubscribe();
+    appSetOpen(false);
+  };
+
     // Define the props type, replace 'any' with the actual type of your itemProps if known
     interface LinkProps {
         to: string;
@@ -136,7 +144,7 @@ export default function AppDrawer({
               </Box>
               <Box sx={{ width: 360, position: 'absolute', bottom: 0 }}>
                 <List aria-label="main mailbox folders" sx={{ color: '#ffffff', background: 'rgba(0,0,0,0.1)', borderTop: '1px solid rgba(255,255,255,0.33)' }}>
-                  <ListItemLink onClick={() => appOnLogout()} to="/" primary="Logout" />
+                  <ListItemLink onClick={() => onLogout()} to="/" primary="Logout" />
                   <ListItemLink onClick={() => appSetOpen(!appOpen)} to="/appConfig" primary="App Config" />
                   <ListItemLink onClick={() => appSetOpen(!appOpen)} to="/pageLogin" primary="User Config" />
                 </List>

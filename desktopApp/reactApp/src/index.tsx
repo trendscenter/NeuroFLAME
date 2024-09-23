@@ -13,6 +13,7 @@ import '@fontsource/lato/700.css';
 import "./index.css"
 import { UserStateProvider } from './contexts/UserStateContext';
 import { NotificationsProvider } from './contexts/NotificationsContext';
+import Router from './Router';
 
 const startApp = async () => {
   const config = await fetchConfig();
@@ -21,9 +22,11 @@ const startApp = async () => {
     ReactDOM.render(
       <UserStateProvider>
         <ApolloClientsProvider config={config}>
-          <NotificationsProvider>
-            <App />
-          </NotificationsProvider>
+          <Router>
+            <NotificationsProvider>
+              <App />
+            </NotificationsProvider>
+          </Router>
         </ApolloClientsProvider>
       </UserStateProvider>
       ,
