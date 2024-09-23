@@ -4,11 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "generate-graphql-types": "graphql-codegen --config codegen.yml",
+    "convert-typedefs-to-ts": "node ./convert-typedefs-to-ts.js",
     "compile": "tsc",
-    "start": "npm run compile && node ./dist/index.js --",
-    "getTokens": "npm run compile && node ./dist/authentication/getTokens.js",
-    "seed": "npm run compile && node ./dist/database/seed.js",
-    "start-configured": "npm run compile && node ./dist/index.js -- --config=../configs/centralApi.json"
+    "build": "npm run generate-graphql-types && npm run convert-typedefs-to-ts && npm run compile",
+    "start": "npm run build && node ./dist/index.js --",
+    "getTokens": "npm run build && node ./dist/authentication/getTokens.js",
+    "seed": "npm run build && node ./dist/database/seed.js",
+    "start-configured": "npm run build && node ./dist/index.js -- --config=../configs/centralApi.json"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +29,10 @@
     "ws": "^8.17.1"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/typescript": "^4.0.9",
+    "@graphql-codegen/typescript-operations": "^4.2.3",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.2",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.12.4",
     "@types/ws": "^8.5.10",

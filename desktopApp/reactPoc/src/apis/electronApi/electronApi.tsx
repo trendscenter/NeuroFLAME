@@ -1,10 +1,12 @@
+import { FetchConfig } from "./FetchConfig";
+
 export interface Config {
   centralServerQueryUrl: string;
   centralServerSubscriptionUrl: string;
   edgeClientQueryUrl: string;
   edgeClientSubscriptionUrl: string;
-  startEdgeClientOnLaunch: boolean;
   edgeClientRunResultsUrl: string;
+  startEdgeClientOnLaunch: boolean;
   edgeClientConfig: {
     httpUrl: string,
     wsUrl: string,
@@ -28,12 +30,8 @@ declare global {
   }
 }
 
-export const fetchConfig = async (): Promise<Config | undefined> => {
-  try {
-    const config = await window.ElectronAPI.getConfig()
-    return config
-  } catch (error) {
-    console.error('Failed to load configuration:', error)
-    return undefined
-  }
+export const electronApi = {
+  FetchConfig
 }
+
+

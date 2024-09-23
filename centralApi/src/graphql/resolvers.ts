@@ -1,4 +1,3 @@
-import { Document, Types } from 'mongoose'
 import {
   generateTokens,
   compare,
@@ -24,7 +23,7 @@ import {
   RunEventPayload,
   RunListItem,
   RunDetails,
-} from './typeDefs.js'
+} from './generated/graphql.js'
 import { logger } from '../logger.js'
 
 interface Context {
