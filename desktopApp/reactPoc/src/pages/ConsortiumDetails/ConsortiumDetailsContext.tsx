@@ -3,6 +3,7 @@ import React, { createContext, useContext, ReactNode } from "react";
 // Define the shape of the context
 interface ConsortiumDetailsContextType {
     refetch: () => void;
+    isLeader: boolean;
 }
 
 // Create the context with a default value
@@ -21,11 +22,12 @@ export const useConsortiumDetailsContext = () => {
 interface ConsortiumDetailsProviderProps {
     children: ReactNode;
     refetch: () => void; // Pass refetch function as a prop
+    isLeader: boolean;
 }
 
-export const ConsortiumDetailsProvider = ({ children, refetch }: ConsortiumDetailsProviderProps) => {
+export const ConsortiumDetailsProvider = ({ children, refetch, isLeader }: ConsortiumDetailsProviderProps) => {
     return (
-        <ConsortiumDetailsContext.Provider value={{ refetch }}>
+        <ConsortiumDetailsContext.Provider value={{ refetch, isLeader }}>
             {children}
         </ConsortiumDetailsContext.Provider>
     );

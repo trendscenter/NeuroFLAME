@@ -1,5 +1,4 @@
 import { Box, Button, Typography } from "@mui/material";
-import { useState } from "react";
 import ConsortiumLeaderNotesDisplay from "./ConsortiumLeaderNotesDisplay";
 import ConsortiumLeaderNotesEdit from "./ConsortiumLeaderNotesEdit";
 import { useConsortiumLeaderNotes } from "./useConsortiumLeaderNotes";
@@ -9,7 +8,7 @@ interface ConsortiumLeaderNotesProps {
 }
 
 export default function ConsortiumLeaderNotes({ consortiumLeaderNotes }: ConsortiumLeaderNotesProps) {
-    const { isEditing, handleEdit, handleSave, handleCancel } = useConsortiumLeaderNotes(consortiumLeaderNotes);
+    const { isEditing, handleEdit, handleSave, handleCancel, isLeader } = useConsortiumLeaderNotes(consortiumLeaderNotes);
 
     return (
         <Box p={2} border={1} borderRadius={4} borderColor="grey.300">
@@ -25,7 +24,8 @@ export default function ConsortiumLeaderNotes({ consortiumLeaderNotes }: Consort
             ) : (
                 <ConsortiumLeaderNotesDisplay consortiumLeaderNotes={consortiumLeaderNotes} />
             )}
-            {!isEditing && (
+            {/* Only show the Edit button if the user is the leader */}
+            {!isEditing && isLeader && (
                 <Button
                     variant="outlined"
                     color="primary"

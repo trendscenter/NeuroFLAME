@@ -18,8 +18,8 @@ export default function ComputationSelect() {
         setIsModalOpen(false);
     };
 
-    const handleSelectComputation = (computationId: string) => {
-        selectComputation(computationId);
+    const handleSelectComputation = async (computationId: string) => {
+        await selectComputation(computationId);
         refetch(); // Refetch consortium details to update computation
         handleCloseModal(); // Close modal after selection
     };

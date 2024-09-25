@@ -26,8 +26,8 @@ export const useComputationSelect = () => {
         }
     };
 
-    const selectComputation = (computationId: string) => {
-        studySetComputation({ consortiumId, computationId });
+    const selectComputation = async (computationId: string) => {
+        await studySetComputation({ consortiumId, computationId });
     };
 
     // Fetch the computation list when the hook is first called

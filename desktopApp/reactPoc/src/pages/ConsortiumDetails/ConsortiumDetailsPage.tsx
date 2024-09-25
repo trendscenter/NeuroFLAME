@@ -12,15 +12,13 @@ import { ConsortiumDetailsProvider } from "./ConsortiumDetailsContext";
 
 export default function ConsortiumDetailsPage() {
     const { userId } = useUserState();
-    const { data, status, refetch } = useConsortiumDetails();
+    const { data, status, refetch, isLeader } = useConsortiumDetails();
     const { studyConfiguration, members, activeMembers, leader, title, description } = data;
-    const { loading, error } = status;
 
-    const isLeader = leader.id === userId;
     const isActive = activeMembers.some((member) => member.id === userId);
 
     return (
-        <ConsortiumDetailsProvider refetch={refetch}>
+        <ConsortiumDetailsProvider refetch={refetch} isLeader={isLeader}>
             <Box p={3}>
                 <TitleAndDescription title={title} description={description} />
 

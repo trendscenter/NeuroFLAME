@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useCentralApi } from "../../apis/centralApi/centralApi";
 import { PublicUser } from "../../apis/centralApi/generated/graphql";
 import { useParams } from "react-router-dom";
+import { useUserState } from "../../contexts/UserStateContext";
 
 const useConsortiumDetails = () => {
     const { getConsortiumDetails } = useCentralApi();
@@ -14,6 +15,9 @@ const useConsortiumDetails = () => {
     const [description, setDescription] = useState<string>('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const { userId } = useUserState()
+    const [isLeader, setIsLeader] = useState(false);
 
 
     const fetchConsortiumDetails = useCallback(async () => {
@@ -29,6 +33,8 @@ const useConsortiumDetails = () => {
             setTitle(result.title);
             setDescription(result.description);
             setStudyConfiguration(result.studyConfiguration);
+
+            setIsLeader(result.leader.id === userId);
         } catch (err) {
             setError("Failed to fetch consortium details.");
         } finally {
@@ -53,7 +59,8 @@ const useConsortiumDetails = () => {
             loading,
             error,
         },
-        refetch: fetchConsortiumDetails // expose refetch method
+        refetch: fetchConsortiumDetails, // expose refetch method
+        isLeader: isLeader
     };
 };
 

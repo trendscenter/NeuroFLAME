@@ -4,12 +4,13 @@ import { useParams } from "react-router-dom";
 import { useCentralApi } from "../../../../apis/centralApi/centralApi";
 import { useConsortiumDetailsContext } from "../../ConsortiumDetailsContext";
 
+
 export const useConsortiumLeaderNotes = (initialNotes: string) => {
     const [isEditing, setIsEditing] = useState(false);
     const [notes, setNotes] = useState(initialNotes);
     const { studySetNotes } = useCentralApi();
     const consortiumId = useParams<{ consortiumId: string }>().consortiumId as string;
-    const { refetch } = useConsortiumDetailsContext();
+    const { refetch, isLeader } = useConsortiumDetailsContext();
     const handleEdit = () => setIsEditing(true);
 
     const handleSave = async (newNotes: string) => {
@@ -23,6 +24,7 @@ export const useConsortiumLeaderNotes = (initialNotes: string) => {
 
     return {
         isEditing,
+        isLeader,
         notes,
         handleEdit,
         handleSave,

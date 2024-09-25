@@ -9,7 +9,7 @@ interface ComputationParametersProps {
 }
 
 const ComputationParameters: React.FC<ComputationParametersProps> = ({ computationParameters }) => {
-    const { isEditing, handleEdit, handleSave, handleCancel } = useComputationParameters(computationParameters);
+    const { isEditing, handleEdit, handleSave, handleCancel, isLeader } = useComputationParameters(computationParameters);
 
     return (
         <Box p={2} border={1} borderRadius={4} borderColor="grey.300">
@@ -25,7 +25,7 @@ const ComputationParameters: React.FC<ComputationParametersProps> = ({ computati
             ) : (
                 <ComputationParametersDisplay computationParameters={computationParameters} />
             )}
-            {!isEditing && (
+            {!isEditing && isLeader && (
                 <Button
                     variant="outlined"
                     color="primary"

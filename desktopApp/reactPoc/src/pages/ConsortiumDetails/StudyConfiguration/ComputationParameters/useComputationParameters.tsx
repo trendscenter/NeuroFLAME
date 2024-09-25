@@ -9,12 +9,12 @@ export const useComputationParameters = (initialParameters: string) => {
     const [computationParameters, setComputationParameters] = useState(initialParameters);
     const { studySetParameters } = useCentralApi();
     const consortiumId = useParams<{ consortiumId: string }>().consortiumId as string;
-    const { refetch } = useConsortiumDetailsContext();
+    const { refetch, isLeader } = useConsortiumDetailsContext();
     const handleEdit = () => setIsEditing(true);
 
     const handleSave = async (newParameters: string) => {
         await studySetParameters({ consortiumId, parameters: newParameters });
-        setComputationParameters(newParameters);
+        // setComputationParameters(newParameters);
         refetch();
         setIsEditing(false);
     };
@@ -23,6 +23,7 @@ export const useComputationParameters = (initialParameters: string) => {
 
     return {
         isEditing,
+        isLeader,
         computationParameters,
         handleEdit,
         handleSave,
