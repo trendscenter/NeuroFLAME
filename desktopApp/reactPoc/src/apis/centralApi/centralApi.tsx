@@ -1,7 +1,8 @@
 import { useApolloClients } from "../../contexts/ApolloClientsContext";
 import { login } from "./login";
 import { getConsortiumList } from "./getConsortiumList";
-import { MutationLoginArgs } from "./generated/graphql"; // Import generated types
+import { MutationLoginArgs, QueryGetConsortiumDetailsArgs } from "./generated/graphql"; // Import generated types
+import { getConsortiumDetails } from "./getConsortiumDetails";
 
 export const useCentralApi = () => {
     const { centralApiApolloClient } = useApolloClients();
@@ -14,5 +15,6 @@ export const useCentralApi = () => {
     return {
         login: (input: MutationLoginArgs) => login(centralApiApolloClient, input),
         getConsortiumList: () => getConsortiumList(centralApiApolloClient)
+        getConsortiumDetails: (input: QueryGetConsortiumDetailsArgs) => getConsortiumDetails(centralApiApolloClient, input)
     };
 };
