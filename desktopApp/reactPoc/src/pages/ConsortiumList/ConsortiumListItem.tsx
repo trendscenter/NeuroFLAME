@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { ListItem, ListItemText, Button, Box } from '@mui/material';
 import { ConsortiumListItem as ConsortiumListItemType } from '../../apis/centralApi/generated/graphql'; // Import the type
 import { useNavigate } from 'react-router-dom';
-import { useCentralApi } from '../../apis/centralApi/centralApi'; // Assuming you have an API hook for joining/leaving
 import { useUserState } from '../../contexts/UserStateContext';
 
 interface ConsortiumListItemProps {

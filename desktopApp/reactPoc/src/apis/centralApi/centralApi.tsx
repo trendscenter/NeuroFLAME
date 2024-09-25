@@ -2,7 +2,7 @@ import { useApolloClients } from "../../contexts/ApolloClientsContext";
 import { login } from "./login";
 import { getConsortiumList } from "./getConsortiumList";
 import { getConsortiumDetails } from "./getConsortiumDetails";
-import { Mutation, MutationConsortiumSetMemberActiveArgs, MutationLoginArgs, MutationStartRunArgs, MutationStudySetComputationArgs, MutationStudySetNotesArgs, MutationStudySetParametersArgs, QueryGetConsortiumDetailsArgs } from "./generated/graphql"; // Import generated types
+import { MutationConsortiumSetMemberActiveArgs, MutationLoginArgs, MutationStartRunArgs, MutationStudySetComputationArgs, MutationStudySetNotesArgs, MutationStudySetParametersArgs, QueryGetConsortiumDetailsArgs } from "./generated/graphql"; // Import generated types
 import { studySetParameters } from "./studySetParameters";
 import { getComputationList } from "./getComputationList";
 import { studySetComputation } from "./studySetComputation";
