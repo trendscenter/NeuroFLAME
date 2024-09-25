@@ -2,6 +2,7 @@ import React from "react";
 import { Computation } from "../../../../apis/centralApi/generated/graphql";
 import { Box, Typography, Card, CardContent, Accordion, AccordionSummary, AccordionDetails, Grid, Link } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ReactMarkdown from 'react-markdown';
 
 interface ComputationDisplayProps {
     computation: Computation | null;
@@ -49,7 +50,8 @@ export default function ComputationDisplay({ computation }: ComputationDisplayPr
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
-                                    {notes}
+                                    <ReactMarkdown>{notes}</ReactMarkdown>
+                                
                                 </Typography>
                             </AccordionDetails>
                         </Accordion>

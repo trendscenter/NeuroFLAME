@@ -1,6 +1,4 @@
-import { useParams } from "react-router-dom";
-import { Grid, Box, Typography } from "@mui/material";
-
+import { Grid, Box, Typography, Divider } from "@mui/material";
 import { StudyConfiguration } from "./StudyConfiguration/StudyConfiguration";
 import { Members } from "./Members/Members";
 import { TitleAndDescription } from "./TitleAndDescription/TitleAndDescription";
@@ -20,23 +18,34 @@ export default function ConsortiumDetailsPage() {
     return (
         <ConsortiumDetailsProvider refetch={refetch} isLeader={isLeader}>
             <Box p={3}>
+                {/* Title and Description Section */}
                 <TitleAndDescription title={title} description={description} />
 
                 <Grid container spacing={2} sx={{ mt: 2 }}>
+                    {/* Members Section */}
                     <Grid item xs={12} md={6}>
                         <Members members={members} activeMembers={activeMembers} leader={leader} />
                     </Grid>
+
+                    {/* Directory Select Section (only if active) */}
                     {isActive && (
                         <Grid item xs={12} md={6}>
                             <DirectorySelect />
                         </Grid>
                     )}
+
+                    {/* Start Run Button Section (only if leader) */}
                     {isLeader && (
                         <Grid item xs={12} md={6}>
                             <StartRunButton />
                         </Grid>
                     )}
                 </Grid>
+
+                {/* Divider */}
+                <Divider sx={{ my: 4 }} />
+
+                {/* Study Configuration Section */}
                 <StudyConfiguration studyConfiguration={studyConfiguration} />
             </Box>
         </ConsortiumDetailsProvider>
