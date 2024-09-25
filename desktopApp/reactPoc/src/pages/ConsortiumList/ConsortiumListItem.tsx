@@ -11,14 +11,13 @@ const ConsortiumListItem: React.FC<ConsortiumListItemProps> = ({ consortium }) =
     const navigate = useNavigate();
 
     return (
-        <ListItem divider onClick={()=>{
-            navigate(`/consortium/${consortium.id}`);
+        <ListItem divider onClick={() => {
+            navigate(`/consortium/details/${consortium.id}`);
         }}>
             <ListItemText
                 primary={consortium.title || 'No Title'}
                 secondary={consortium.description || 'No Description'}
             />
-            
         </ListItem>
     );
 };

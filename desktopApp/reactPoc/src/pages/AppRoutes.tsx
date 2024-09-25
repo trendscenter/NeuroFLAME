@@ -26,7 +26,6 @@ export default function AppRoutes() {
         <Routes>
             <Route index path="/" element={<LoginPage></LoginPage>} />
             <Route index path="/login" element={<LoginPage></LoginPage>} />
-            
             <Route path="/consortiumList" element={<ConsortiumListPage></ConsortiumListPage>} />
             <Route path="/consortium/details/:consortiumId" element={<ConsortiumDetailsPage></ConsortiumDetailsPage>} />
             

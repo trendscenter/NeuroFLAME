@@ -2,7 +2,10 @@ import { useApolloClients } from "../../contexts/ApolloClientsContext";
 import { login } from "./login";
 import { getConsortiumList } from "./getConsortiumList";
 import { getConsortiumDetails } from "./getConsortiumDetails";
-import { MutationLoginArgs, QueryGetConsortiumDetailsArgs } from "./generated/graphql"; // Import generated types
+import { MutationLoginArgs, MutationStudySetComputationArgs, MutationStudySetParametersArgs, QueryGetConsortiumDetailsArgs } from "./generated/graphql"; // Import generated types
+import { studySetParameters } from "./studySetParameters";
+import { getComputationList } from "./getComputationList";
+import { setStudyComputation } from "./studySetComputation";
 
 export const useCentralApi = () => {
     const { centralApiApolloClient } = useApolloClients();
@@ -13,8 +16,12 @@ export const useCentralApi = () => {
     }
 
     return {
-        login: (input: MutationLoginArgs) => login(centralApiApolloClient, input),
         getConsortiumList: () => getConsortiumList(centralApiApolloClient),
-        getConsortiumDetails: (input: QueryGetConsortiumDetailsArgs) => getConsortiumDetails(centralApiApolloClient, input)
+        getComputationList: () => getComputationList(centralApiApolloClient),
+        getConsortiumDetails: (input: QueryGetConsortiumDetailsArgs) => getConsortiumDetails(centralApiApolloClient, input),
+        login: (input: MutationLoginArgs) => login(centralApiApolloClient, input),
+        studySetParameters: (input: MutationStudySetParametersArgs) => studySetParameters(centralApiApolloClient, input),
+        setStudyComputation: (input: MutationStudySetComputationArgs) => setStudyComputation(centralApiApolloClient, input),
     };
 };
+

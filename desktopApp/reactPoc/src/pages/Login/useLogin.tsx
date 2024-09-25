@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useCentralApi } from "../../apis/centralApi/centralApi";
 import { useEdgeApi } from "../../apis/edgeApi/edgeApi";
-import { useUserState } from "../../contexts/userStateContext";
+import { useUserState } from "../../contexts/UserStateContext";
 import { useNavigate } from 'react-router-dom';
 
 export const useLogin = () => {
@@ -21,7 +21,7 @@ export const useLogin = () => {
       const userData = await login({username, password});
       await setUserData(userData);
       await connectAsUser();
-      navigate('/consortium');
+      navigate('/consortiumList');
     } catch (err) {
       setError('Login failed, please try again.');
     } finally {
