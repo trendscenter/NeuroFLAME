@@ -1,27 +1,46 @@
 import { useParams } from "react-router-dom";
-import { useCentralApi } from "../../apis/centralApi/centralApi";
-import { useEffect, useState } from "react";
+import { Grid, Box, Typography } from "@mui/material";
+
 import { StudyConfiguration } from "./StudyConfiguration/StudyConfiguration";
 import { Members } from "./Members/Members";
-import { PublicUser } from "../../apis/centralApi/generated/graphql";
-import { TitleAndDescription } from "./TitleAndDescription";
+import { TitleAndDescription } from "./TitleAndDescription/TitleAndDescription";
 import useConsortiumDetails from "./useConsortiumDetails";
+import DirectorySelect from "./DirectorySelect/DirectorySelect";
+import { useUserState } from "../../contexts/UserStateContext";
+import StartRunButton from "./StartRunButton/StartRunButton";
+import { ConsortiumDetailsProvider } from "./ConsortiumDetailsContext";
 
 export default function ConsortiumDetailsPage() {
-    const { consortiumId } = useParams<{ consortiumId: string }>();
-    const { data, status, refetch } = useConsortiumDetails(consortiumId);
+    const { userId } = useUserState();
+    const { data, status, refetch } = useConsortiumDetails();
     const { studyConfiguration, members, activeMembers, leader, title, description } = data;
     const { loading, error } = status;
 
-    // if (loading) return <div>Loading...</div>;
-    // if (error) return <div>Error: {error}</div>;
+    const isLeader = leader.id === userId;
+    const isActive = activeMembers.some((member) => member.id === userId);
 
     return (
-        <div>
-            <button onClick={refetch}>Refetch Details</button>
-            <TitleAndDescription title={title} description={description} />
-            <Members members={members} activeMembers={activeMembers} leader={leader} />
-            <StudyConfiguration studyConfiguration={studyConfiguration} />
-        </div>
+        <ConsortiumDetailsProvider refetch={refetch}>
+            <Box p={3}>
+                <TitleAndDescription title={title} description={description} />
+
+                <Grid container spacing={2} sx={{ mt: 2 }}>
+                    <Grid item xs={12} md={6}>
+                        <Members members={members} activeMembers={activeMembers} leader={leader} />
+                    </Grid>
+                    {isActive && (
+                        <Grid item xs={12} md={6}>
+                            <DirectorySelect />
+                        </Grid>
+                    )}
+                    {isLeader && (
+                        <Grid item xs={12} md={6}>
+                            <StartRunButton />
+                        </Grid>
+                    )}
+                </Grid>
+                <StudyConfiguration studyConfiguration={studyConfiguration} />
+            </Box>
+        </ConsortiumDetailsProvider>
     );
-};
+}

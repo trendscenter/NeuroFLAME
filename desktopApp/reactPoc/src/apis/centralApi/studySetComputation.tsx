@@ -1,7 +1,7 @@
 import { ApolloClient, gql, NormalizedCacheObject } from '@apollo/client';
 import { MutationStudySetComputationArgs } from './generated/graphql'; // Use generated types
 
-export const setStudyComputation = async (
+export const studySetComputation = async (
   apolloClient: ApolloClient<NormalizedCacheObject>,
   input: MutationStudySetComputationArgs // Use MutationStudySetComputationArgs type for input
 ): Promise<void> => {

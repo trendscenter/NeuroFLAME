@@ -3,10 +3,12 @@ import React, { useState } from "react";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import ComputationList from "./ComputationList";
 import { useComputationSelect } from "./useComputationSelect";
+import { useConsortiumDetailsContext } from "../../../ConsortiumDetailsContext";
 
 export default function ComputationSelect() {
     const { computations, loading, error, selectComputation } = useComputationSelect();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { refetch } = useConsortiumDetailsContext();
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -18,6 +20,7 @@ export default function ComputationSelect() {
 
     const handleSelectComputation = (computationId: string) => {
         selectComputation(computationId);
+        refetch(); // Refetch consortium details to update computation
         handleCloseModal(); // Close modal after selection
     };
 

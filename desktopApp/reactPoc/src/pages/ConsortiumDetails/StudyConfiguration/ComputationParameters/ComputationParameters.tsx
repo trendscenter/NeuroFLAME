@@ -1,5 +1,5 @@
-// src/components/ComputationParameters.tsx
 import React from "react";
+import { Button, Box, Typography } from "@mui/material";
 import ComputationParametersDisplay from "./ComputationParametersDisplay";
 import ComputationParametersEdit from "./ComputationParametersEdit";
 import { useComputationParameters } from "./useComputationParameters";
@@ -12,8 +12,10 @@ const ComputationParameters: React.FC<ComputationParametersProps> = ({ computati
     const { isEditing, handleEdit, handleSave, handleCancel } = useComputationParameters(computationParameters);
 
     return (
-        <div>
-            <h1>Computation Parameters</h1>
+        <Box p={2} border={1} borderRadius={4} borderColor="grey.300">
+            <Typography variant="h6" gutterBottom>
+                Computation Parameters
+            </Typography>
             {isEditing ? (
                 <ComputationParametersEdit
                     computationParameters={computationParameters}
@@ -23,8 +25,17 @@ const ComputationParameters: React.FC<ComputationParametersProps> = ({ computati
             ) : (
                 <ComputationParametersDisplay computationParameters={computationParameters} />
             )}
-            {!isEditing && <button onClick={handleEdit}>Edit</button>}
-        </div>
+            {!isEditing && (
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleEdit}
+                    sx={{ mt: 2 }}
+                >
+                    Edit
+                </Button>
+            )}
+        </Box>
     );
 };
 

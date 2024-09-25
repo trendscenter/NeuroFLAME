@@ -2,10 +2,13 @@ import { useApolloClients } from "../../contexts/ApolloClientsContext";
 import { login } from "./login";
 import { getConsortiumList } from "./getConsortiumList";
 import { getConsortiumDetails } from "./getConsortiumDetails";
-import { MutationLoginArgs, MutationStudySetComputationArgs, MutationStudySetParametersArgs, QueryGetConsortiumDetailsArgs } from "./generated/graphql"; // Import generated types
+import { Mutation, MutationConsortiumSetMemberActiveArgs, MutationLoginArgs, MutationStartRunArgs, MutationStudySetComputationArgs, MutationStudySetNotesArgs, MutationStudySetParametersArgs, QueryGetConsortiumDetailsArgs } from "./generated/graphql"; // Import generated types
 import { studySetParameters } from "./studySetParameters";
 import { getComputationList } from "./getComputationList";
-import { setStudyComputation } from "./studySetComputation";
+import { studySetComputation } from "./studySetComputation";
+import { consortiumSetMemberActive } from "./consortiumSetMemberActive";
+import { startRun } from "./startRun";
+import { studySetNotes } from "./studySetNotes";
 
 export const useCentralApi = () => {
     const { centralApiApolloClient } = useApolloClients();
@@ -21,7 +24,10 @@ export const useCentralApi = () => {
         getConsortiumDetails: (input: QueryGetConsortiumDetailsArgs) => getConsortiumDetails(centralApiApolloClient, input),
         login: (input: MutationLoginArgs) => login(centralApiApolloClient, input),
         studySetParameters: (input: MutationStudySetParametersArgs) => studySetParameters(centralApiApolloClient, input),
-        setStudyComputation: (input: MutationStudySetComputationArgs) => setStudyComputation(centralApiApolloClient, input),
+        studySetComputation: (input: MutationStudySetComputationArgs) => studySetComputation(centralApiApolloClient, input),
+        consortiumSetMemberActive: (input: MutationConsortiumSetMemberActiveArgs) => consortiumSetMemberActive(centralApiApolloClient, input),
+        startRun: (input: MutationStartRunArgs) => startRun(centralApiApolloClient, input),
+        studySetNotes: (input: MutationStudySetNotesArgs) => studySetNotes(centralApiApolloClient, input),
     };
 };
 

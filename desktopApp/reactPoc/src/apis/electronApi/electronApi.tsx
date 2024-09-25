@@ -1,4 +1,5 @@
 import { FetchConfig } from "./FetchConfig";
+import useDirectoryDialog from "./useDirectoryDialog";
 
 export interface Config {
   centralServerQueryUrl: string;
@@ -31,7 +32,8 @@ declare global {
 }
 
 export const electronApi = {
-  FetchConfig
+  FetchConfig,
+  useDirectoryDialog
 }
 
 

@@ -5,7 +5,7 @@ import { ComputationListItem } from "../../../../../apis/centralApi/generated/gr
 import { useParams } from "react-router-dom";
 
 export const useComputationSelect = () => {
-    const { getComputationList, setStudyComputation } = useCentralApi();
+    const { getComputationList, studySetComputation } = useCentralApi();
     const consortiumId = useParams<{ consortiumId: string }>().consortiumId as string;
     const [computations, setComputations] = useState<ComputationListItem[]>([]);
     const [loading, setLoading] = useState(false);
@@ -27,7 +27,7 @@ export const useComputationSelect = () => {
     };
 
     const selectComputation = (computationId: string) => {
-        setStudyComputation({ consortiumId, computationId });
+        studySetComputation({ consortiumId, computationId });
     };
 
     // Fetch the computation list when the hook is first called
