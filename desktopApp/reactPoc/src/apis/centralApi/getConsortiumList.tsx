@@ -5,6 +5,7 @@ import { Query } from './generated/graphql'; // Import generated types
 const GET_CONSORTIUM_LIST_QUERY = gql`
   query GetConsortiumList {
     getConsortiumList {
+      id
       title
       description
       leader {

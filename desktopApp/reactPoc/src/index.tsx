@@ -4,7 +4,7 @@ import App from './App';
 import { electronApi } from './apis/electronApi/electronApi';
 import ApolloClientsProvider from './contexts/ApolloClientsProvider';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { UserStateProvider } from './contexts/userStateContext';
+import { UserStateProvider } from './contexts/UserStateContext';
 
 const startApp = async () => {
   const config = await electronApi.FetchConfig();

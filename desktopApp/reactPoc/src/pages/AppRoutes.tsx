@@ -5,6 +5,7 @@ import {
 import LoginPage from './Login/LoginPage';
 import ConsortiumPage from './ConsortiumPage';
 import ConsortiumListPage from './ConsortiumList/ConsortiumListPage';
+import ConsortiumDetailsPage from './ConsortiumDetails/ConsortiumDetailsPage';
 // import ConsortiumList from './ConsortiumList';
 // import ConsortiumDetails from './ConsortiumDetails';
 // import ComputationsList from './ComputationList';
@@ -25,8 +26,9 @@ export default function AppRoutes() {
         <Routes>
             <Route index path="/" element={<LoginPage></LoginPage>} />
             <Route index path="/login" element={<LoginPage></LoginPage>} />
-            <Route path="/consortium" element={<ConsortiumPage></ConsortiumPage>} />
             <Route path="/consortiumList" element={<ConsortiumListPage></ConsortiumListPage>} />
+            <Route path="/consortium/details/:consortiumId" element={<ConsortiumDetailsPage></ConsortiumDetailsPage>} />
+            
             {/* <Route path="/consortia" element={<ConsortiumList />} />
             <Route path="/consortia/create" element={<ConsortiumCreate />} />
             <Route path="/consortia/details/:consortiumId" element={<ConsortiumDetails />} />
