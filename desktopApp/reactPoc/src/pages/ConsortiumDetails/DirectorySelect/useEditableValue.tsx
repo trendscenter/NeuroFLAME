@@ -26,7 +26,7 @@ export function useEditableValue({ fetchValue, saveValue }: useEditableValuePara
     };
 
     fetchInitialValue();
-  }, [fetchValue]);
+  }, []);
 
   // Start edit mode
   const startEdit = () => {
@@ -35,6 +35,7 @@ export function useEditableValue({ fetchValue, saveValue }: useEditableValuePara
 
   // Change the value (e.g., through text input)
   const changeValue = (newValue: string) => {
+    console.log("hello")
     setEditableValue(newValue);
   };
 
