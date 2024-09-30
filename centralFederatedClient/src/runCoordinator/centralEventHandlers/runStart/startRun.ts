@@ -34,6 +34,7 @@ export default async function ({
   const { port: admin_port, server: admin_server } = await reservePort()
 
   await provisionRun({
+    image_name: imageName,
     userIds,
     path_run,
     computationParameters,

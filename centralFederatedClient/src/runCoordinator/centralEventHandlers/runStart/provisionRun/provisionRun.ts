@@ -4,8 +4,10 @@ import { generateProjectFile } from './generateProjectFile.js'
 import { createStartupKits } from './createStartupKits.js'
 import { createRunKits } from './createRunKits.js'
 import { prepareHostingDirectory } from './prepareHostingDirectory.js'
+import { launchNode } from '../launchNode.js'
 
 interface provisionRunArgs {
+  image_name: string
   userIds: string[]
   path_run: string
   computationParameters: string
@@ -15,6 +17,7 @@ interface provisionRunArgs {
 }
 
 export async function provisionRun({
+  image_name,
   userIds,
   computationParameters,
   path_run,
@@ -22,47 +25,46 @@ export async function provisionRun({
   admin_port,
   FQDN,
 }: provisionRunArgs) {
-  // these variables will be configurable by environment variables or config
 
-  const adminName = 'admin@admin.com'
 
-  const path_startupKits = path.join(path_run, 'startupKits/')
-  const path_runKits = path.join(path_run, 'runKits/')
-  const path_hosting = path.join(path_run, 'hosting/')
+  
+  const path_hosting = path.join(path_run, 'hosting')
 
-  // Ensure all necessary directories are created
   await ensureDirectoryExists(path_run)
-  await ensureDirectoryExists(path_startupKits)
-  await ensureDirectoryExists(path_runKits)
+  await ensureDirectoryExists(path_hosting)
+  
+  // make the input
+  const provision_input = {
+    userIds,
+    computationParameters,
+    fed_learn_port,
+    admin_port,
+    host_identifier: FQDN,
+  }
 
-  await generateProjectFile({
-    projectName: 'project',
-    FQDN: FQDN,
-    fed_learn_port: fed_learn_port,
-    admin_port: admin_port,
-    outputFilePath: path.join(path_run, 'Project.yml'),
-    siteNames: userIds,
-  })
+  // save the file
+  const path_provision_input = path.join(path_run, 'provision_input.json')
+  await fs.promises.writeFile(path_provision_input, JSON.stringify(provision_input, null, 2))
 
-  await createStartupKits({
-    projectFilePath: path.join(path_run, 'Project.yml'),
-    outputDirectory: path.join(path_run, 'startupKits'),
+  await launchNode({
+    containerService: 'docker',
+    imageName: image_name,
+    directoriesToMount: [
+      { hostDirectory: path_provision_input, containerDirectory: '/provisioning/input/provision_input.json' },
+      { hostDirectory: path_hosting, containerDirectory: '/provisioning/output/' },
+    ],
+    portBindings: [
+      { hostPort: fed_learn_port, containerPort: fed_learn_port },
+      { hostPort: admin_port, containerPort: admin_port },
+    ],
+    commandsToRun: [
+      `python3 entry_provision.py`,
+    ],
   })
+  // launch the container
+  // wait for it to finish
 
-  await createRunKits({
-    startupKitsPath: path.join(path_startupKits, 'project', 'prod_00'),
-    outputDirectory: path_runKits,
-    computationParameters: computationParameters,
-    FQDN: FQDN,
-    adminName: adminName,
-  })
 
-  // Zip and move the runKits to the hosting directory
-  await prepareHostingDirectory({
-    sourceDir: path_runKits,
-    targetDir: path_hosting,
-    exclude: ['centralNode'],
-  })
 }
 
 async function ensureDirectoryExists(directoryPath: string): Promise<void> {
