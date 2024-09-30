@@ -1,10 +1,7 @@
 import path from 'path'
 import fs from 'fs'
-import { generateProjectFile } from './generateProjectFile.js'
-import { createStartupKits } from './createStartupKits.js'
-import { createRunKits } from './createRunKits.js'
-import { prepareHostingDirectory } from './prepareHostingDirectory.js'
 import { launchNode } from '../launchNode.js'
+import { prepareHostingDirectory } from './prepareHostingDirectory.js'
 
 interface provisionRunArgs {
   image_name: string
@@ -25,18 +22,15 @@ export async function provisionRun({
   admin_port,
   FQDN,
 }: provisionRunArgs) {
-
-
-  
   const path_hosting = path.join(path_run, 'hosting')
 
   await ensureDirectoryExists(path_run)
   await ensureDirectoryExists(path_hosting)
-  
+
   // make the input
   const provision_input = {
-    userIds,
-    computationParameters,
+    user_ids: userIds,
+    computation_parameters: computationParameters,
     fed_learn_port,
     admin_port,
     host_identifier: FQDN,
@@ -44,27 +38,34 @@ export async function provisionRun({
 
   // save the file
   const path_provision_input = path.join(path_run, 'provision_input.json')
-  await fs.promises.writeFile(path_provision_input, JSON.stringify(provision_input, null, 2))
+  await fs.promises.writeFile(
+    path_provision_input,
+    JSON.stringify(provision_input, null, 2),
+  )
 
-  await launchNode({
-    containerService: 'docker',
-    imageName: image_name,
-    directoriesToMount: [
-      { hostDirectory: path_provision_input, containerDirectory: '/provisioning/input/provision_input.json' },
-      { hostDirectory: path_hosting, containerDirectory: '/provisioning/output/' },
-    ],
-    portBindings: [
-      { hostPort: fed_learn_port, containerPort: fed_learn_port },
-      { hostPort: admin_port, containerPort: admin_port },
-    ],
-    commandsToRun: [
-      `python3 entry_provision.py`,
-    ],
+  // launch the container and await its completion
+  // throw errors appropriately here
+  await new Promise((resolve, reject) => {
+    launchNode({
+      containerService: 'docker',
+      imageName: image_name,
+      directoriesToMount: [
+        { hostDirectory: path_run, containerDirectory: '/provisioning/' },
+      ],
+      portBindings: [],
+      commandsToRun: [`python`, `/workspace/entry_provision.py`],
+      onContainerExitSuccess: async (containerId) => {
+        return resolve(void 0)
+      },
+    })
   })
-  // launch the container
-  // wait for it to finish
 
-
+  const path_runKits = path.join(path_run, 'runKits')
+  await prepareHostingDirectory({
+    sourceDir: path_runKits,
+    targetDir: path_hosting,
+    exclude: ['centralNode'],
+  })
 }
 
 async function ensureDirectoryExists(directoryPath: string): Promise<void> {
