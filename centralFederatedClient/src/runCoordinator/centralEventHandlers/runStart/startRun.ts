@@ -7,6 +7,7 @@ import getConfig from '../../../config/getConfig.js'
 import reportRunError from './reportRunError.js'
 import reportRunComplete from './reportRunComplete.js'
 import { logger } from '../../../logger.js'
+import { start } from '../../../index.js'
 
 interface startRunArgs {
   imageName: string
@@ -26,14 +27,22 @@ export default async function ({
   logger.info('Starting run...')
   const path_baseDirectory = config.baseDir
   const FQDN = config.FQDN
+  const hostingPortRange = config.hostingPortRange
 
   const path_run = path.join(path_baseDirectory, 'runs/', consortiumId, runId)
   const path_centralNodeRunKit = path.join(path_run, 'runKits', 'centralNode')
 
-  const { port: fed_learn_port, server: fed_learn_server } = await reservePort()
-  const { port: admin_port, server: admin_server } = await reservePort()
+  const { port: fed_learn_port, server: fed_learn_server } = await reservePort({
+    start: hostingPortRange.start,
+    end: hostingPortRange.end,
+  })
+  const { port: admin_port, server: admin_server } = await reservePort({
+    start: hostingPortRange.start,
+    end: hostingPortRange.end,
+  })
 
   await provisionRun({
+    image_name: imageName,
     userIds,
     path_run,
     computationParameters,
@@ -41,7 +50,7 @@ export default async function ({
     admin_port,
     FQDN,
   })
-  
+
   await uploadToFileServer({
     consortiumId,
     runId,

@@ -1,11 +1,10 @@
 import path from 'path'
 import fs from 'fs'
-import { generateProjectFile } from './generateProjectFile.js'
-import { createStartupKits } from './createStartupKits.js'
-import { createRunKits } from './createRunKits.js'
+import { launchNode } from '../launchNode.js'
 import { prepareHostingDirectory } from './prepareHostingDirectory.js'
 
 interface provisionRunArgs {
+  image_name: string
   userIds: string[]
   path_run: string
   computationParameters: string
@@ -15,6 +14,7 @@ interface provisionRunArgs {
 }
 
 export async function provisionRun({
+  image_name,
   userIds,
   computationParameters,
   path_run,
@@ -22,42 +22,45 @@ export async function provisionRun({
   admin_port,
   FQDN,
 }: provisionRunArgs) {
-  // these variables will be configurable by environment variables or config
+  const path_hosting = path.join(path_run, 'hosting')
 
-  const adminName = 'admin@admin.com'
-
-  const path_startupKits = path.join(path_run, 'startupKits/')
-  const path_runKits = path.join(path_run, 'runKits/')
-  const path_hosting = path.join(path_run, 'hosting/')
-
-  // Ensure all necessary directories are created
   await ensureDirectoryExists(path_run)
-  await ensureDirectoryExists(path_startupKits)
-  await ensureDirectoryExists(path_runKits)
+  await ensureDirectoryExists(path_hosting)
 
-  await generateProjectFile({
-    projectName: 'project',
-    FQDN: FQDN,
-    fed_learn_port: fed_learn_port,
-    admin_port: admin_port,
-    outputFilePath: path.join(path_run, 'Project.yml'),
-    siteNames: userIds,
+  // make the input
+  const provision_input = {
+    user_ids: userIds,
+    computation_parameters: computationParameters,
+    fed_learn_port,
+    admin_port,
+    host_identifier: FQDN,
+  }
+
+  // save the file
+  const path_provision_input = path.join(path_run, 'provision_input.json')
+  await fs.promises.writeFile(
+    path_provision_input,
+    JSON.stringify(provision_input, null, 2),
+  )
+
+  // launch the container and await its completion
+  // throw errors appropriately here
+  await new Promise((resolve, reject) => {
+    launchNode({
+      containerService: 'docker',
+      imageName: image_name,
+      directoriesToMount: [
+        { hostDirectory: path_run, containerDirectory: '/provisioning/' },
+      ],
+      portBindings: [],
+      commandsToRun: [`python`, `/workspace/entry_provision.py`],
+      onContainerExitSuccess: async (containerId) => {
+        return resolve(void 0)
+      },
+    })
   })
 
-  await createStartupKits({
-    projectFilePath: path.join(path_run, 'Project.yml'),
-    outputDirectory: path.join(path_run, 'startupKits'),
-  })
-
-  await createRunKits({
-    startupKitsPath: path.join(path_startupKits, 'project', 'prod_00'),
-    outputDirectory: path_runKits,
-    computationParameters: computationParameters,
-    FQDN: FQDN,
-    adminName: adminName,
-  })
-
-  // Zip and move the runKits to the hosting directory
+  const path_runKits = path.join(path_run, 'runKits')
   await prepareHostingDirectory({
     sourceDir: path_runKits,
     targetDir: path_hosting,
