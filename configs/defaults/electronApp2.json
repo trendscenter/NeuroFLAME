@@ -1,16 +1,16 @@
 {
-    "centralServerQueryUrl": "http://localhost:4000/graphql",
-    "centralServerSubscriptionUrl": "ws://localhost:4000/graphql",
-    "edgeClientQueryUrl": "http://localhost:5001/graphql",
-    "edgeClientSubscriptionUrl": "ws://localhost:5001/graphql",
-    "edgeClientRunResultsUrl": "http://localhost:5001/run-results",
+    "centralServerQueryUrl": "http://localhost:3001/graphql",
+    "centralServerSubscriptionUrl": "ws://localhost:3001/graphql",
+    "edgeClientQueryUrl": "http://localhost:3004/graphql",
+    "edgeClientSubscriptionUrl": "ws://localhost:3004/graphql",
+    "edgeClientRunResultsUrl": "http://localhost:3004/run-results",
     "startEdgeClientOnLaunch": true,
     "logPath": "",
     "edgeClientConfig": {
-        "httpUrl": "http://localhost:4000/graphql",
-        "wsUrl": "ws://localhost:4000/graphql",
+        "httpUrl": "http://localhost:3001/graphql",
+        "wsUrl": "ws://localhost:3001/graphql",
         "path_base_directory": "{{REPO_DIR}}/_devTestDirectories/edgeSite2",
-        "authenticationEndpoint": "http://localhost:4000/authenticateToken",
-        "hostingPort": 5001
+        "authenticationEndpoint": "http://localhost:3001/authenticateToken",
+        "hostingPort": 3004
     }
 }

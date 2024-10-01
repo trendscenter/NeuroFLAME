@@ -1,6 +1,6 @@
 {
-    "authenticationUrl": "http://localhost:4000/authenticateToken",
+    "authenticationUrl": "http://localhost:3001/authenticateToken",
     "baseDir": "{{REPO_DIR}}/_devTestDirectories/fileHostDir",
-    "port": 4002,
+    "port": 3002,
     "logPath": ""
 }

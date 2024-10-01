@@ -11,7 +11,12 @@ interface CentralFederateClientConfig {
   baseDir: string
   FQDN: string
   logPath?: string
+  hostingPortRange: {
+    start: number
+    end: number
+  }
 }
+
 
 export default async function getConfig(): Promise<
   CentralFederateClientConfig
