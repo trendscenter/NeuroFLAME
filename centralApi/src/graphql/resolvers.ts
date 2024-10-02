@@ -831,6 +831,11 @@ export default {
         $addToSet: { members: userId, activeMembers: userId },
       })
 
+
+      pubsub.publish('CONSORTIUM_DETAILS_CHANGED', {
+        consortiumId: consortiumId,
+      })
+
       return true
     },
     consortiumLeave: async (
@@ -845,6 +850,10 @@ export default {
 
       await Consortium.findByIdAndUpdate(consortiumId, {
         $pull: { members: userId, activeMembers: userId },
+      })
+
+      pubsub.publish('CONSORTIUM_DETAILS_CHANGED', {
+        consortiumId: consortiumId,
       })
 
       return true
@@ -873,6 +882,12 @@ export default {
         await consortium.updateOne({
           [active ? '$addToSet' : '$pull']: { activeMembers: userId },
         })
+
+        pubsub.publish('CONSORTIUM_DETAILS_CHANGED', {
+          consortiumId: consortiumId,
+        })
+  
+
         return true
       } catch (error) {
         logger.error('Error updating consortium active members:', error)
@@ -1142,7 +1157,7 @@ export default {
           const isMember = consortium.members.some(
             (memberObjectId: any) => memberObjectId.toString() === userId,
           )
-          
+
           return isMember
         },
       ),
