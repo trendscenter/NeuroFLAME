@@ -831,7 +831,6 @@ export default {
         $addToSet: { members: userId, activeMembers: userId },
       })
 
-
       pubsub.publish('CONSORTIUM_DETAILS_CHANGED', {
         consortiumId: consortiumId,
       })
@@ -886,7 +885,6 @@ export default {
         pubsub.publish('CONSORTIUM_DETAILS_CHANGED', {
           consortiumId: consortiumId,
         })
-  
 
         return true
       } catch (error) {
@@ -1109,33 +1107,37 @@ export default {
     },
     consortiumLatestRunChanged: {
       resolve: (payload: { consortiumId: string }): string => {
-        return "Consortium latest run changed";
+        return 'Consortium latest run changed'
       },
       subscribe: withFilter(
         () => pubsub.asyncIterator(['CONSORTIUM_LATEST_RUN_CHANGED']),
-        async (payload: { consortiumId: string }, variables: unknown, context: Context) => {
-          const { userId } = context;
-          const { consortiumId } = payload;
-    
+        async (
+          payload: { consortiumId: string },
+          variables: unknown,
+          context: Context,
+        ) => {
+          const { userId } = context
+          const { consortiumId } = payload
+
           // Check if the user is part of the consortium's active members
-          const consortium = await Consortium.findById(consortiumId).lean();
+          const consortium = await Consortium.findById(consortiumId).lean()
           if (!consortium) {
-            logger.error('Consortium not found');
-            throw new Error('Consortium not found');
+            logger.error('Consortium not found')
+            throw new Error('Consortium not found')
           }
-    
+
           const isMember = consortium.members.some(
-            (memberObjectId: any) => memberObjectId.toString() === userId
-          );
-    
-          return isMember;
+            (memberObjectId: any) => memberObjectId.toString() === userId,
+          )
+
+          return isMember
         },
       ),
     },
-    
+
     consortiumDetailsChanged: {
-      resolve: (payload: { consortiumId: string; }): string => {
-        return "Consortium details changed";
+      resolve: (payload: { consortiumId: string }): string => {
+        return 'Consortium details changed'
       },
       subscribe: withFilter(
         () => pubsub.asyncIterator(['CONSORTIUM_DETAILS_CHANGED']),
