@@ -179,7 +179,7 @@ export default {
         const runs = await Run.find(query)
           .populate('consortium', 'title')
           .populate('members', 'id username')
-          .sort({ lastUpdated: -1 })
+          .sort({ createdAt: -1 })
           .lean()
           .exec()
 
