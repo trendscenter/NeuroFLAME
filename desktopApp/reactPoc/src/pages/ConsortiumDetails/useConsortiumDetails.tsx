@@ -5,8 +5,10 @@ import { useParams } from "react-router-dom";
 import { useUserState } from "../../contexts/UserStateContext";
 
 const useConsortiumDetails = () => {
-    const { getConsortiumDetails } = useCentralApi();
-    const {consortiumId} = useParams<{ consortiumId: string }>();
+    const { getConsortiumDetails, subscriptions: {
+        consortiumDetailsChanged
+    } } = useCentralApi();
+    const consortiumId = useParams<{ consortiumId: string }>().consortiumId as string;
     const [studyConfiguration, setStudyConfiguration] = useState({});
     const [members, setMembers] = useState<PublicUser[]>([]);
     const [activeMembers, setActiveMembers] = useState<PublicUser[]>([]);
@@ -18,7 +20,6 @@ const useConsortiumDetails = () => {
 
     const { userId } = useUserState()
     const [isLeader, setIsLeader] = useState(false);
-
 
     const fetchConsortiumDetails = useCallback(async () => {
         if (!consortiumId) return;
@@ -44,6 +45,14 @@ const useConsortiumDetails = () => {
 
     useEffect(() => {
         fetchConsortiumDetails();
+        const subscription = consortiumDetailsChanged({ consortiumId }).subscribe({
+            next: () => {
+                fetchConsortiumDetails()
+            }
+        })
+        return () => {
+            subscription.unsubscribe()
+        }
     }, []);
 
     return {

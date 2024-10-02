@@ -242,6 +242,7 @@ export type RunDetails = {
   __typename?: 'RunDetails';
   consortiumId: Scalars['String']['output'];
   consortiumTitle: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
   lastUpdated: Scalars['String']['output'];
   members: Array<PublicUser>;
   runErrors: Array<RunError>;
@@ -270,6 +271,7 @@ export type RunListItem = {
   __typename?: 'RunListItem';
   consortiumId: Scalars['String']['output'];
   consortiumTitle: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
   lastUpdated: Scalars['String']['output'];
   runId: Scalars['String']['output'];
   status: Scalars['String']['output'];
@@ -311,7 +313,19 @@ export type StudyConfiguration = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  consortiumDetailsChanged: Scalars['String']['output'];
+  consortiumLatestRunChanged: Scalars['String']['output'];
   runEvent: RunEventPayload;
   runStartCentral: RunStartCentralPayload;
   runStartEdge: RunStartEdgePayload;
+};
+
+
+export type SubscriptionConsortiumDetailsChangedArgs = {
+  consortiumId: Scalars['String']['input'];
+};
+
+
+export type SubscriptionConsortiumLatestRunChangedArgs = {
+  consortiumId: Scalars['String']['input'];
 };

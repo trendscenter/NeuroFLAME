@@ -1,4 +1,4 @@
-import { Grid, Box, Typography, Divider } from "@mui/material";
+import { Grid, Box, Divider } from "@mui/material";
 import { StudyConfiguration } from "./StudyConfiguration/StudyConfiguration";
 import { Members } from "./Members/Members";
 import { TitleAndDescription } from "./TitleAndDescription/TitleAndDescription";
@@ -7,6 +7,7 @@ import DirectorySelect from "./DirectorySelect/DirectorySelect";
 import { useUserState } from "../../contexts/UserStateContext";
 import StartRunButton from "./StartRunButton/StartRunButton";
 import { ConsortiumDetailsProvider } from "./ConsortiumDetailsContext";
+import { LatestRun } from "./LatestRun/LatestRun";
 
 export default function ConsortiumDetailsPage() {
     const { userId } = useUserState();
@@ -40,6 +41,9 @@ export default function ConsortiumDetailsPage() {
                             <StartRunButton />
                         </Grid>
                     )}
+                    <Grid item xs={12} md={6}>
+                        <LatestRun />
+                    </Grid>
                 </Grid>
 
                 {/* Divider */}

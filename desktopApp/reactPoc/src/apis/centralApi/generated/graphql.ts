@@ -19,7 +19,6 @@ export type Computation = {
   imageDownloadUrl: Scalars['String']['output'];
   imageName: Scalars['String']['output'];
   notes: Scalars['String']['output'];
-  owner: Scalars['String']['output'];
   title: Scalars['String']['output'];
 };
 
@@ -242,6 +241,7 @@ export type RunDetails = {
   __typename?: 'RunDetails';
   consortiumId: Scalars['String']['output'];
   consortiumTitle: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
   lastUpdated: Scalars['String']['output'];
   members: Array<PublicUser>;
   runErrors: Array<RunError>;
@@ -270,6 +270,7 @@ export type RunListItem = {
   __typename?: 'RunListItem';
   consortiumId: Scalars['String']['output'];
   consortiumTitle: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
   lastUpdated: Scalars['String']['output'];
   runId: Scalars['String']['output'];
   status: Scalars['String']['output'];
@@ -311,6 +312,8 @@ export type StudyConfiguration = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  consortiumDetailsChanged: Scalars['String']['output'];
+  consortiumLatestRunChanged: Scalars['String']['output'];
   runEvent: RunEventPayload;
   runStartCentral: RunStartCentralPayload;
   runStartEdge: RunStartEdgePayload;

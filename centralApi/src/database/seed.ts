@@ -145,6 +145,7 @@ const seedDatabase = async () => {
         members: consortia[0].members,
         status: 'Complete',
         runErrors: [],
+        createdAt: Date.now(),
         lastUpdated: Date.now(),
       },
       {
@@ -155,6 +156,7 @@ const seedDatabase = async () => {
         members: consortia[1].members,
         status: 'Pending',
         runErrors: [],
+        createdAt: Date.now(),
         lastUpdated: Date.now(),
       },
       {
@@ -176,6 +178,7 @@ const seedDatabase = async () => {
             message: 'Error message for user 2',
           },
         ],
+        createdAt: Date.now(),
         lastUpdated: Date.now(),
       },
     ]

@@ -20,6 +20,7 @@ export interface IRun extends Document {
   status: string // Could be an enum or simple string
   runErrors: IRunError[] // Array of error objects
   lastUpdated: string // String representing the numeric timestamp
+  createdAt: string // String representing the numeric timestamp
 }
 
 // Create the Run schema
@@ -49,6 +50,7 @@ const runSchema: Schema = new Schema({
     },
   ],
 
+  createdAt: { type: String, default: Date.now },
   lastUpdated: { type: String, default: Date.now },
 })
 
