@@ -86,6 +86,7 @@ type RunListItem {
   runId: String!
   status: String!
   lastUpdated: String!
+  createdAt: String!
 }
 
 type RunError {
@@ -100,6 +101,7 @@ type RunDetails {
   consortiumTitle: String!
   status: String!
   lastUpdated: String!
+  createdAt: String!
   members: [PublicUser!]!  # Non-nullable array and non-nullable items
   studyConfiguration: StudyConfiguration!
   runErrors: [RunError!]!  # Non-nullable array and non-nullable items
@@ -141,5 +143,7 @@ type Subscription {
   runStartCentral: RunStartCentralPayload!
   runStartEdge: RunStartEdgePayload!
   runEvent: RunEventPayload!
+  consortiumLatestRunChanged(consortiumId: String!): String!
+  consortiumDetailsChanged(consortiumId: String!): String!
 }
 `;
