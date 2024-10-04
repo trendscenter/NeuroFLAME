@@ -994,11 +994,20 @@ export default {
   Subscription: {
     runStartCentral: {
       resolve: (payload: RunStartCentralPayload): RunStartCentralPayload => {
+        logger.info(
+          `Event emitted for runStartCentral: \n${JSON.stringify(
+            payload,
+            null,
+            2,
+          )}`,
+        )
         return payload
       },
       subscribe: withFilter(
-        () => pubsub.asyncIterator(['RUN_START_CENTRAL']),
-        // Placeholder for future filtering logic. Currently returns true for all payloads.
+        () => {
+          logger.info('Subscription attempt for runStartCentral')
+          return pubsub.asyncIterator(['RUN_START_CENTRAL'])
+        },
         (
           payload: RunStartCentralPayload,
           variables: unknown,
