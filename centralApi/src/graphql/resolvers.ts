@@ -1013,6 +1013,7 @@ export default {
           variables: unknown,
           context: Context,
         ) => {
+          logger.info(`Subscription attempt for runStartCentral: context: \n${JSON.stringify(context, null, 2)}`)
           return context.roles.includes('central')
         },
       ),
