@@ -3,7 +3,6 @@ import { useUserState } from "../../../contexts/UserStateContext";
 import { useCentralApi } from "../../../apis/centralApi/centralApi";
 import { useParams } from "react-router-dom";
 import { useConsortiumDetailsContext } from "../ConsortiumDetailsContext";
-import { read } from "fs";
 
 interface UseMembersProps {
     members: PublicUser[];
@@ -40,23 +39,23 @@ export const useMembers = ({ members, activeMembers, readyMembers, leader }: Use
             return a.username.localeCompare(b.username);
         });
 
-    const handleToggleActive = async (memberId: string, isActive: boolean) => {
+    const setMemberActive = async (memberId: string, isActive: boolean) => {
         try {
-            await consortiumSetMemberActive({ consortiumId, active: !isActive });
+            await consortiumSetMemberActive({ consortiumId, active: isActive });
             refetch();
         } catch (error) {
             console.error("Failed to update member status:", error);
         }
     };
 
-    const handleToggleReady = async (memberId: string, isReady: boolean) => {
+    const setMemberReady = async (memberId: string, isReady: boolean) => {
         try {
-            await consortiumSetMemberReady({ consortiumId, ready: !isReady });
+            await consortiumSetMemberReady({ consortiumId, ready: isReady });
             refetch();
         } catch (error) {
             console.error("Failed to update member status:", error);
         }
     }
 
-    return { memberList, handleToggleActive, handleToggleReady };
+    return { memberList, setMemberActive, setMemberReady };
 };

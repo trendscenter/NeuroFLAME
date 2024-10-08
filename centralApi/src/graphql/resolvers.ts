@@ -686,6 +686,7 @@ export default {
         leader: context.userId,
         members: [context.userId],
         activeMembers: [context.userId],
+        readyMembers: [],
         studyConfiguration: {
           consortiumLeaderNotes: '',
           computationParameters: '',
@@ -896,10 +897,17 @@ export default {
       }
 
       // Update the activeMembers array
+
       try {
-        await consortium.updateOne({
-          [active ? '$addToSet' : '$pull']: { activeMembers: userId },
-        })
+        if (active) {
+          consortium.updateOne({
+            $addToSet: { activeMembers: userId },
+          })
+        } else {
+          consortium.updateOne({
+            $pull: { activeMembers: userId, readyMembers: userId },
+          })
+        }
 
         pubsub.publish('CONSORTIUM_DETAILS_CHANGED', {
           consortiumId: consortiumId,
