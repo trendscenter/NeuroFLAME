@@ -15,7 +15,7 @@ interface MembersDisplayProps {
 }
 
 export const MembersDisplay = ({ memberList, setMemberActive, setMemberReady }: MembersDisplayProps) => (
-    <Box p={2}>
+    <Box p={2} border={1} borderRadius={4} borderColor="grey.300">
         <Typography variant="h5" gutterBottom>
             Members
         </Typography>
