@@ -373,6 +373,10 @@ export default {
         consortiumId: consortium._id.toString(),
       })
 
+      pubsub.publish('RUN_DETAILS_CHANGED', {
+        runId: run._id.toString(),
+      })
+
       return { runId: run._id.toString() }
     },
     reportRunReady: async (
@@ -419,6 +423,10 @@ export default {
 
       pubsub.publish('CONSORTIUM_LATEST_RUN_CHANGED', {
         consortiumId: consortium._id.toString(),
+      })
+
+      pubsub.publish('RUN_DETAILS_CHANGED', {
+        runId: run._id.toString(),
       })
 
       return true
@@ -482,6 +490,10 @@ export default {
         consortiumId: consortium._id.toString(),
       })
 
+      pubsub.publish('RUN_DETAILS_CHANGED', {
+        runId: run._id.toString(),
+      })
+
       return true
     },
 
@@ -521,6 +533,10 @@ export default {
 
       pubsub.publish('CONSORTIUM_LATEST_RUN_CHANGED', {
         consortiumId: consortium._id.toString(),
+      })
+
+      pubsub.publish('RUN_DETAILS_CHANGED', {
+        runId: run._id.toString(),
       })
 
       return true
