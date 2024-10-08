@@ -1013,7 +1013,13 @@ export default {
           variables: unknown,
           context: Context,
         ) => {
-          logger.info(`Subscription attempt for runStartCentral: context: \n${JSON.stringify(context, null, 2)}`)
+          logger.info(
+            `Subscription attempt for runStartCentral: context: \n${JSON.stringify(
+              context,
+              null,
+              2,
+            )}`,
+          )
           return context.roles.includes('central')
         },
       ),
@@ -1166,6 +1172,44 @@ export default {
             throw new Error('Consortium not found')
           }
 
+          const isMember = consortium.members.some(
+            (memberObjectId: any) => memberObjectId.toString() === userId,
+          )
+
+          return isMember
+        },
+      ),
+    },
+
+    runDetailsChanged: {
+      resolve: (payload: { runId: string }): string => {
+        return 'Run details changed'
+      },
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(['RUN_DETAILS_CHANGED']),
+        async (
+          payload: { runId: string },
+          variables: unknown,
+          context: Context,
+        ) => {
+          const { userId } = context
+          const { runId } = payload
+
+          // Find the run by its ID
+          const run = await Run.findById(runId).lean()
+          if (!run) {
+            logger.error('Run not found')
+            throw new Error('Run not found')
+          }
+
+          // Check if the user is a member of the run's consortium
+          const consortium = await Consortium.findById(run.consortium).lean()
+          if (!consortium) {
+            logger.error('Consortium not found')
+            throw new Error('Consortium not found')
+          }
+
+          // Verify if the user is part of the consortium's members
           const isMember = consortium.members.some(
             (memberObjectId: any) => memberObjectId.toString() === userId,
           )

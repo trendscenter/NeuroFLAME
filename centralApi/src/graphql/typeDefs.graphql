@@ -145,4 +145,5 @@ type Subscription {
   runEvent: RunEventPayload!
   consortiumLatestRunChanged(consortiumId: String!): String!
   consortiumDetailsChanged(consortiumId: String!): String!
+  runDetailsChanged(runId: String!): String!
 }
