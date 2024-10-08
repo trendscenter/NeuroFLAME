@@ -3,27 +3,33 @@ import { useUserState } from "../../../contexts/UserStateContext";
 import { useCentralApi } from "../../../apis/centralApi/centralApi";
 import { useParams } from "react-router-dom";
 import { useConsortiumDetailsContext } from "../ConsortiumDetailsContext";
+import { read } from "fs";
 
 interface UseMembersProps {
     members: PublicUser[];
     activeMembers: PublicUser[];
+    readyMembers: PublicUser[];
     leader: PublicUser;
 }
 
-export const useMembers = ({ members, activeMembers, leader }: UseMembersProps) => {
+export const useMembers = ({ members, activeMembers, readyMembers, leader }: UseMembersProps) => {
     const { userId } = useUserState();
-    const { consortiumSetMemberActive } = useCentralApi();
+    const { consortiumSetMemberActive, consortiumSetMemberReady } = useCentralApi();
     const consortiumId = useParams<{ consortiumId: string }>().consortiumId as string;
     const { refetch } = useConsortiumDetailsContext();
 
     const isActiveMember = (member: PublicUser) =>
         activeMembers.some((activeMember) => activeMember.id === member.id);
 
+    const isReadyMember = (member: PublicUser) =>
+        readyMembers.some((readyMember) => readyMember.id === member.id);
+
     const memberList = members
         .map((member) => ({
             ...member,
             isLeader: member.id === leader.id,
             isActive: isActiveMember(member),
+            isReady: isReadyMember(member),
             isMe: member.id === userId,
         }))
         .sort((a, b) => {
@@ -43,5 +49,14 @@ export const useMembers = ({ members, activeMembers, leader }: UseMembersProps) 
         }
     };
 
-    return { memberList, handleToggleActive };
+    const handleToggleReady = async (memberId: string, isReady: boolean) => {
+        try {
+            await consortiumSetMemberReady({ consortiumId, ready: !isReady });
+            refetch();
+        } catch (error) {
+            console.error("Failed to update member status:", error);
+        }
+    }
+
+    return { memberList, handleToggleActive, handleToggleReady };
 };

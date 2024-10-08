@@ -37,6 +37,7 @@ export type ConsortiumDetails = {
   id: Scalars['String']['output'];
   leader: PublicUser;
   members: Array<PublicUser>;
+  readyMembers: Array<PublicUser>;
   studyConfiguration: StudyConfiguration;
   title: Scalars['String']['output'];
 };
@@ -69,6 +70,7 @@ export type Mutation = {
   consortiumJoin: Scalars['Boolean']['output'];
   consortiumLeave: Scalars['Boolean']['output'];
   consortiumSetMemberActive: Scalars['Boolean']['output'];
+  consortiumSetMemberReady: Scalars['Boolean']['output'];
   login: LoginOutput;
   reportRunComplete: Scalars['Boolean']['output'];
   reportRunError: Scalars['Boolean']['output'];
@@ -138,6 +140,12 @@ export type MutationConsortiumLeaveArgs = {
 export type MutationConsortiumSetMemberActiveArgs = {
   active: Scalars['Boolean']['input'];
   consortiumId: Scalars['String']['input'];
+};
+
+
+export type MutationConsortiumSetMemberReadyArgs = {
+  consortiumId: Scalars['String']['input'];
+  ready: Scalars['Boolean']['input'];
 };
 
 

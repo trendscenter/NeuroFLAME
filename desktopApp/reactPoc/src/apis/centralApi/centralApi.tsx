@@ -3,7 +3,7 @@ import { login } from "./login";
 import { getConsortiumList } from "./getConsortiumList";
 import { getConsortiumDetails } from "./getConsortiumDetails";
 import { getRunDetails } from "./getRunDetails"; // Import the getRunDetails function
-import { MutationConsortiumSetMemberActiveArgs, MutationLoginArgs, MutationStartRunArgs, MutationStudySetComputationArgs, MutationStudySetNotesArgs, MutationStudySetParametersArgs, QueryGetConsortiumDetailsArgs, QueryGetRunListArgs, QueryGetRunDetailsArgs } from "./generated/graphql"; // Import generated types
+import { MutationConsortiumSetMemberActiveArgs, MutationLoginArgs, MutationStartRunArgs, MutationStudySetComputationArgs, MutationStudySetNotesArgs, MutationStudySetParametersArgs, QueryGetConsortiumDetailsArgs, QueryGetRunListArgs, QueryGetRunDetailsArgs, MutationConsortiumSetMemberReadyArgs } from "./generated/graphql"; // Import generated types
 import { studySetParameters } from "./studySetParameters";
 import { getComputationList } from "./getComputationList";
 import { studySetComputation } from "./studySetComputation";
@@ -14,6 +14,7 @@ import { consortiumDetailsChanged } from "./subscriptions/consortiumDetailsChang
 import { getRunList } from "./getRunList";
 import { consortiumLatestRunChanged } from "./subscriptions/consortiumLatestRunChanged";
 import { runDetailsChanged } from "./subscriptions/runDetailsChanged";
+import { consortiumSetMemberReady } from "./consortiumSetMemberReady";
 
 export const useCentralApi = () => {
     const { centralApiApolloClient } = useApolloClients();
@@ -32,6 +33,7 @@ export const useCentralApi = () => {
         studySetParameters: (input: MutationStudySetParametersArgs) => studySetParameters(centralApiApolloClient, input),
         studySetComputation: (input: MutationStudySetComputationArgs) => studySetComputation(centralApiApolloClient, input),
         consortiumSetMemberActive: (input: MutationConsortiumSetMemberActiveArgs) => consortiumSetMemberActive(centralApiApolloClient, input),
+        consortiumSetMemberReady: (input: MutationConsortiumSetMemberReadyArgs) => consortiumSetMemberReady(centralApiApolloClient, input),
         startRun: (input: MutationStartRunArgs) => startRun(centralApiApolloClient, input),
         studySetNotes: (input: MutationStudySetNotesArgs) => studySetNotes(centralApiApolloClient, input),
         getRunList: (input: QueryGetRunListArgs) => getRunList(centralApiApolloClient, input),

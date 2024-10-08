@@ -12,7 +12,7 @@ import { LatestRun } from "./LatestRun/LatestRun";
 export default function ConsortiumDetailsPage() {
     const { userId } = useUserState();
     const { data, status, refetch, isLeader } = useConsortiumDetails();
-    const { studyConfiguration, members, activeMembers, leader, title, description } = data;
+    const { studyConfiguration, members, activeMembers, readyMembers, leader, title, description } = data;
 
     const isActive = activeMembers.some((member) => member.id === userId);
 
@@ -25,7 +25,7 @@ export default function ConsortiumDetailsPage() {
                 <Grid container spacing={2} sx={{ mt: 2 }}>
                     {/* Members Section */}
                     <Grid item xs={12} md={6}>
-                        <Members members={members} activeMembers={activeMembers} leader={leader} />
+                        <Members members={members} activeMembers={activeMembers} readyMembers={readyMembers} leader={leader} />
                     </Grid>
 
                     {/* Directory Select Section (only if active) */}

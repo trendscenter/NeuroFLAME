@@ -12,6 +12,7 @@ const useConsortiumDetails = () => {
     const [studyConfiguration, setStudyConfiguration] = useState({});
     const [members, setMembers] = useState<PublicUser[]>([]);
     const [activeMembers, setActiveMembers] = useState<PublicUser[]>([]);
+    const [readyMembers, setReadyMembers] = useState<PublicUser[]>([]);
     const [leader, setLeader] = useState<PublicUser>({ id: '', username: '' });
     const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
@@ -30,6 +31,7 @@ const useConsortiumDetails = () => {
             const result = await getConsortiumDetails({ consortiumId });
             setMembers(result.members);
             setActiveMembers(result.activeMembers);
+            setReadyMembers(result.readyMembers);
             setLeader(result.leader);
             setTitle(result.title);
             setDescription(result.description);
@@ -41,7 +43,7 @@ const useConsortiumDetails = () => {
         } finally {
             setLoading(false);
         }
-    }, [consortiumId, getConsortiumDetails]);
+    }, [consortiumId]);
 
     useEffect(() => {
         fetchConsortiumDetails();
@@ -60,6 +62,7 @@ const useConsortiumDetails = () => {
             studyConfiguration,
             members,
             activeMembers,
+            readyMembers,
             leader,
             title,
             description,
