@@ -900,11 +900,11 @@ export default {
 
       try {
         if (active) {
-          consortium.updateOne({
+          await consortium.updateOne({
             $addToSet: { activeMembers: userId },
           })
         } else {
-          consortium.updateOne({
+          await consortium.updateOne({
             $pull: { activeMembers: userId, readyMembers: userId },
           })
         }
