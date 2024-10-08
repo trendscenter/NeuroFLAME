@@ -3,7 +3,6 @@ import {
   IStudyConfiguration,
   studyConfigurationSchema,
 } from './StudyConfiguration.js'
-import { read } from 'fs'
 
 // Define an interface for the Consortium document
 interface IConsortium extends Document {
