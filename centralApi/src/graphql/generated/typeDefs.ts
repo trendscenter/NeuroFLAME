@@ -112,7 +112,7 @@ type Query {
   getComputationList: [ComputationListItem!]!  # Non-nullable array and non-nullable items
   getConsortiumDetails(consortiumId: String!): ConsortiumDetails!
   getComputationDetails(computationId: String!): Computation!
-  getRunList(consortiumId: String!): [RunListItem!]!  # Non-nullable array and non-nullable items
+  getRunList(consortiumId: String): [RunListItem!]!  # Non-nullable array and non-nullable items
   getRunDetails(runId: String!): RunDetails!
 }
 
@@ -145,5 +145,6 @@ type Subscription {
   runEvent: RunEventPayload!
   consortiumLatestRunChanged(consortiumId: String!): String!
   consortiumDetailsChanged(consortiumId: String!): String!
+  runDetailsChanged(runId: String!): String!
 }
 `;

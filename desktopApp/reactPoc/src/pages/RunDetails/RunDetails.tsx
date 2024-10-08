@@ -1,5 +1,5 @@
 import React from "react";
-import { CircularProgress, Typography, Paper, Box, Alert } from "@mui/material";
+import { Typography, Paper, Box, Alert } from "@mui/material";
 import { useRunDetails } from "./useRunDetails";
 
 export function RunDetails() {
@@ -7,13 +7,6 @@ export function RunDetails() {
 
     return (
         <Box p={2}>
-            {/* Loading State */}
-            {loading && (
-                <Box display="flex" justifyContent="center" mt={2}>
-                    <CircularProgress />
-                </Box>
-            )}
-
             {/* Error State */}
             {error && (
                 <Box mt={2}>

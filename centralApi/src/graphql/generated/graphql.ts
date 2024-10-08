@@ -235,7 +235,7 @@ export type QueryGetRunDetailsArgs = {
 
 
 export type QueryGetRunListArgs = {
-  consortiumId: Scalars['String']['input'];
+  consortiumId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type RunDetails = {
@@ -315,6 +315,7 @@ export type Subscription = {
   __typename?: 'Subscription';
   consortiumDetailsChanged: Scalars['String']['output'];
   consortiumLatestRunChanged: Scalars['String']['output'];
+  runDetailsChanged: Scalars['String']['output'];
   runEvent: RunEventPayload;
   runStartCentral: RunStartCentralPayload;
   runStartEdge: RunStartEdgePayload;
@@ -328,4 +329,9 @@ export type SubscriptionConsortiumDetailsChangedArgs = {
 
 export type SubscriptionConsortiumLatestRunChangedArgs = {
   consortiumId: Scalars['String']['input'];
+};
+
+
+export type SubscriptionRunDetailsChangedArgs = {
+  runId: Scalars['String']['input'];
 };
