@@ -3,6 +3,7 @@ import {
   IStudyConfiguration,
   studyConfigurationSchema,
 } from './StudyConfiguration.js'
+import { read } from 'fs'
 
 // Define an interface for the Consortium document
 interface IConsortium extends Document {
@@ -11,6 +12,7 @@ interface IConsortium extends Document {
   leader: mongoose.Types.ObjectId // Reference to a User
   members: mongoose.Types.ObjectId[] // Array of User references
   activeMembers: mongoose.Types.ObjectId[] // Array of User references
+  readyMembers: mongoose.Types.ObjectId[] // Array of User references
   studyConfiguration: IStudyConfiguration
 }
 
@@ -21,6 +23,7 @@ const consortiumSchema: Schema = new Schema({
   leader: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
   members: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
   activeMembers: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
+  readyMembers: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
   studyConfiguration: { type: studyConfigurationSchema, required: true }, // Make sure studyConfiguration is always present
 })
 

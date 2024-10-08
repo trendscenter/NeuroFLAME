@@ -62,6 +62,7 @@ type ConsortiumDetails {
   leader: PublicUser!
   members: [PublicUser!]!  # Non-nullable array and non-nullable items
   activeMembers: [PublicUser!]!  # Non-nullable array and non-nullable items
+  readyMembers: [PublicUser!]!  # Non-nullable array and non-nullable items
   studyConfiguration: StudyConfiguration!
 }
 
@@ -131,6 +132,7 @@ type Mutation {
   consortiumJoin(consortiumId: String!): Boolean!
   consortiumLeave(consortiumId: String!): Boolean!
   consortiumSetMemberActive(consortiumId: String!, active: Boolean!): Boolean!
+  consortiumSetMemberReady(consortiumId: String!, ready: Boolean!): Boolean!
   computationCreate(title: String!, imageName: String!, imageDownloadUrl: String!, notes: String!): Boolean!
   computationEdit(computationId: String!, title: String!, imageName: String!, imageDownloadUrl: String!, notes: String!): Boolean!
   userCreate(username: String!, password: String!): LoginOutput!
