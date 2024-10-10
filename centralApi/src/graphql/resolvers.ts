@@ -71,6 +71,7 @@ export default {
           .populate('leader', 'id username')
           .populate('members', 'id username')
           .populate('activeMembers', 'id username')
+          .populate('readyMembers', 'id username')
           .populate(
             'studyConfiguration.computation',
             'title imageName imageDownloadUrl notes owner',
@@ -88,6 +89,7 @@ export default {
           leader,
           members,
           activeMembers,
+          readyMembers,
           studyConfiguration: {
             consortiumLeaderNotes,
             computationParameters,
@@ -107,6 +109,7 @@ export default {
           leader: leader ? transformUser(leader) : null,
           members: members ? members.map(transformUser) : [],
           activeMembers: activeMembers ? activeMembers.map(transformUser) : [],
+          readyMembers: readyMembers ? readyMembers.map(transformUser) : [],
           studyConfiguration: {
             consortiumLeaderNotes,
             computationParameters,
@@ -373,6 +376,10 @@ export default {
         consortiumId: consortium._id.toString(),
       })
 
+      pubsub.publish('RUN_DETAILS_CHANGED', {
+        runId: run._id.toString(),
+      })
+
       return { runId: run._id.toString() }
     },
     reportRunReady: async (
@@ -419,6 +426,10 @@ export default {
 
       pubsub.publish('CONSORTIUM_LATEST_RUN_CHANGED', {
         consortiumId: consortium._id.toString(),
+      })
+
+      pubsub.publish('RUN_DETAILS_CHANGED', {
+        runId: run._id.toString(),
       })
 
       return true
@@ -482,6 +493,10 @@ export default {
         consortiumId: consortium._id.toString(),
       })
 
+      pubsub.publish('RUN_DETAILS_CHANGED', {
+        runId: run._id.toString(),
+      })
+
       return true
     },
 
@@ -521,6 +536,10 @@ export default {
 
       pubsub.publish('CONSORTIUM_LATEST_RUN_CHANGED', {
         consortiumId: consortium._id.toString(),
+      })
+
+      pubsub.publish('RUN_DETAILS_CHANGED', {
+        runId: run._id.toString(),
       })
 
       return true
@@ -667,6 +686,7 @@ export default {
         leader: context.userId,
         members: [context.userId],
         activeMembers: [context.userId],
+        readyMembers: [],
         studyConfiguration: {
           consortiumLeaderNotes: '',
           computationParameters: '',
@@ -848,7 +868,7 @@ export default {
       }
 
       await Consortium.findByIdAndUpdate(consortiumId, {
-        $pull: { members: userId, activeMembers: userId },
+        $pull: { members: userId, activeMembers: userId, readyMembers: userId },
       })
 
       pubsub.publish('CONSORTIUM_DETAILS_CHANGED', {
@@ -877,10 +897,17 @@ export default {
       }
 
       // Update the activeMembers array
+
       try {
-        await consortium.updateOne({
-          [active ? '$addToSet' : '$pull']: { activeMembers: userId },
-        })
+        if (active) {
+          await consortium.updateOne({
+            $addToSet: { activeMembers: userId },
+          })
+        } else {
+          await consortium.updateOne({
+            $pull: { activeMembers: userId, readyMembers: userId },
+          })
+        }
 
         pubsub.publish('CONSORTIUM_DETAILS_CHANGED', {
           consortiumId: consortiumId,
@@ -890,6 +917,53 @@ export default {
       } catch (error) {
         logger.error('Error updating consortium active members:', error)
         throw new Error('Failed to update consortium active members')
+      }
+    },
+    consortiumSetMemberReady: async (
+      _: unknown,
+      { consortiumId, ready }: { consortiumId: string; ready: boolean },
+      context: Context,
+    ): Promise<boolean> => {
+      const { userId } = context
+
+      // Find the consortium by ID
+      const consortium = await Consortium.findById(consortiumId)
+      if (!consortium) {
+        throw new Error('Consortium not found')
+      }
+
+      // Check if the caller is a member of the consortium
+      if (
+        !consortium.members.map((member) => member.toString()).includes(userId)
+      ) {
+        throw new Error('User is not a member of the consortium')
+      }
+
+      // If trying to set ready to true, check if the member is active
+      if (
+        ready &&
+        !consortium.activeMembers
+          .map((member) => member.toString())
+          .includes(userId)
+      ) {
+        throw new Error('User must be active to be set as ready')
+      }
+
+      // Update the readyMembers array
+      try {
+        await consortium.updateOne({
+          [ready ? '$addToSet' : '$pull']: { readyMembers: userId }, // Add if ready, remove if unready
+        })
+
+        // Publish an event indicating the consortium details have changed
+        pubsub.publish('CONSORTIUM_DETAILS_CHANGED', {
+          consortiumId: consortiumId,
+        })
+
+        return true
+      } catch (error) {
+        logger.error('Error updating consortium ready members:', error)
+        throw new Error('Failed to update consortium ready members')
       }
     },
     userCreate: async (
@@ -994,16 +1068,32 @@ export default {
   Subscription: {
     runStartCentral: {
       resolve: (payload: RunStartCentralPayload): RunStartCentralPayload => {
+        logger.info(
+          `Event emitted for runStartCentral: \n${JSON.stringify(
+            payload,
+            null,
+            2,
+          )}`,
+        )
         return payload
       },
       subscribe: withFilter(
-        () => pubsub.asyncIterator(['RUN_START_CENTRAL']),
-        // Placeholder for future filtering logic. Currently returns true for all payloads.
+        () => {
+          logger.info('Subscription attempt for runStartCentral')
+          return pubsub.asyncIterator(['RUN_START_CENTRAL'])
+        },
         (
           payload: RunStartCentralPayload,
           variables: unknown,
           context: Context,
         ) => {
+          logger.info(
+            `Subscription attempt for runStartCentral: context: \n${JSON.stringify(
+              context,
+              null,
+              2,
+            )}`,
+          )
           return context.roles.includes('central')
         },
       ),
@@ -1156,6 +1246,44 @@ export default {
             throw new Error('Consortium not found')
           }
 
+          const isMember = consortium.members.some(
+            (memberObjectId: any) => memberObjectId.toString() === userId,
+          )
+
+          return isMember
+        },
+      ),
+    },
+
+    runDetailsChanged: {
+      resolve: (payload: { runId: string }): string => {
+        return 'Run details changed'
+      },
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(['RUN_DETAILS_CHANGED']),
+        async (
+          payload: { runId: string },
+          variables: unknown,
+          context: Context,
+        ) => {
+          const { userId } = context
+          const { runId } = payload
+
+          // Find the run by its ID
+          const run = await Run.findById(runId).lean()
+          if (!run) {
+            logger.error('Run not found')
+            throw new Error('Run not found')
+          }
+
+          // Check if the user is a member of the run's consortium
+          const consortium = await Consortium.findById(run.consortium).lean()
+          if (!consortium) {
+            logger.error('Consortium not found')
+            throw new Error('Consortium not found')
+          }
+
+          // Verify if the user is part of the consortium's members
           const isMember = consortium.members.some(
             (memberObjectId: any) => memberObjectId.toString() === userId,
           )

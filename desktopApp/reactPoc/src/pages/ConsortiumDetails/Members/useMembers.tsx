@@ -7,23 +7,28 @@ import { useConsortiumDetailsContext } from "../ConsortiumDetailsContext";
 interface UseMembersProps {
     members: PublicUser[];
     activeMembers: PublicUser[];
+    readyMembers: PublicUser[];
     leader: PublicUser;
 }
 
-export const useMembers = ({ members, activeMembers, leader }: UseMembersProps) => {
+export const useMembers = ({ members, activeMembers, readyMembers, leader }: UseMembersProps) => {
     const { userId } = useUserState();
-    const { consortiumSetMemberActive } = useCentralApi();
+    const { consortiumSetMemberActive, consortiumSetMemberReady } = useCentralApi();
     const consortiumId = useParams<{ consortiumId: string }>().consortiumId as string;
     const { refetch } = useConsortiumDetailsContext();
 
     const isActiveMember = (member: PublicUser) =>
         activeMembers.some((activeMember) => activeMember.id === member.id);
 
+    const isReadyMember = (member: PublicUser) =>
+        readyMembers.some((readyMember) => readyMember.id === member.id);
+
     const memberList = members
         .map((member) => ({
             ...member,
             isLeader: member.id === leader.id,
             isActive: isActiveMember(member),
+            isReady: isReadyMember(member),
             isMe: member.id === userId,
         }))
         .sort((a, b) => {
@@ -34,14 +39,23 @@ export const useMembers = ({ members, activeMembers, leader }: UseMembersProps) 
             return a.username.localeCompare(b.username);
         });
 
-    const handleToggleActive = async (memberId: string, isActive: boolean) => {
+    const setMemberActive = async (memberId: string, isActive: boolean) => {
         try {
-            await consortiumSetMemberActive({ consortiumId, active: !isActive });
+            await consortiumSetMemberActive({ consortiumId, active: isActive });
             refetch();
         } catch (error) {
             console.error("Failed to update member status:", error);
         }
     };
 
-    return { memberList, handleToggleActive };
+    const setMemberReady = async (memberId: string, isReady: boolean) => {
+        try {
+            await consortiumSetMemberReady({ consortiumId, ready: isReady });
+            refetch();
+        } catch (error) {
+            console.error("Failed to update member status:", error);
+        }
+    }
+
+    return { memberList, setMemberActive, setMemberReady };
 };

@@ -20,6 +20,10 @@ const GET_CONSORTIUM_DETAILS = gql`
         id
         username
       }
+      readyMembers {
+        id
+        username
+      }
       studyConfiguration {
         consortiumLeaderNotes
         computationParameters
