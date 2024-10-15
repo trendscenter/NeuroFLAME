@@ -17,7 +17,7 @@ export default function UserAvatar(props: any) {
           marginRight: '0.5rem',  
           fontStyle: 'none'
         }}
-      >{username && username.charAt(0).toUpperCase()}
+      >{username && typeof username === 'string' && username.charAt(0).toUpperCase()}
       </Avatar>
     )
 }

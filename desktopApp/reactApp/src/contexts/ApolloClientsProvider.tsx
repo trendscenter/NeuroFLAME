@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ReactNode } from 'react'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { createApolloClient } from '../createApolloClient'
+import { createApolloClient } from '../utils/createApolloClient'
 import { ApolloClientsContext } from './ApolloClientsContext' // Ensure this path is correct
 
 
