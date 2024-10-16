@@ -4,7 +4,7 @@ interface UserStateContextType {
     userId: string;
     username: string;
     roles: string[];
-    setUserData: (userData: { accessToken: string, userId: string, username: string, roles: string[] }, persist: boolean) => void;
+    setUserData: (userData: { accessToken: string, userId: string, username: string, roles: string[] }) => void;
     clearUserData: () => void;
 }
 
@@ -38,7 +38,6 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
             })
             // TODO investigate ways that don't rely on local storage
             localStorage.setItem("accessToken", localAccessToken);
-
         }
     }
 
@@ -71,22 +70,20 @@ export const UserStateProvider = ({ children }: { children: ReactNode }) => {
         localStorage.removeItem("roles");
     }
 
-    const setUserData = async (data: { accessToken: string, userId: string, username: string, roles: string[] }, persist: boolean) => {
+    const setUserData = async (data: { accessToken: string, userId: string, username: string, roles: string[] }) => {
         _setUserData({
             accessToken: data.accessToken,
             userId: data.userId,
             username: data.username,
             roles: data.roles
         });
-        if (persist) {
-            setLocalStorageForUser(data);
-        }
+
+        setLocalStorageForUser(data);
+
     }
 
-
-
     return (
-        <UserStateContext.Provider value={{ userId: userData.userId, username: userData.username, roles: userData.roles,  setUserData, clearUserData }}>
+        <UserStateContext.Provider value={{ userId: userData.userId, username: userData.username, roles: userData.roles, setUserData, clearUserData }}>
             {children}
         </UserStateContext.Provider>
     );

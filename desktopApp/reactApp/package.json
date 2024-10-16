@@ -1,17 +1,14 @@
 {
-  "name": "react-app",
+  "name": "reactpoc",
   "version": "0.1.0",
   "private": true,
   "homepage": ".",
   "dependencies": {
     "@apollo/client": "^3.10.1",
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
-    "@fontsource/inter": "^5.0.18",
-    "@fontsource/lato": "^5.0.21",
-    "@mui/icons-material": "^5.15.20",
-    "@mui/material": "^5.15.20",
-    "@mui/x-tree-view": "^7.7.0",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.0",
+    "@mui/material": "^6.1.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -21,16 +18,18 @@
     "@types/react-dom": "^18.2.25",
     "graphql": "^16.8.1",
     "graphql-ws": "^5.16.0",
-    "html-react-parser": "^5.1.10",
+    "js-yaml": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^9.0.1",
-    "react-quill": "^2.0.0",
     "react-router-dom": "^6.23.1",
     "react-scripts": "5.0.1",
-    "react-textarea-autosize": "^8.5.3",
     "react-toastify": "^10.0.5",
-    "vanilla-jsoneditor": "^0.23.7",
+    "rehype-katex": "^7.0.0",
+    "remark-breaks": "^4.0.0",
+    "remark-emoji": "^5.0.1",
+    "remark-gfm": "^4.0.0",
+    "remark-math": "^6.0.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -58,7 +57,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react-router-dom": "^5.3.3",
+    "@types/js-yaml": "^4.0.9",
     "typescript": "^4.9.5"
   }
 }
