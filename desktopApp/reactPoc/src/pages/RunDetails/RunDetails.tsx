@@ -51,7 +51,7 @@ export function RunDetails() {
                             </Typography>
                             {runDetails.runErrors.map((error, index) => (
                                 <Typography key={index} variant="body2" color="error">
-                                    {error.message} - {new Date(error.timestamp).toLocaleString()} (User: {error.user.username})
+                                    {new Date(+error.timestamp).toLocaleString()} {error.user.username} - {error.message}
                                 </Typography>
                             ))}
                         </>

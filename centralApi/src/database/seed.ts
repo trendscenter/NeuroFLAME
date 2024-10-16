@@ -21,6 +21,7 @@ const user3Id = new mongoose.Types.ObjectId('66289c79aebab67040a20070')
 const user4Id = new mongoose.Types.ObjectId('66289c79aebab67040a20071')
 const computation1Id = new mongoose.Types.ObjectId('66289c79aebab67040a21000')
 const computation2Id = new mongoose.Types.ObjectId('66289c79aebab67040a21001')
+const computation3Id = new mongoose.Types.ObjectId('66289c79aebab67040a21002')
 const consortium1Id = new mongoose.Types.ObjectId('66289c79aebab67040a22000')
 const consortium2Id = new mongoose.Types.ObjectId('66289c79aecab67040a22001')
 const run1Id = new mongoose.Types.ObjectId('66289c79aecab67040a23000')
@@ -88,6 +89,14 @@ const seedDatabase = async () => {
         imageDownloadUrl: 'https://www.markdownguide.org/cheat-sheet/',
         notes: computationNotesMarkdownExample,
         owner: user2Id.toString(),
+      },
+      {
+        _id: computation3Id,
+        title: 'single round ridge regression',
+        imageName: 'single_round_ridge_regression',
+        imageDownloadUrl: 'https://example.com/single_round_ridge_regression',
+        notes: 'This is a test computation.',
+        owner: user3Id.toString(),
       },
     ]
     await Computation.insertMany(computations)
