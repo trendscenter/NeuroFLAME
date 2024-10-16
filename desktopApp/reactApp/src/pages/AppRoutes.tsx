@@ -3,11 +3,16 @@ import {
     Routes,
   } from 'react-router-dom';
 import LoginPage from './Login/LoginPage';
+<<<<<<< HEAD
 import ConsortiumPage from './ConsortiumPage';
 import ConsortiumListPage from './ConsortiumList/ConsortiumListPage';
 import ConsortiumDetailsPage from './ConsortiumDetails/ConsortiumDetailsPage';
 import { RunDetails } from './RunDetails/RunDetails';
 import { RunList } from './RunList/RunList';
+=======
+import ConsortiumListPage from './ConsortiumList/ConsortiumListPage';
+import ConsortiumDetailsPage from './ConsortiumDetails/ConsortiumDetailsPage';
+>>>>>>> bc92e82 (Moving earlier reactApp to reactAppOld. Using latest reactPoc to create new reactApp with UI embellishments)
 // import ConsortiumList from './ConsortiumList';
 // import ConsortiumDetails from './ConsortiumDetails';
 // import ComputationsList from './ComputationList';
@@ -30,8 +35,11 @@ export default function AppRoutes() {
             <Route index path="/login" element={<LoginPage></LoginPage>} />
             <Route path="/consortiumList" element={<ConsortiumListPage></ConsortiumListPage>} />
             <Route path="/consortium/details/:consortiumId" element={<ConsortiumDetailsPage></ConsortiumDetailsPage>} />
+<<<<<<< HEAD
             <Route path="/run/details/:runId" element={<RunDetails/>} />
             <Route path="/runList" element={<RunList/>} />
+=======
+>>>>>>> bc92e82 (Moving earlier reactApp to reactAppOld. Using latest reactPoc to create new reactApp with UI embellishments)
             
             {/* <Route path="/consortia" element={<ConsortiumList />} />
             <Route path="/consortia/create" element={<ConsortiumCreate />} />

@@ -1,38 +1,278 @@
-.App {
-  text-align: center;
+/* Body styling */
+html {
+  scroll-behavior: smooth;
+  font-size: 14px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #EFEFF0 !important; 
+  color: #333;
+  line-height: 1.6;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+header {
+  position: fixed;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600 !important;
+  margin: 0 0 0.5rem;
+  color: #0066FF;
+}
+
+h1 {
+  color: #0066FF;
+}
+
+h6 {
+  font-size: 1.2rem !important;
+}
+
+/* Paragraphs */
+p {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+}
+
+/* Links */
+a {
+  color: #007bff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+ul,
+ol {
+  margin-left: 0;
+  margin-bottom: 1rem;
+}
+
+/* Buttons */
+button {
+  display: inline-block;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 1.5rem;
+  font-size: 16px;
+}
+
+button a {
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.button {
+  display: inline-block;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Forms and Input fields */
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+input.MuiInput-input,
+input.MuiInputBase-input {
+  border: none !important;
+}
+
+input[type="submit"],
+input[type="button"] {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover {
+  background-color: #45a049;
+}
+
+/* Utility classes */
+.container {
+  width: 80%;
+  margin: auto;
+  overflow: hidden;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Responsive design */
+@media screen and (max-width: 600px) {
+  .container {
+    width: 100%;
   }
-  to {
-    transform: rotate(360deg);
+}
+
+pre, code, .pre {
+  display: inline-block;
+  background-color: #eef2f2; /* Light grey background */
+  border-radius: 8px; /* Rounded corners */
+  padding: 1rem; /* Padding inside the code block */
+  overflow-x: auto; /* Horizontal scroll for long lines */
+  font-size: 0.9rem;
+  color: #000 !important;
+  margin: 0 0 0.25rem;
+  height: auto;
+  width: calc(100% - 2rem);
+}
+
+pre.settings {
+  background-color: #1A2948; /* Light grey background */   
+  color: #ffffff !important;
+  padding: 1rem;
+}
+
+pre {
+  white-space: pre-wrap; /* Wrap long lines */
+}
+
+code {
+  font-family: 'Courier New', Courier, monospace; /* Monospace font for code */
+  display: block; /* Make code element block-level */
+  padding: 0;
+}
+
+/* Additional styling for better readability */
+pre code {
+  color: #333; /* Darker text color for contrast */
+  line-height: 1.4; /* Slightly increased line height */
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  display: inline-block;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+input[type="file"]::-webkit-file-upload-button:hover {
+  background-color: #0066cc; /* Slightly darker blue for hover effect */
+}
+
+.markdown-wrapper h1, 
+.markdown-wrapper h2,
+.markdown-wrapper h3,
+.markdown-wrapper strong,
+.markdown-wrapper b {
+  color: black;
+}
+
+.markdown-wrapper h2 {
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.toast-container > div {
+  background-color: #001f70 !important; 
+}
+
+.toast-container h2 {
+  color: white;
+}
+
+a > div.MuiAvatar-root:hover {
+  text-decoration: none;
+  background-color: white;
+  color: #001f70;
+}
+
+a:hover > div.MuiAvatar-root {
+  text-decoration: none;
+}
+
+#compnotes {
+  position: absolute;
+  top: -5rem;
+}
+
+.computation-notes {
+  position: relative;
+}
+
+.computation-links {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+}
+
+.username {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+input,
+textarea {
+  font-size: 14px !important;
+}
+
+.MuiCardActions-root label span {
+  font-size: 11px !important;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@media only screen and (min-width: 900px) {
+  html {
+    font-size: 14px;
+  }
+  #compnotes-anchor {
+    display: none;
+  }
+  .computation-links {
+    position: relative;
+    top: initial;
+    right: initial;
+    margin: 0.5rem 0 1rem;
   }
 }

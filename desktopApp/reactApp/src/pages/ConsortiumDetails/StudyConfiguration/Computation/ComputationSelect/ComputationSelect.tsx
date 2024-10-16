@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // src/components/ComputationSelect.tsx
+=======
+>>>>>>> bc92e82 (Moving earlier reactApp to reactAppOld. Using latest reactPoc to create new reactApp with UI embellishments)
 import React, { useState } from "react";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import ComputationList from "./ComputationList";
@@ -26,8 +29,13 @@ export default function ComputationSelect() {
 
     return (
         <div>
+<<<<<<< HEAD
             <Button variant="contained" color="primary" onClick={handleOpenModal}>
                 Select Computation
+=======
+            <Button variant="outlined" color="primary" onClick={handleOpenModal} size="small">
+                Change
+>>>>>>> bc92e82 (Moving earlier reactApp to reactAppOld. Using latest reactPoc to create new reactApp with UI embellishments)
             </Button>
 
             <Dialog open={isModalOpen} onClose={handleCloseModal} maxWidth="sm" fullWidth>

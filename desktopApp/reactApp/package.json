@@ -7,6 +7,11 @@
     "@apollo/client": "^3.10.1",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+<<<<<<< HEAD
+=======
+    "@fontsource/inter": "^5.1.0",
+    "@fontsource/lato": "^5.1.0",
+>>>>>>> bc92e82 (Moving earlier reactApp to reactAppOld. Using latest reactPoc to create new reactApp with UI embellishments)
     "@mui/icons-material": "^6.1.0",
     "@mui/material": "^6.1.0",
     "@testing-library/jest-dom": "^5.17.0",
@@ -18,6 +23,10 @@
     "@types/react-dom": "^18.2.25",
     "graphql": "^16.8.1",
     "graphql-ws": "^5.16.0",
+<<<<<<< HEAD
+=======
+    "html-react-parser": "^5.1.17",
+>>>>>>> bc92e82 (Moving earlier reactApp to reactAppOld. Using latest reactPoc to create new reactApp with UI embellishments)
     "js-yaml": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

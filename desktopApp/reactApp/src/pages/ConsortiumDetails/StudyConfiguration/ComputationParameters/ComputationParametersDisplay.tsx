@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 import React from "react";
 import { Typography, Paper } from "@mui/material";
 
+=======
+>>>>>>> bc92e82 (Moving earlier reactApp to reactAppOld. Using latest reactPoc to create new reactApp with UI embellishments)
 interface ComputationParametersDisplayProps {
     computationParameters: string;
 }
@@ -18,6 +21,7 @@ export default function ComputationParametersDisplay({ computationParameters }: 
 
     return (
         <div>
+<<<<<<< HEAD
             <Typography variant="h5" gutterBottom>
                 Computation Parameters Display
             </Typography>
@@ -26,6 +30,13 @@ export default function ComputationParametersDisplay({ computationParameters }: 
                     {formattedJson}
                 </pre>
             </Paper>
+=======
+            <pre className="settings" style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
+                {computationParameters ? 
+                formattedJson : 
+                'Please provide settings that coorespond to your selected Computation. Refer to Computation Notes for Example Settings.'}
+            </pre>
+>>>>>>> bc92e82 (Moving earlier reactApp to reactAppOld. Using latest reactPoc to create new reactApp with UI embellishments)
         </div>
     );
 }

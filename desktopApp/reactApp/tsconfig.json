@@ -15,8 +15,8 @@
       "noEmit": true,                                 // Do not emit outputs (used by create-react-app)
       "jsx": "react-jsx"                              // Support JSX in .tsx files: "react", "react-jsx", "react-jsxdev"
     },
-    "include": [
-      "src"                                           // Include all files in the src directory
+    "include": [         
+      "src/**/*"                                     // Include all files in the src directory                                  
     ],
     "exclude": [
       "node_modules",                                 // Exclude the node_modules directory

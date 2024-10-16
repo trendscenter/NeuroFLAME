@@ -10,8 +10,12 @@ export default function DirectorySelect() {
         cancelEdit, 
         isEditing, 
         isDifferent, 
+<<<<<<< HEAD
         openDirectoryDialogHandler,
 
+=======
+        openDirectoryDialogHandler
+>>>>>>> bc92e82 (Moving earlier reactApp to reactAppOld. Using latest reactPoc to create new reactApp with UI embellishments)
     } = useDirectorySelect();
 
     return (
