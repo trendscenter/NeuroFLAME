@@ -1,36 +1,25 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import App from './App';
-import { fetchConfig } from './fetchConfig';
+import { electronApi } from './apis/electronApi/electronApi';
 import ApolloClientsProvider from './contexts/ApolloClientsProvider';
-import '@fontsource/inter/300.css';
-import '@fontsource/inter/400.css';
-import '@fontsource/inter/500.css';
-import '@fontsource/inter/700.css';
-import '@fontsource/lato/300.css';
-import '@fontsource/lato/400.css';
-import '@fontsource/lato/700.css';
-import "./index.css"
+import { BrowserRouter as Router } from 'react-router-dom';
 import { UserStateProvider } from './contexts/UserStateContext';
-import { NotificationsProvider } from './contexts/NotificationsContext';
-import Router from './Router';
 
 const startApp = async () => {
-  const config = await fetchConfig();
-
+  const config = await electronApi.FetchConfig();
+  const root = ReactDOM.createRoot(
+    document.getElementById('root') as HTMLElement
+  );
   if (config) {
-    ReactDOM.render(
-      <UserStateProvider>
-        <ApolloClientsProvider config={config}>
+    root.render(
+      <ApolloClientsProvider config={config}>
+        <UserStateProvider>
           <Router>
-            <NotificationsProvider>
-              <App />
-            </NotificationsProvider>
+            <App />
           </Router>
-        </ApolloClientsProvider>
-      </UserStateProvider>
-      ,
-      document.getElementById('root')
+        </UserStateProvider>
+      </ApolloClientsProvider>
     );
   } else {
     console.error('Failed to start the app due to configuration loading failure.');
