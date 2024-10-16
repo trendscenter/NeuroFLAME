@@ -12,15 +12,9 @@ const ComputationParameters: React.FC<ComputationParametersProps> = ({ computati
     const { isEditing, handleEdit, handleSave, handleCancel, isLeader } = useComputationParameters(computationParameters);
 
     return (
-<<<<<<< HEAD
-        <Box p={2} border={1} borderRadius={4} borderColor="grey.300">
-            <Typography variant="h6" gutterBottom>
-                Computation Parameters
-=======
         <Box p={2} border={1} borderRadius={2} borderColor="grey.300" marginBottom={0} bgcolor={'white'}>
             <Typography variant="h6" gutterBottom>
                 Settings <span style={{fontSize: '12px', color: 'black'}}>(parameters.json)</span>
->>>>>>> bc92e82 (Moving earlier reactApp to reactAppOld. Using latest reactPoc to create new reactApp with UI embellishments)
             </Typography>
             {isEditing ? (
                 <ComputationParametersEdit
@@ -36,10 +30,6 @@ const ComputationParameters: React.FC<ComputationParametersProps> = ({ computati
                     variant="outlined"
                     color="primary"
                     onClick={handleEdit}
-<<<<<<< HEAD
-                    sx={{ mt: 2 }}
-=======
->>>>>>> bc92e82 (Moving earlier reactApp to reactAppOld. Using latest reactPoc to create new reactApp with UI embellishments)
                 >
                     Edit
                 </Button>

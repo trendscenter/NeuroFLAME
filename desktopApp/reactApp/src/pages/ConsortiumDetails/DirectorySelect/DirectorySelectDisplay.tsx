@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-import { Box, Button, TextField, Typography } from "@mui/material";
-=======
 import React, { useRef } from 'react';
 import { Box, Button, InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
->>>>>>> bc92e82 (Moving earlier reactApp to reactAppOld. Using latest reactPoc to create new reactApp with UI embellishments)
 
 interface DirectorySelectDisplayProps {
     directory: string;
@@ -27,68 +23,6 @@ export function DirectorySelectDisplay({
     onCancelEdit,
     onStartEdit,
 }: DirectorySelectDisplayProps) {
-<<<<<<< HEAD
-    return (
-        <Box p={2} border={1} borderRadius={4} borderColor="grey.300">
-            <Typography variant="h6" gutterBottom>
-                Directory Select
-            </Typography>
-
-            {/* Row of Edit, Save, and Cancel buttons */}
-            <Box display="flex" gap={2} mb={2}>
-                {isEditing ? (
-                    <>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={onSaveDirectory}
-                            disabled={!isDifferent} // Save only if canSave is true
-                        >
-                            Save
-                        </Button>
-
-                        <Button
-                            variant="contained"
-                            onClick={onCancelEdit}
-                        >
-                            Cancel
-                        </Button>
-                    </>
-                ) : (
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={onStartEdit} // Start editing
-                    >
-                        Edit
-                    </Button>
-                )}
-            </Box>
-
-            {/* TextField for manual directory input, disabled unless in edit mode */}
-            <TextField
-                label="Directory"
-                value={directory || ""}
-                onChange={(e) => onDirectoryChange(e.target.value)}
-                fullWidth
-                margin="normal"
-                variant="outlined"
-                disabled={!isEditing} // Disable if not editing
-            />
-
-            {/* Button to trigger the Electron directory picker */}
-            {isEditing && (
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={onOpenDirectoryDialog}
-                    sx={{ mt: 2 }}
-                >
-                    Browse for Directory
-                </Button>
-            )}
-        </Box>
-=======
     const inputRef = useRef<HTMLInputElement>(null);
 
     const handleFocus = () => {
@@ -190,6 +124,5 @@ export function DirectorySelectDisplay({
             Select Data Directory
         </Button>}
         </>
->>>>>>> bc92e82 (Moving earlier reactApp to reactAppOld. Using latest reactPoc to create new reactApp with UI embellishments)
     );
 }

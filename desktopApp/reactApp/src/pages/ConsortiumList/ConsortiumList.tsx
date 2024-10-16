@@ -1,9 +1,6 @@
 import React from 'react';
 import { Paper, List, Typography, Button, Box, CircularProgress, Container } from '@mui/material';
-<<<<<<< HEAD
-=======
 import ReplayIcon from '@mui/icons-material/Replay';
->>>>>>> bc92e82 (Moving earlier reactApp to reactAppOld. Using latest reactPoc to create new reactApp with UI embellishments)
 import { ConsortiumListItem as ConsortiumListItemType } from '../../apis/centralApi/generated/graphql'; // Import the type
 import ConsortiumListItem from './ConsortiumListItem'; // Import the new presentation component
 
@@ -42,24 +39,6 @@ const ConsortiumList: React.FC<ConsortiumListProps> = ({ consortiumList, loading
 
     // Success state (show list and reload button at the top)
     return (
-<<<<<<< HEAD
-        <Container maxWidth="md">
-            <Box display="flex" flexDirection="column" alignItems="center" marginBottom={2}>
-                <Typography variant="h4" gutterBottom align="center">
-                    Consortium List
-                </Typography>
-                <Button variant="contained" color="primary" onClick={onReload} sx={{ marginBottom: 2 }}>
-                    Reload
-                </Button>
-            </Box>
-            <Paper elevation={3}>
-                <List>
-                    {consortiumList.map((consortium, index) => (
-                        <ConsortiumListItem key={index} consortium={consortium} />
-                    ))}
-                </List>
-            </Paper>
-=======
         <Container maxWidth="lg">
             <Box display="flex" flexDirection="row" marginTop={4} marginBottom={2}>
                 <Box flex={1}>
@@ -81,7 +60,6 @@ const ConsortiumList: React.FC<ConsortiumListProps> = ({ consortiumList, loading
                     ))}
                 </>
             </Box>
->>>>>>> bc92e82 (Moving earlier reactApp to reactAppOld. Using latest reactPoc to create new reactApp with UI embellishments)
         </Container>
     );
 };
