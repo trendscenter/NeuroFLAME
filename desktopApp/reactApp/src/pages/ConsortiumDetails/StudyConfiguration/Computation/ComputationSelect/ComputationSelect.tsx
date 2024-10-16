@@ -1,4 +1,3 @@
-// src/components/ComputationSelect.tsx
 import React, { useState } from "react";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import ComputationList from "./ComputationList";
@@ -26,8 +25,8 @@ export default function ComputationSelect() {
 
     return (
         <div>
-            <Button variant="contained" color="primary" onClick={handleOpenModal}>
-                Select Computation
+            <Button variant="outlined" color="primary" onClick={handleOpenModal} size="small">
+                Change
             </Button>
 
             <Dialog open={isModalOpen} onClose={handleCloseModal} maxWidth="sm" fullWidth>

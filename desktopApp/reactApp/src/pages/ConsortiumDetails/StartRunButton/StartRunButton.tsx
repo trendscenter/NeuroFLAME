@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCentralApi } from "../../../apis/centralApi/centralApi";
-import { Button, Typography, CircularProgress, Box } from "@mui/material";
+import { Button, Typography, CircularProgress } from "@mui/material";
 
 export default function StartRunButton() {
     const { startRun } = useCentralApi();
@@ -9,6 +9,7 @@ export default function StartRunButton() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [runId, setRunId] = useState<string | null>(null);
+    const [runStarted, setRunStarted] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const handleStartRun = async () => {
@@ -21,30 +22,32 @@ export default function StartRunButton() {
             setError("Failed to start the run. Please try again.");
         } finally {
             setLoading(false);
+            setRunStarted(true);
+            const startRunTimeout = setTimeout(() => {
+                setRunStarted(false);
+            }, 10000);
+            return () => clearTimeout(startRunTimeout);
         }
     };
 
     return (
-        <Box p={2} border={1} borderRadius={4} borderColor="grey.300">
+        <>
             {loading ? (
                 <CircularProgress />
             ) : (
                 <Button
                     variant="contained"
-                    color="primary"
                     onClick={handleStartRun}
-                    disabled={!!runId} // Disable after a run is started
-                    // fullWidth
+                    disabled={runStarted} // Disable after a run is started
+                    sx={{
+                        marginBottom: '1rem', 
+                        backgroundColor: '#2FB600',
+                        borderRadius: '1.2rem'
+                    }}
+                    fullWidth
                 >
-                    {runId ? `Run Started (ID: ${runId})` : "Start Run"}
+                    {runStarted ? `Run Started (ID: ${runId})` : "Start Run"}
                 </Button>
-            )}
-
-            {runId && (
-                <Typography mt={2} color="primary">
-                    Run successfully started with ID: {runId}.{" "}
-                    <Link to={`/run/details/${runId}`}>View Run</Link>
-                </Typography>
             )}
 
             {error && (
@@ -52,6 +55,6 @@ export default function StartRunButton() {
                     {error}
                 </Typography>
             )}
-        </Box>
+        </>
     );
 }

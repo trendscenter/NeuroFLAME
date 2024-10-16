@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 
 interface ComputationParametersEditProps {
     computationParameters: string;
@@ -40,15 +40,11 @@ export default function ComputationParametersEdit({
 
     return (
         <div>
-            <Typography variant="h5" gutterBottom>
-                Computation Parameters Edit
-            </Typography>
             <TextField
                 fullWidth
                 multiline
                 rows={10}
                 variant="outlined"
-                label="Computation Parameters (JSON)"
                 value={parameters}
                 onChange={handleChange}
                 error={!isValidJson}
@@ -56,6 +52,7 @@ export default function ComputationParametersEdit({
             />
             <div style={{ marginTop: "16px" }}>
                 <Button
+                    size="small"
                     variant="contained"
                     color="primary"
                     onClick={handleSave}
@@ -64,7 +61,7 @@ export default function ComputationParametersEdit({
                 >
                     Save
                 </Button>
-                <Button variant="outlined" onClick={handleCancel}>
+                <Button size="small" variant="outlined" onClick={handleCancel}>
                     Cancel
                 </Button>
             </div>

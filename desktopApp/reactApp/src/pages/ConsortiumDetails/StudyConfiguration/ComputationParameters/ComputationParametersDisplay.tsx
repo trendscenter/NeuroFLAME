@@ -1,6 +1,3 @@
-import React from "react";
-import { Typography, Paper } from "@mui/material";
-
 interface ComputationParametersDisplayProps {
     computationParameters: string;
 }
@@ -18,14 +15,11 @@ export default function ComputationParametersDisplay({ computationParameters }: 
 
     return (
         <div>
-            <Typography variant="h5" gutterBottom>
-                Computation Parameters Display
-            </Typography>
-            <Paper elevation={3} style={{ padding: "16px", backgroundColor: "#f5f5f5" }}>
-                <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-                    {formattedJson}
-                </pre>
-            </Paper>
+            <pre className="settings" style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
+                {computationParameters ? 
+                formattedJson : 
+                'Please provide settings that coorespond to your selected Computation. Refer to Computation Notes for Example Settings.'}
+            </pre>
         </div>
     );
 }

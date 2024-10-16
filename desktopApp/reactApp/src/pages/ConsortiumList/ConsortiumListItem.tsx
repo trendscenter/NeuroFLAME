@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ListItem, ListItemText, Button, Box } from '@mui/material';
+import { ListItem, ListItemText, Button, Box, Paper, Typography } from '@mui/material';
 import { ConsortiumListItem as ConsortiumListItemType } from '../../apis/centralApi/generated/graphql'; // Import the type
 import { useNavigate } from 'react-router-dom';
 import { useUserState } from '../../contexts/UserStateContext';
@@ -53,23 +53,25 @@ const ConsortiumListItem: React.FC<ConsortiumListItemProps> = ({ consortium }) =
     };
 
     return (
-        <ListItem divider>
-            <Box flex={1} onClick={() => navigate(`/consortium/details/${consortium.id}`)}>
-                <ListItemText
-                    primary={consortium.title || 'No Title'}
-                    secondary={consortium.description || 'No Description'}
-                />
+        <Box display="flex" flexDirection="row" style={{background: 'white', padding: '1rem', marginBottom: '1rem'}}>
+            <Box flex={1}>
+                <a onClick={() => navigate(`/consortium/details/${consortium.id}`)}>
+                    <Typography variant="h6">{consortium.title || 'No Title'}</Typography>
+                </a>
+                <Typography>{consortium.description || 'No Description'}</Typography>
             </Box>
-            <Button
-                variant="contained"
-                color={isMember ? "secondary" : "primary"}
-                onClick={isMember ? handleLeave : handleJoin}
-                disabled={loading}
-                sx={{ ml: 2 }}
-            >
-                {loading ? "Loading..." : isMember ? "Leave" : "Join"}
-            </Button>
-        </ListItem>
+            <Box>
+                <Button
+                    variant="contained"
+                    color={isMember ? "secondary" : "primary"}
+                    onClick={isMember ? handleLeave : handleJoin}
+                    disabled={loading}
+                    sx={{ ml: 2 }}
+                >
+                    {loading ? "Loading..." : isMember ? "Leave" : "Join"}
+                </Button>
+            </Box>
+        </Box>
     );
 };
 

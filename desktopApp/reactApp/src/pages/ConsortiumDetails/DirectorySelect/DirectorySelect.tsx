@@ -10,8 +10,7 @@ export default function DirectorySelect() {
         cancelEdit, 
         isEditing, 
         isDifferent, 
-        openDirectoryDialogHandler,
-
+        openDirectoryDialogHandler
     } = useDirectorySelect();
 
     return (

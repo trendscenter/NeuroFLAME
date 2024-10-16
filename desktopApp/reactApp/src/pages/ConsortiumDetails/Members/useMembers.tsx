@@ -1,6 +1,8 @@
+import React, { useEffect, useState } from "react";
 import { PublicUser } from "../../../apis/centralApi/generated/graphql";
 import { useUserState } from "../../../contexts/UserStateContext";
 import { useCentralApi } from "../../../apis/centralApi/centralApi";
+import { useEdgeApi } from "../../../apis/edgeApi/edgeApi";
 import { useParams } from "react-router-dom";
 import { useConsortiumDetailsContext } from "../ConsortiumDetailsContext";
 
@@ -16,6 +18,8 @@ export const useMembers = ({ members, activeMembers, readyMembers, leader }: Use
     const { consortiumSetMemberActive, consortiumSetMemberReady } = useCentralApi();
     const consortiumId = useParams<{ consortiumId: string }>().consortiumId as string;
     const { refetch } = useConsortiumDetailsContext();
+
+    const [memberMountDir, setMemberMountDir] = useState<string>('');
 
     const isActiveMember = (member: PublicUser) =>
         activeMembers.some((activeMember) => activeMember.id === member.id);

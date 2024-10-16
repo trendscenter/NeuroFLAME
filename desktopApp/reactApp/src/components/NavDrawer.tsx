@@ -5,20 +5,18 @@ import { Link } from 'react-router-dom';
 interface NavDrawerProps {
   open: boolean;
   onClose: () => void;
+  navSetDrawerOpen: (...args: any[]) => any;
 }
 
-const NavDrawer: React.FC<NavDrawerProps> = ({ open, onClose }) => {
+const NavDrawer: React.FC<NavDrawerProps> = ({ open, onClose, navSetDrawerOpen }) => {
   return (
-    <Drawer anchor="left" open={open} onClose={onClose}>
+    <Drawer anchor="right" open={open} onClose={onClose}>
       <List>
-        <ListItem component={Link} to="/">
+        <ListItem onClick={()=>{navSetDrawerOpen(false)}} component={Link} to="/">
           <ListItemText primary="Home" />
         </ListItem>
-        <ListItem component={Link} to="/consortiumList">
+        <ListItem onClick={()=>{navSetDrawerOpen(false)}} component={Link} to="/consortiumList">
           <ListItemText primary="Consortium List" />
-        </ListItem>
-        <ListItem component={Link} to="/runList">
-          <ListItemText primary="Run List" />
         </ListItem>
       </List>
     </Drawer>

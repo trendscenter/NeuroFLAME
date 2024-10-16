@@ -1,4 +1,5 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
+import parse from 'html-react-parser';
 
 interface ConsortiumLeaderNotesDisplayProps {
     consortiumLeaderNotes: string;
@@ -7,9 +8,9 @@ interface ConsortiumLeaderNotesDisplayProps {
 export default function ConsortiumLeaderNotesDisplay({ consortiumLeaderNotes }: ConsortiumLeaderNotesDisplayProps) {
     return (
         <Box>
-            <Typography variant="body1" style={{ whiteSpace: 'pre-wrap' }}>
-                {consortiumLeaderNotes}
-            </Typography>
+            {consortiumLeaderNotes && <div>
+                {parse(consortiumLeaderNotes)}
+            </div>}
         </Box>
     );
 }

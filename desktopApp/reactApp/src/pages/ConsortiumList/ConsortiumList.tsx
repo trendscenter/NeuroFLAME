@@ -1,5 +1,6 @@
 import React from 'react';
 import { Paper, List, Typography, Button, Box, CircularProgress, Container } from '@mui/material';
+import ReplayIcon from '@mui/icons-material/Replay';
 import { ConsortiumListItem as ConsortiumListItemType } from '../../apis/centralApi/generated/graphql'; // Import the type
 import ConsortiumListItem from './ConsortiumListItem'; // Import the new presentation component
 
@@ -38,22 +39,27 @@ const ConsortiumList: React.FC<ConsortiumListProps> = ({ consortiumList, loading
 
     // Success state (show list and reload button at the top)
     return (
-        <Container maxWidth="md">
-            <Box display="flex" flexDirection="column" alignItems="center" marginBottom={2}>
-                <Typography variant="h4" gutterBottom align="center">
-                    Consortium List
-                </Typography>
-                <Button variant="contained" color="primary" onClick={onReload} sx={{ marginBottom: 2 }}>
-                    Reload
-                </Button>
+        <Container maxWidth="lg">
+            <Box display="flex" flexDirection="row" marginTop={4} marginBottom={2}>
+                <Box flex={1}>
+                    <Typography variant="h4" gutterBottom align="left">
+                        Consortium List
+                    </Typography>
+                </Box>
+                <Box>
+                    <Button variant="contained" color="primary" onClick={onReload} sx={{ marginBottom: 2 }}>
+                        Reload
+                        <ReplayIcon sx={{fontSize: '1rem'}} />
+                    </Button>
+                </Box>
             </Box>
-            <Paper elevation={3}>
-                <List>
+            <Box>
+                <>
                     {consortiumList.map((consortium, index) => (
                         <ConsortiumListItem key={index} consortium={consortium} />
                     ))}
-                </List>
-            </Paper>
+                </>
+            </Box>
         </Container>
     );
 };
