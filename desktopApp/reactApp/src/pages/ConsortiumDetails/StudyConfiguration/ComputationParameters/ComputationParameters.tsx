@@ -12,7 +12,7 @@ const ComputationParameters: React.FC<ComputationParametersProps> = ({ computati
     const { isEditing, handleEdit, handleSave, handleCancel, isLeader } = useComputationParameters(computationParameters);
 
     return (
-        <Box p={2} border={1} borderRadius={2} borderColor="grey.300" marginBottom={0} bgcolor={'white'}>
+        <Box p={2} borderRadius={2}  marginBottom={0} bgcolor={'white'}>
             <Typography variant="h6" gutterBottom>
                 Settings <span style={{fontSize: '12px', color: 'black'}}>(parameters.json)</span>
             </Typography>

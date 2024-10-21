@@ -7,7 +7,7 @@ export function LatestRunDisplay({ latestRun, loading, navigateToRunDetails }: R
         {loading ? (
             <CircularProgress />
         ) : (latestRun &&
-        <Box p={2} border={1} borderRadius={2} borderColor="grey.300" bgcolor="white" marginBottom={2}>
+        <Box p={2} borderRadius={2}  bgcolor="white" marginBottom={2}>
             <Typography variant="h6" gutterBottom>
                 Latest Run
             </Typography>

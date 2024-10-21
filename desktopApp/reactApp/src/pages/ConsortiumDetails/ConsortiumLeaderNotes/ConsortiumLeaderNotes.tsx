@@ -12,7 +12,7 @@ export default function ConsortiumLeaderNotes({ consortiumLeaderNotes }: Consort
     const { isEditing, handleEdit, handleSave, handleCancel, isLeader } = useConsortiumLeaderNotes(consortiumLeaderNotes);
 
     return (
-        <Box p={2} border={1} borderRadius={2} borderColor="grey.300" bgcolor={'white'} marginBottom={0}>
+        <Box p={2} borderRadius={2}  bgcolor={'white'} marginBottom={0}>
             <Accordion sx={{margin: '0', padding: '0', boxShadow: 'none'}} defaultExpanded>
             <AccordionSummary 
                 sx={{

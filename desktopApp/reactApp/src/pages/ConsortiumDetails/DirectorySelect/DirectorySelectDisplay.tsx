@@ -49,7 +49,7 @@ export function DirectorySelectDisplay({
 
     return (
         <>
-            <Box p={2} border={1} borderRadius={2} borderColor="grey.300" marginBottom={2} bgcolor={'white'}>
+            <Box p={2} borderRadius={2}  marginBottom={2} bgcolor={'white'}>
             <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems='center'>
                 <Typography variant="h6">
                     Data Directory

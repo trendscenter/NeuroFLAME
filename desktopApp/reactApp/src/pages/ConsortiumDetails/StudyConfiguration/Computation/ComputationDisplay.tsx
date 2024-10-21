@@ -23,9 +23,9 @@ export default function ComputationDisplay({ computation }: ComputationDisplayPr
     return (
         <Box 
             className="computation-notes"
-            border={1} 
+            
             borderRadius={2} 
-            borderColor="grey.300" 
+             
             marginBottom={2} 
             bgcolor={'white'} 
         >
