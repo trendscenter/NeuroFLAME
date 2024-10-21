@@ -15,19 +15,19 @@ export const RunListItem: React.FC<RunListItemProps> = ({ run }) => {
   };
 
   return (
-    <Card variant="outlined" sx={{ marginBottom: 2 }}>
-      <CardContent>
-        <Typography variant="h6" component="div" gutterBottom>
+    <Card sx={{ display: 'flex', marginBottom: 2, boxShadow: 'none', justifyContent: 'space-between' }}>
+      <CardContent sx={{flexSize: '3'}}>
+        <Typography variant="h6" component="div" fontWeight="600" gutterBottom>
           {run.consortiumTitle}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          Status: {run.status}
+          <strong>Status:</strong> {run.status}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          Created At: {new Date(+run.createdAt).toLocaleString()}
+          <strong>Created At:</strong> {new Date(+run.createdAt).toLocaleString()}
         </Typography>
       </CardContent>
-      <CardActions>
+      <CardActions sx={{flexSize: '1'}}>
         <Box ml="auto"> {/* This will push the button to the right */}
           <Button variant="contained" color="primary" onClick={handleViewDetails}>
             View Details
