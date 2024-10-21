@@ -7,7 +7,9 @@ import bcrypt from 'bcrypt'
 import getConfig from '../config/getConfig.js'
 import { logger } from '../logger.js'
 import computationNotesMarkdownExample from './computationNotesMarkdownExample.js'
+import computationNotesNvflareSsrCsv from './computationNotesNvflareSsrCsv.js'
 import computationNotesNvflareBoilerplate from './computationNotesNvflareBoilerplate.js'
+import consortiumLeaderNotesMulitsiteBrainStudy from './consortiumLeaderNotesMulitsiteBrainStudy.js'
 
 const { databaseDetails } = await getConfig()
 const { url, user, pass } = databaseDetails
@@ -22,8 +24,10 @@ const user4Id = new mongoose.Types.ObjectId('66289c79aebab67040a20071')
 const computation1Id = new mongoose.Types.ObjectId('66289c79aebab67040a21000')
 const computation2Id = new mongoose.Types.ObjectId('66289c79aebab67040a21001')
 const computation3Id = new mongoose.Types.ObjectId('66289c79aebab67040a21002')
+const computation4Id = new mongoose.Types.ObjectId('66289c79aebab67040a21003')
 const consortium1Id = new mongoose.Types.ObjectId('66289c79aebab67040a22000')
 const consortium2Id = new mongoose.Types.ObjectId('66289c79aecab67040a22001')
+const consortium3Id = new mongoose.Types.ObjectId('66289c79aecab67040a22002')
 const run1Id = new mongoose.Types.ObjectId('66289c79aecab67040a23000')
 const run2Id = new mongoose.Types.ObjectId('66289c79aecab67040a23001')
 const run3Id = new mongoose.Types.ObjectId('66289c79aecab67040a23002')
@@ -98,6 +102,14 @@ const seedDatabase = async () => {
         notes: 'This is a test computation.',
         owner: user3Id.toString(),
       },
+      {
+        _id: computation4Id,
+        title: 'NVFlare SSR CSV',
+        imageName: 'coinstacteam/nvflare-ssr-csv',
+        imageDownloadUrl: 'https://hub.docker.com/repository/docker/coinstacteam/nvflare-ssr-csv',
+        notes: computationNotesNvflareSsrCsv,
+        owner: user1Id.toString(),
+      },
     ]
     await Computation.insertMany(computations)
     logger.info('Computations seeded successfully!')
@@ -139,6 +151,38 @@ const seedDatabase = async () => {
             imageDownloadUrl: computations[1].imageDownloadUrl,
             notes: computations[1].notes,
             owner: computations[1].owner,
+          },
+        },
+      },
+      {
+        _id: consortium3Id,
+        title: 'Multisite Brain Study',
+        description: 'Our Goal is to see if there are any statistical connections between Hippocampal measurements and MDD, Age, Sex, and ICV data',
+        leader: user1Id,
+        members: [user1Id, user2Id],
+        activeMembers: [user1Id, user2Id],
+        studyConfiguration: {
+          consortiumLeaderNotes: consortiumLeaderNotesMulitsiteBrainStudy,
+          computationParameters: JSON.stringify({
+            "Dependents": {
+                "L_hippo":"int",
+                "R_hippo":"int",
+                "Tot_hippo":"int"
+            },
+            "Covariates": {
+                "MDD":"bool",
+                "Age":"int",
+                "Sex":"int",
+                "ICV":"int"
+            },
+            "Lambda": 0
+        }),
+          computation: {
+            title: computations[3].title,
+            imageName: computations[3].imageName,
+            imageDownloadUrl: computations[3].imageDownloadUrl,
+            notes: computations[3].notes,
+            owner: computations[3].owner,
           },
         },
       },
