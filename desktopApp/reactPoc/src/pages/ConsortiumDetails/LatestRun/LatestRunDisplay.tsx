@@ -4,7 +4,7 @@ import { useLatestRun } from "./useLatestRun"; // Import the custom hook
 export function LatestRunDisplay({ latestRun, loading, navigateToRunDetails }: ReturnType<typeof useLatestRun> & { navigateToRunDetails: (runId: string) => void }) {
 
     return (
-        <Box p={2} border={1} borderRadius={4} borderColor="grey.300">
+        <Box p={2} borderRadius={4} >
             <Typography variant="h4" gutterBottom>
                 Latest Run
             </Typography>

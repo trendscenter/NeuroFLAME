@@ -12,7 +12,7 @@ const ComputationParameters: React.FC<ComputationParametersProps> = ({ computati
     const { isEditing, handleEdit, handleSave, handleCancel, isLeader } = useComputationParameters(computationParameters);
 
     return (
-        <Box p={2} border={1} borderRadius={4} borderColor="grey.300">
+        <Box p={2} borderRadius={4} >
             <Typography variant="h6" gutterBottom>
                 Computation Parameters
             </Typography>

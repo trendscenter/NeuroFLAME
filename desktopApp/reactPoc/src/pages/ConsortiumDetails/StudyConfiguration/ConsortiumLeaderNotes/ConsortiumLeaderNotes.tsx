@@ -11,7 +11,7 @@ export default function ConsortiumLeaderNotes({ consortiumLeaderNotes }: Consort
     const { isEditing, handleEdit, handleSave, handleCancel, isLeader } = useConsortiumLeaderNotes(consortiumLeaderNotes);
 
     return (
-        <Box p={2} border={1} borderRadius={4} borderColor="grey.300">
+        <Box p={2} borderRadius={4} >
             <Typography variant="h6" gutterBottom>
                 Consortium Leader Notes
             </Typography>
