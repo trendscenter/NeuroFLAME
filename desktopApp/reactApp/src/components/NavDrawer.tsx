@@ -21,6 +21,9 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ open, onClose, navSetDrawerOpen }
         <ListItem onClick={()=>{navSetDrawerOpen(false)}} component={Link} to="/runList">
           <ListItemText primary="Run List" />
         </ListItem>
+        <ListItem onClick={()=>{navSetDrawerOpen(false)}} component={Link} to="/computationList">
+          <ListItemText primary="Computation List" />
+        </ListItem>
       </List>
     </Drawer>
   );
