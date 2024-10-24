@@ -21,9 +21,9 @@ export function MembersDisplay({ memberList, setMemberActive, setMemberReady }: 
 
     return(<Box 
         p={2} 
-        border={1} 
+        
         borderRadius={2} 
-        borderColor="grey.300" 
+         
         marginBottom={2} 
         bgcolor={'white'}
         style={{position: 'relative'}}

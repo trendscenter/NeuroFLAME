@@ -6,7 +6,7 @@ import { useConsortiumDetailsContext } from "../../ConsortiumDetailsContext";
 export default function Computation({ computation }: { computation: ComputationType }) {
     const { isLeader } = useConsortiumDetailsContext();
 
-    return <Box p={2} border={1} borderRadius={2} borderColor="grey.300" marginBottom={2} bgcolor={'white'} display="flex" justifyContent="space-between">
+    return <Box p={2} borderRadius={2}  marginBottom={2} bgcolor={'white'} display="flex" justifyContent="space-between">
         <Box>
             <Typography variant="h6" gutterBottom>
                 Computation
