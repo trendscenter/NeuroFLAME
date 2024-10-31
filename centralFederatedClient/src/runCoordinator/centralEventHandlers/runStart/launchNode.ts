@@ -117,14 +117,7 @@ const attachDockerEventHandlers = (
       return
     }
     stream?.on('data', (chunk) => {
-      let event;
-
-      try {
-        const jsonString = chunk.toString('base64');
-        event = JSON.parse(atob(jsonString));
-      } catch (error) {
-        console.error('JSON parsing error:', error);
-      }
+      const event = JSON.parse(chunk.toString())
 
       if (event.Type === 'container' && event.Actor.ID === containerId) {
         if (event.Action === 'die') {
