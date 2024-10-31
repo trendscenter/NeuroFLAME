@@ -5,13 +5,13 @@ import Shield from '../../../assets/shield.svg';
 import GreyShield from '../../../assets/grey_shield.svg';
 
 const UserColor: string[] = [
-  "#2FA84F",
-  "#FFBA08",
-  "#FF007A",
-  "#F25919",
-  "#B91372",
-  "#440381",
-  "#016572"
+  "#2FA84F", //green
+  "#FFBA08", //yellow
+  "#FF007A", //magenta
+  "#F25919", //orange
+  "#B91372", //violet
+  "#440381", //purple
+  "#016572", //heather
 ];
 
 const GetUserColor = (index: number, active: boolean): string => {
