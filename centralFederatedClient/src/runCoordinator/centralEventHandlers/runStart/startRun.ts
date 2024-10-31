@@ -7,7 +7,6 @@ import getConfig from '../../../config/getConfig.js'
 import reportRunError from './reportRunError.js'
 import reportRunComplete from './reportRunComplete.js'
 import { logger } from '../../../logger.js'
-import { start } from '../../../index.js'
 
 interface startRunArgs {
   imageName: string
