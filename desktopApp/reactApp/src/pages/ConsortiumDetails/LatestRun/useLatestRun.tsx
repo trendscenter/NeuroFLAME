@@ -25,6 +25,12 @@ export function useLatestRun(consortiumId: string) {
     }
   }
 
+  const navigateToRunResults = () => {
+    if (latestRun) {
+      navigate(`/run/results/${consortiumId}/${latestRun.runId}`);
+    }
+  }
+
   useEffect(() => {
     fetchRunList();
     const subscription = consortiumLatestRunChanged({ consortiumId }).subscribe({
@@ -39,5 +45,5 @@ export function useLatestRun(consortiumId: string) {
 
   
 
-  return { latestRun, loading, navigateToRunDetails };
+  return { latestRun, loading, navigateToRunDetails, navigateToRunResults };
 }

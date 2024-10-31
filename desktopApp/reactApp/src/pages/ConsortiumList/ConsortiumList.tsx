@@ -56,7 +56,7 @@ const ConsortiumList: React.FC<ConsortiumListProps> = ({ consortiumList, loading
             <Box>
                 <>
                     {consortiumList.map((consortium, index) => (
-                        <ConsortiumListItem key={index} consortium={consortium} />
+                        <ConsortiumListItem key={index} consortium={consortium} onReload={onReload} />
                     ))}
                 </>
             </Box>

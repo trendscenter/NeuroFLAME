@@ -7,6 +7,7 @@ import ConsortiumListPage from './ConsortiumList/ConsortiumListPage';
 import ConsortiumDetailsPage from './ConsortiumDetails/ConsortiumDetailsPage';
 import { RunDetails } from './RunDetails/RunDetails';
 import { RunList } from './RunList/RunList';
+import RunResults from './RunResults/RunResults';
 import ComputationListPage from './ComputationList/ComputationListPage';
 // import ConsortiumList from './ConsortiumList';
 // import ConsortiumDetails from './ConsortiumDetails';
@@ -26,20 +27,20 @@ import ComputationListPage from './ComputationList/ComputationListPage';
 export default function AppRoutes() {   
     return (
         <Routes>
-            <Route index path="/" element={<LoginPage></LoginPage>} />
-            <Route index path="/login" element={<LoginPage></LoginPage>} />
-            <Route path="/consortiumList" element={<ConsortiumListPage></ConsortiumListPage>} />
-            <Route path="/consortium/details/:consortiumId" element={<ConsortiumDetailsPage></ConsortiumDetailsPage>} />
+            <Route index path="/" element={<LoginPage />} />
+            <Route index path="/login" element={<LoginPage />} />
+            <Route path="/consortiumList" element={<ConsortiumListPage />} />
+            <Route path="/consortium/details/:consortiumId" element={<ConsortiumDetailsPage />} />
             <Route path="/run/details/:runId" element={<RunDetails/>} />
             <Route path="/runList" element={<RunList/>} />
             <Route path="/computationList" element={<ComputationListPage></ComputationListPage>} />
+            <Route path="/run/results/:consortiumId/:runId" element={<RunResults />} />
             
             {/* <Route path="/consortia" element={<ConsortiumList />} />
             <Route path="/consortia/create" element={<ConsortiumCreate />} />
             <Route path="/consortia/details/:consortiumId" element={<ConsortiumDetails />} />
             <Route path="/runs" element={<RunsList></RunsList>} />
             <Route path="/runs/details/:runId" element={<RunDetails />} />
-            <Route path="/runs/results/:consortiumId/:runId" element={<RunResults />} />
             <Route path="/computations" element={<ComputationsList />} />
             <Route path="/computations/create" element={<ComputationsCreate />} />
             <Route path="/computations/details/:computationId" element={<ComputationDetails />} />

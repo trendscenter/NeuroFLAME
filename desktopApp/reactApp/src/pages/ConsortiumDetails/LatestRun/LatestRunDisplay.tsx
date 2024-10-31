@@ -1,7 +1,11 @@
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { useLatestRun } from "./useLatestRun"; // Import the custom hook
 
-export function LatestRunDisplay({ latestRun, loading, navigateToRunDetails }: ReturnType<typeof useLatestRun> & { navigateToRunDetails: (runId: string) => void }) {
+export function LatestRunDisplay({ latestRun, loading, navigateToRunDetails, navigateToRunResults }: 
+    ReturnType<typeof useLatestRun> & { 
+        navigateToRunDetails: (runId: string) => void, 
+        navigateToRunResults: (consortiumId: string, runId: string) => void  
+    }) {
     return (
         <>
         {loading ? (
@@ -31,7 +35,16 @@ export function LatestRunDisplay({ latestRun, loading, navigateToRunDetails }: R
                         <span style={{fontSize: '11px',  color: '#aaa'}}>{latestRun.runId}</span>
                     </Typography>
                 </Box>
-                <Box mt={2}>
+                <Box mt={2} display="flex" flexDirection="column">
+                <Button
+                        size="small"
+                        variant="contained"
+                        color="primary"
+                        style={{marginBottom: '1rem'}}
+                        onClick={() => navigateToRunResults()}
+                    >
+                        Results
+                    </Button>
                     <Button
                         size="small"
                         variant="outlined"
