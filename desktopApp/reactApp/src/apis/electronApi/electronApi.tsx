@@ -2,7 +2,9 @@ import { applyDefaultConfig } from "./applyDefaultConfig";
 import { getConfig } from "./getConfig";
 import { getConfigPath } from "./getConfigPath";
 import { openConfig } from "./openConfig";
-import useDirectoryDialog from "./useDirectoryDialog";
+import { useDirectoryDialog } from "./useDirectoryDialog";
+import { saveConfig } from "./saveConfig";
+import { restartApp } from "./restartApp";
 
 export interface Config {
   centralServerQueryUrl: string;
@@ -24,8 +26,10 @@ interface ElectronAPI {
   getConfigPath: () => Promise<string>;
   getConfig: () => Promise<Config>;
   openConfig: () => Promise<void>;
+  saveConfig: (configString: string) => Promise<void>;
   applyDefaultConfig: () => Promise<void>;
   useDirectoryDialog: (pathString?: string) => Promise<{ directoryPath: undefined | string, canceled: boolean, error: string | null }>;
+  restartApp: () => void;
 }
 
 declare global {
@@ -38,8 +42,10 @@ export const electronApi = {
   getConfig,
   openConfig,
   getConfigPath,
+  saveConfig,
   applyDefaultConfig,
-  useDirectoryDialog
+  useDirectoryDialog,
+  restartApp
 }
 
 
