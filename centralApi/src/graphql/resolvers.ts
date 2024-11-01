@@ -403,7 +403,7 @@ export default {
       const run = await Run.findById(runId)
       const result = await Run.updateOne(
         { _id: runId },
-        { status: 'Ready', lastUpdated: Date.now() },
+        { status: 'In Progress', lastUpdated: Date.now() },
       )
       const imageName = run.studyConfiguration.computation.imageName
       const consortiumId = run.consortium._id
