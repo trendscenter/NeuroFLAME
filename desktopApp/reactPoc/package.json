@@ -2,7 +2,7 @@
   "name": "reactpoc",
   "version": "0.1.0",
   "private": true,
-  "homepage": ".",
+  "homepage": "./",
   "dependencies": {
     "@apollo/client": "^3.10.1",
     "@emotion/react": "^11.13.3",
