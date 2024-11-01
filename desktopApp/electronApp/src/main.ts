@@ -9,6 +9,7 @@ import {
   getConfig,
   applyDefaultConfig,
   openConfig,
+  saveConfig,
 } from './config.js'
 import { useDirectoryDialog } from './dialogs.js'
 
@@ -67,6 +68,9 @@ app.on('activate', () => {
 ipcMain.handle('getConfigPath', () => configPath)
 ipcMain.handle('getConfig', getConfig)
 ipcMain.handle('openConfig', openConfig)
+ipcMain.handle('saveConfig', async (event, configString) => {
+  return await saveConfig(configString)
+})
 ipcMain.handle('applyDefaultConfig', applyDefaultConfig)
 ipcMain.handle('useDirectoryDialog', (event, pathString) => {
   logger.info('useDirectoryDialog', { pathString })
@@ -78,4 +82,8 @@ ipcMain.handle('useDirectoryDialog', (event, pathString) => {
     canceled: true,
     error: 'Main window is not available',
   }
+})
+ipcMain.handle('restartApp', () => {
+  app.relaunch() // Relaunch the application with the same arguments and working directory
+  app.exit(0) // Exit the current instance
 })

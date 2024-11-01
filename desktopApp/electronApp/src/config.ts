@@ -2,10 +2,11 @@ import path from 'path'
 import { promises as fs } from 'fs'
 import { app, shell } from 'electron'
 import { defaultConfig } from './defaultConfig.js'
+import { Config } from './types.js'
 import { logger } from './logger.js'
 
 export function getConfigPath(): string {
-  const args: string[] = process.argv.slice(1) // Skip the first argument which is the path to node
+  const args: string[] = process.argv.slice(1)
   const configArgIndex: number = args.findIndex((arg) =>
     arg.startsWith('--config='),
   )
@@ -14,12 +15,12 @@ export function getConfigPath(): string {
     : path.join(app.getPath('userData'), 'config.json')
 }
 
-export async function getConfig(): Promise<typeof defaultConfig> {
+export async function getConfig(): Promise<Config> {
   const configPath = getConfigPath()
   logger.info(`Reading configuration from: ${configPath}`)
   try {
     const config = await fs.readFile(configPath, 'utf8')
-    return JSON.parse(config)
+    return JSON.parse(config) as Config
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
       logger.info(
@@ -28,9 +29,30 @@ export async function getConfig(): Promise<typeof defaultConfig> {
       await fs.writeFile(configPath, JSON.stringify(defaultConfig, null, 2))
       return defaultConfig
     } else {
-      logger.error('Failed to read or parse the configuration file:', error)
+      logger.error(
+        `Failed to read or parse the configuration file: ${
+          (error as Error).message
+        }`,
+      )
       throw new Error('Failed to access the configuration file.')
     }
+  }
+}
+
+export async function saveConfig(configString: string): Promise<void> {
+  const configPath = getConfigPath()
+  try {
+    // Attempt to parse the JSON to ensure it's valid
+    const parsedConfig = JSON.parse(configString)
+
+    // Write directly to file, allowing any JSON structure
+    await fs.writeFile(configPath, JSON.stringify(parsedConfig, null, 2))
+    logger.info('Configuration successfully saved.')
+  } catch (error) {
+    logger.error(`Failed to save configuration: ${(error as Error).message}`)
+    throw new Error(
+      'Failed to save configuration. Please ensure it is valid JSON.',
+    )
   }
 }
 

@@ -1,4 +1,6 @@
-export const defaultConfig = {
+import { Config } from './types'
+
+export const defaultConfig: Config = {
   centralServerQueryUrl: 'http://localhost:4000/graphql',
   centralServerSubscriptionUrl: 'ws://localhost:4000/graphql',
   edgeClientQueryUrl: 'http://localhost:4001/graphql',
