@@ -2,6 +2,7 @@ import {
     Route,
     Routes,
   } from 'react-router-dom';
+import { AppConfig } from './AppConfig/AppConfig';
 import LoginPage from './Login/LoginPage';
 import ConsortiumListPage from './ConsortiumList/ConsortiumListPage';
 import ConsortiumDetailsPage from './ConsortiumDetails/ConsortiumDetailsPage';
@@ -35,7 +36,7 @@ export default function AppRoutes() {
             <Route path="/runList" element={<RunList/>} />
             <Route path="/computationList" element={<ComputationListPage></ComputationListPage>} />
             <Route path="/run/results/:consortiumId/:runId" element={<RunResults />} />
-            
+            <Route path="/appConfig" element={<AppConfig/>}/>
             {/* <Route path="/consortia" element={<ConsortiumList />} />
             <Route path="/consortia/create" element={<ConsortiumCreate />} />
             <Route path="/consortia/details/:consortiumId" element={<ConsortiumDetails />} />
