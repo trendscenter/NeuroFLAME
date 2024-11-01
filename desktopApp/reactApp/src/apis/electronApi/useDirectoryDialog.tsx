@@ -1,4 +1,4 @@
 
-export default function useDirectoryDialog(directory: string) {
+export function useDirectoryDialog(directory: string) {
     return window.ElectronAPI.useDirectoryDialog(directory)
 }
