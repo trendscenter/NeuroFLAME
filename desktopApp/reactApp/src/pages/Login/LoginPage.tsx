@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, TextField, Typography, CircularProgress, Alert } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { useLogin } from './useLogin';
 import logo from '../../assets/coinstac-logo.png';
 
 const LoginPage: React.FC = () => {
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { handleLogin, loading, error } = useLogin();
@@ -102,6 +105,15 @@ const LoginPage: React.FC = () => {
           {loading ? <CircularProgress size={24} /> : 'Log In'}
         </Button>
       </Box>
+      <Button
+          variant="text"
+          color="primary"
+          fullWidth
+          onClick={() => navigate(`/appConfig`)}
+          disabled={loading}
+        >
+          App Configuration
+        </Button>
     </Box>
   );
 };

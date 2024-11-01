@@ -36,7 +36,7 @@ export function LatestRunDisplay({ latestRun, loading, navigateToRunDetails, nav
                     </Typography>
                 </Box>
                 <Box mt={2} display="flex" flexDirection="column">
-                <Button
+                    {latestRun.status === 'Complete' && <Button
                         size="small"
                         variant="contained"
                         color="primary"
@@ -44,7 +44,7 @@ export function LatestRunDisplay({ latestRun, loading, navigateToRunDetails, nav
                         onClick={() => navigateToRunResults()}
                     >
                         Results
-                    </Button>
+                    </Button>}
                     <Button
                         size="small"
                         variant="outlined"
