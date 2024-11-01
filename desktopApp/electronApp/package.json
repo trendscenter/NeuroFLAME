@@ -1,5 +1,5 @@
 {
-  "name": "electronapp",
+  "name": "coinstac-mint-electron",
   "version": "1.0.0",
   "description": "desktop app",
   "main": "build/main.js",
@@ -28,15 +28,15 @@
     "typescript": "^5.4.5"
   },
   "build": {
-    "appId": "coinstac2",
-    "productName": "coinstac2",
+    "appId": "coinstac-mint-electron",
+    "productName": "coinstac-mint-electron",
     "directories": {
       "buildResources": "assets",
       "output": "dist"
     },
     "extraResources": [
       {
-        "from": "../reactPoc/build",
+        "from": "../reactApp/build",
         "to": "app/build",
         "filter": [
           "**/*"
