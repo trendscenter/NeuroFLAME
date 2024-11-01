@@ -7,7 +7,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { UserStateProvider } from './contexts/UserStateContext';
 
 const startApp = async () => {
-  const config = await electronApi.FetchConfig();
+  const config = await electronApi.getConfig();
   const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
   );
