@@ -20,7 +20,7 @@ export async function createMainWindow(
     },
   })
 
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   return mainWindow
 }

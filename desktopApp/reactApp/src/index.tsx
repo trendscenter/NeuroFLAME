@@ -8,30 +8,44 @@ import '@fontsource/inter/700.css';
 import '@fontsource/lato/300.css';
 import '@fontsource/lato/400.css';
 import '@fontsource/lato/700.css';
-import "./index.css"
+import "./index.css";
 import { electronApi } from './apis/electronApi/electronApi';
 import ApolloClientsProvider from './contexts/ApolloClientsProvider';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 import { UserStateProvider } from './contexts/UserStateContext';
 
 const startApp = async () => {
+  console.log("Starting app...");
+
+  // Attempt to get the configuration
   const config = await electronApi.getConfig();
-  const root = ReactDOM.createRoot(
-    document.getElementById('root') as HTMLElement
-  );
-  if (config) {
-    root.render(
-      <ApolloClientsProvider config={config}>
-        <UserStateProvider>
-          <Router>
-            <App />
-          </Router>
-        </UserStateProvider>
-      </ApolloClientsProvider>
-    );
-  } else {
-    console.error('Failed to start the app due to configuration loading failure.');
+  console.log("Config loaded:", config);
+
+  // Check if the root element exists
+  const rootElement = document.getElementById('root');
+  if (!rootElement) {
+    console.error('Root element not found. Aborting app startup.');
+    return;
   }
+  if (!config){
+    console.error('Config not found. Aborting app startup.');
+    return;
+  }
+
+  const root = ReactDOM.createRoot(rootElement);
+
+  // Render the app, even if config is null (if config is essential, consider a loading screen)
+  root.render(
+    <ApolloClientsProvider config={config}>
+      <UserStateProvider>
+        <Router>
+          <App />
+        </Router>
+      </UserStateProvider>
+    </ApolloClientsProvider>
+  );
 };
 
-startApp();
+startApp().catch(error => {
+  console.error("Error starting the app:", error);
+});
