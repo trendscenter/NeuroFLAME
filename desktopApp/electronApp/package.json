@@ -10,7 +10,8 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "start-configured": "npm run build && electron . --config=../../configs/electronApp1.json",
-    "start-configured-2": "npm run build && electron . --config=../../configs/electronApp2.json"
+    "start-configured-2": "npm run build && electron . --config=../../configs/electronApp2.json",
+    "start-configured-3": "npm run build && electron . --config=../../configs/electronApp3.json"
   },
   "keywords": [],
   "author": "",
