@@ -52,7 +52,7 @@ type Computation {
 type StudyConfiguration {
   consortiumLeaderNotes: String!
   computationParameters: String!
-  computation: Computation!
+  computation: Computation
 }
 
 type ConsortiumDetails {

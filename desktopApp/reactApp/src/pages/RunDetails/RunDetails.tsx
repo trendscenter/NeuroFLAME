@@ -98,7 +98,7 @@ export function RunDetails() {
                                 </Typography>
                                 <Box marginBottom={1}>
                                 <Typography variant="body1">
-                                    <strong>Computation:</strong> {runDetails.studyConfiguration.computation.title}
+                                    <strong>Computation:</strong> {runDetails.studyConfiguration?.computation?.title}
                                 </Typography>
                                 </Box>
                                 <Grid container spacing={2}>
