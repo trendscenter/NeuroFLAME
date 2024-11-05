@@ -314,7 +314,7 @@ export type StartRunOutput = {
 
 export type StudyConfiguration = {
   __typename?: 'StudyConfiguration';
-  computation: Computation;
+  computation?: Maybe<Computation>;
   computationParameters: Scalars['String']['output'];
   consortiumLeaderNotes: Scalars['String']['output'];
 };
