@@ -64,7 +64,7 @@ const HomePage: React.FC = () => {
               <ChangePassword />
             ) : (
               <Button
-                variant="contained"
+                variant="text"
                 color="primary"
                 fullWidth
                 onClick={() => setShowChangePassword(true)}
