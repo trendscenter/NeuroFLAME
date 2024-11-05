@@ -51,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({appUsername}) => {
             >
             COINSTAC
             </Typography>
-            <Link to="/pageLogin" style={{textDecoration: 'none'}}>
+            <Link to="/home" style={{textDecoration: 'none'}}>
             <UserAvatar username={appUsername} />
             </Link>
             <IconButton

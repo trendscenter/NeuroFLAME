@@ -1,23 +1,23 @@
-import React from 'react';
-import { useContext } from "react";
-import { useParams } from 'react-router-dom';
-import CssBaseline from '@mui/material/CssBaseline';
 import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
 
 export default function UserAvatar(props: any) {   
     const { username } = props;
 
     return (
-      <Avatar 
-        sx={{ 
-          bgcolor: '#FF007A', 
-          width: '32px', 
-          height: '32px',
-          marginLeft: '1rem',
-          marginRight: '0.5rem',  
-          fontStyle: 'none'
-        }}
-      >{username && typeof username === 'string' && username.charAt(0).toUpperCase()}
-      </Avatar>
-    )
+      <Tooltip title={username || ''} arrow>
+        <Avatar 
+          sx={{ 
+            bgcolor: '#FF007A', 
+            width: '32px', 
+            height: '32px',
+            marginLeft: '1rem',
+            marginRight: '0.5rem',  
+            fontStyle: 'none'
+          }}
+        >
+          {username && typeof username === 'string' && username.charAt(0).toUpperCase()}
+        </Avatar>
+      </Tooltip>
+    );
 }

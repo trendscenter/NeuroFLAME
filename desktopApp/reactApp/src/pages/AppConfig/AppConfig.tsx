@@ -169,7 +169,7 @@ export function AppConfig() {
 
             {/* Navigation */}
             <Box display="flex" justifyContent="flex-end" mt={2}>
-                <Button variant="text" onClick={() => navigate(`/login`)}>Back to Login</Button>
+                <Button variant="text" onClick={() => navigate(`/home`)}>Back to Home</Button>
             </Box>
         </Paper>
     )
