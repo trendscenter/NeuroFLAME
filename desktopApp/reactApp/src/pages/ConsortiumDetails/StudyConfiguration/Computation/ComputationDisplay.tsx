@@ -1,9 +1,10 @@
 import { Computation } from "../../../../apis/centralApi/generated/graphql";
 import { Box, Chip, Typography, Card, CardContent, Link } from "@mui/material";
+import { Maybe } from "graphql/jsutils/Maybe";
 import ReactMarkdown from 'react-markdown';
 
 interface ComputationDisplayProps {
-    computation: Computation | null;
+    computation: Maybe<Computation> | undefined;
 }
 
 export default function ComputationDisplay({ computation }: ComputationDisplayProps) {
