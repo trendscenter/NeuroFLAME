@@ -36,7 +36,7 @@ const ComputationParameters: React.FC<ComputationParametersProps> = ({ computati
                     Edit
                 </Button>
             }
-            {isLeader && 
+            {isLeader && !computationParameters &&
             <HashLink id="compnotes-anchor" style={{fontSize: '0.9rem', marginTop: '0.5rem'}} to="#compnotes">View Computation Notes</HashLink>
             }
             </Box>
