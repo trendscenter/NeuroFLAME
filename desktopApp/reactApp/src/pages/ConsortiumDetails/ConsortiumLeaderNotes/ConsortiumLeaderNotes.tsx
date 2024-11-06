@@ -44,7 +44,7 @@ export default function ConsortiumLeaderNotes({ consortiumLeaderNotes }: Consort
                         variant="outlined"
                         color="primary"
                         onClick={handleEdit}
-                        sx={{ mt: 2 }}
+                        sx={{ mt: 1 }}
                     >
                         Edit
                     </Button>
