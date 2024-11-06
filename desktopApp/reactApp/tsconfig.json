@@ -13,7 +13,8 @@
       "resolveJsonModule": true,                      // Include modules imported with '.json' extension
       "isolatedModules": true,                        // Ensure each file can be safely transpiled without relying on other imports
       "noEmit": true,                                 // Do not emit outputs (used by create-react-app)
-      "jsx": "react-jsx"                              // Support JSX in .tsx files: "react", "react-jsx", "react-jsxdev"
+      "jsx": "react-jsx",                              // Support JSX in .tsx files: "react", "react-jsx", "react-jsxdev"
+      "typeRoots": ["./node_modules/@types", "./types"] // Add "./types" if you created a custom declaration file
     },
     "include": [         
       "src/**/*"                                     // Include all files in the src directory                                  

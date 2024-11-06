@@ -4,7 +4,7 @@ import ComputationList from "./ComputationList";
 import { useComputationSelect } from "./useComputationSelect";
 import { useConsortiumDetailsContext } from "../../../ConsortiumDetailsContext";
 
-export default function ComputationSelect() {
+export default function ComputationSelect({ computation }: { computation: any }) {
     const { computations, loading, error, selectComputation } = useComputationSelect();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { refetch } = useConsortiumDetailsContext();
@@ -26,7 +26,7 @@ export default function ComputationSelect() {
     return (
         <div>
             <Button variant="outlined" color="primary" onClick={handleOpenModal} size="small">
-                Change
+                {computation ? 'Change' : 'Select A Computation'}
             </Button>
 
             <Dialog open={isModalOpen} onClose={handleCloseModal} maxWidth="sm" fullWidth>

@@ -1,4 +1,5 @@
 import React from "react";
+import { HashLink } from 'react-router-hash-link';
 import { Button, Box, Typography } from "@mui/material";
 import ComputationParametersDisplay from "./ComputationParametersDisplay";
 import ComputationParametersEdit from "./ComputationParametersEdit";
@@ -25,7 +26,8 @@ const ComputationParameters: React.FC<ComputationParametersProps> = ({ computati
             ) : (
                 <ComputationParametersDisplay computationParameters={computationParameters} />
             )}
-            {!isEditing && isLeader && (
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+            {!isEditing && isLeader &&
                 <Button
                     variant="outlined"
                     color="primary"
@@ -33,7 +35,11 @@ const ComputationParameters: React.FC<ComputationParametersProps> = ({ computati
                 >
                     Edit
                 </Button>
-            )}
+            }
+            {isLeader && !computationParameters &&
+            <HashLink id="compnotes-anchor" style={{fontSize: '0.9rem', marginTop: '0.5rem'}} to="#compnotes">View Computation Notes</HashLink>
+            }
+            </Box>
         </Box>
     );
 };

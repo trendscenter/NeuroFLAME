@@ -29,7 +29,7 @@ export default function ConsortiumLeaderNotesEdit({
                 rows={4}
             />
             <Box mt={2}>
-                <Button variant="contained" color="primary" onClick={handleSave} sx={{ mr: 2 }}>
+                <Button variant="contained" color="primary" onClick={handleSave} sx={{ mr: 1 }}>
                     Save
                 </Button>
                 <Button variant="outlined" color="secondary" onClick={onCancel}>

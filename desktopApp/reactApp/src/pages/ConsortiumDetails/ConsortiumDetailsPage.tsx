@@ -27,18 +27,18 @@ export default function ConsortiumDetailsPage() {
 
 
                     {/* Start Run Button Section (only if leader) */}
-                    {isLeader && (
+                    {isLeader && studyConfiguration && studyConfiguration.computation && (
                         <StartRunButton />
                     )}
 
                     {/* Directory Select Section (only if active) */}
-                    {isActive && (
+                    {isActive && studyConfiguration && studyConfiguration.computation && (
                         <DirectorySelect />
                     )}
 
                     {/* Members Section */}
                     <Members members={members} activeMembers={activeMembers} readyMembers={readyMembers} leader={leader} />
-                    {studyConfiguration && <ConsortiumLeaderNotes consortiumLeaderNotes={studyConfiguration.consortiumLeaderNotes} />}
+                    {studyConfiguration && studyConfiguration.computation && (<ConsortiumLeaderNotes consortiumLeaderNotes={studyConfiguration.consortiumLeaderNotes} />)}
                 </Grid>
                 <Grid size={{ sm: 6, md: 4 }}>
                     {/* Latest Run M */}
@@ -47,7 +47,7 @@ export default function ConsortiumDetailsPage() {
                     {studyConfiguration && <StudyConfiguration studyConfiguration={studyConfiguration} />}
                 </Grid>
                 <Grid size={{ sm: 12, md: 4 }}>
-                    {studyConfiguration && <ComputationDisplay computation={studyConfiguration.computation} />}
+                    {studyConfiguration && studyConfiguration.computation && (<ComputationDisplay computation={studyConfiguration.computation} />)}
                 </Grid>
             </Grid>
         </ConsortiumDetailsProvider>

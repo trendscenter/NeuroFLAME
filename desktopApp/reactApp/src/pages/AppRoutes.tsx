@@ -6,6 +6,7 @@ import { AppConfig } from './AppConfig/AppConfig';
 import HomePage from './Home/HomePage';
 import ConsortiumListPage from './ConsortiumList/ConsortiumListPage';
 import ConsortiumDetailsPage from './ConsortiumDetails/ConsortiumDetailsPage';
+import ConsortiumCreatePage from './ConsortiumCreate/ConsortiumCreatePage';
 import { RunDetails } from './RunDetails/RunDetails';
 import { RunList } from './RunList/RunList';
 import RunResults from './RunResults/RunResults';
@@ -19,6 +20,7 @@ export default function AppRoutes() {
             <Route index path="/" element={<HomePage />} />
             <Route index path="/home" element={<HomePage />} />
             <Route path="/consortiumList" element={<ConsortiumListPage />} />
+            <Route path="/consortiumCreate" element={<ConsortiumCreatePage />} />
             <Route path="/consortium/details/:consortiumId" element={<ConsortiumDetailsPage />} />
             <Route path="/run/details/:runId" element={<RunDetails/>} />
             <Route path="/runList" element={<RunList/>} />
