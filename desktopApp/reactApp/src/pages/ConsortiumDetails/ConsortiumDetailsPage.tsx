@@ -37,7 +37,7 @@ export default function ConsortiumDetailsPage() {
                     )}
 
                     {/* Members Section */}
-                    {studyConfiguration && studyConfiguration.computation && (<Members members={members} activeMembers={activeMembers} readyMembers={readyMembers} leader={leader} />)}
+                    <Members members={members} activeMembers={activeMembers} readyMembers={readyMembers} leader={leader} />
                     {studyConfiguration && studyConfiguration.computation && (<ConsortiumLeaderNotes consortiumLeaderNotes={studyConfiguration.consortiumLeaderNotes} />)}
                 </Grid>
                 <Grid size={{ sm: 6, md: 4 }}>
