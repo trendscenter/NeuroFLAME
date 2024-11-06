@@ -4,7 +4,7 @@ import Computation from "./Computation/Computation";
 import ComputationParameters from "./ComputationParameters/ComputationParameters";
 
 export function StudyConfiguration({ studyConfiguration }: { studyConfiguration: any }) {
-    const { computation, computationParameters, consortiumLeaderNotes } = studyConfiguration;
+    const { computation, computationParameters } = studyConfiguration;
 
     return (
         <Box>
