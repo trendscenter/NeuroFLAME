@@ -1,8 +1,9 @@
 import React from 'react';
-import { Paper, List, Typography, Button, Box, CircularProgress, Container } from '@mui/material';
+import { Typography, Button, Box, CircularProgress, Container } from '@mui/material';
 import ReplayIcon from '@mui/icons-material/Replay';
 import { ConsortiumListItem as ConsortiumListItemType } from '../../apis/centralApi/generated/graphql'; // Import the type
 import ConsortiumListItem from './ConsortiumListItem'; // Import the new presentation component
+import { useNavigate } from 'react-router-dom';
 
 interface ConsortiumListProps {
     consortiumList: ConsortiumListItemType[];
@@ -12,6 +13,7 @@ interface ConsortiumListProps {
 }
 
 const ConsortiumList: React.FC<ConsortiumListProps> = ({ consortiumList, loading, error, onReload }) => {
+    const navigate = useNavigate();
     // Loading state
     if (loading) {
         return (
@@ -47,7 +49,10 @@ const ConsortiumList: React.FC<ConsortiumListProps> = ({ consortiumList, loading
                     </Typography>
                 </Box>
                 <Box>
-                    <Button variant="contained" color="primary" onClick={onReload} sx={{ marginBottom: 2 }}>
+                    <Button variant="outlined" color="primary" onClick={() => navigate('/consortiumCreate/')} sx={{marginRight: '1rem'}}>
+                        Create A New Consortium
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={onReload} >
                         Reload
                         <ReplayIcon sx={{fontSize: '1rem'}} />
                     </Button>
