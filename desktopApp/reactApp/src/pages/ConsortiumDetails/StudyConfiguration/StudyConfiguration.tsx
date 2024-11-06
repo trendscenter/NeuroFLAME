@@ -9,7 +9,7 @@ export function StudyConfiguration({ studyConfiguration }: { studyConfiguration:
     return (
         <Box>
             <Box>
-                <Computation computation={computation} computationParameters={computationParameters} />
+                <Computation computation={computation} />
             </Box>
             {computation && <Box>
                 <ComputationParameters computationParameters={computationParameters} />
