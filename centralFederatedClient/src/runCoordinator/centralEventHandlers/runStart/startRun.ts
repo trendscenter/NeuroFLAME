@@ -31,33 +31,41 @@ export default async function startRun({
   const path_centralNodeRunKit = path.join(path_run, 'runKits', 'centralNode');
   const { FQDN, hostingPortRange } = config;
 
-  try {
-    const [fedLearn, admin] = await Promise.all([
-      reservePort(hostingPortRange),
-      reservePort(hostingPortRange),
-    ]);
+ 
 
+  try {
+    // Reserve ports for federated learning and admin servers
+    const { port: reserved_fed_learn_port, server: fed_learn_server } = await reservePort(hostingPortRange);
+    const { port: reserved_admin_port, server: admin_server } = await reservePort(hostingPortRange);
+    const fed_learn_port = reserved_fed_learn_port;
+    const admin_port = reserved_admin_port;
+
+    // Provision the run
     await provisionRun({
       image_name: imageName,
       userIds,
       path_run,
       computationParameters,
-      fed_learn_port: fedLearn.port,
-      admin_port: admin.port,
+      fed_learn_port,
+      admin_port,
       FQDN,
     });
 
+    // Upload run data to the file server
     await uploadToFileServer({ consortiumId, runId, path_baseDirectory: path_baseDir });
-    fedLearn.server.close();
-    admin.server.close();
 
+    // Close the reserved servers before launching the Docker container
+    fed_learn_server.close();
+    admin_server.close();
+
+    // Launch the Docker node
     await launchNode({
       containerService: 'docker',
       imageName,
       directoriesToMount: [{ hostDirectory: path_centralNodeRunKit, containerDirectory: '/workspace/runKit/' }],
       portBindings: [
-        { hostPort: fedLearn.port, containerPort: fedLearn.port },
-        { hostPort: admin.port, containerPort: admin.port },
+        { hostPort: fed_learn_port, containerPort: fed_learn_port },
+        { hostPort: admin_port, containerPort: admin_port },
       ],
       commandsToRun: ['python', '/workspace/entry_central.py'],
       onContainerExitSuccess: () => reportRunComplete({ runId }),
