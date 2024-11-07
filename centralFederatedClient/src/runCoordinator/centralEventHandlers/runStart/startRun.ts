@@ -23,6 +23,8 @@ export default async function startRun({
   runId,
   computationParameters,
 }: StartRunArgs) {
+  logger.info(`Starting run ${runId} for consortium ${consortiumId}`);
+
   const config = await getConfig();
   const path_baseDir = config.baseDir;
   const path_run = path.join(path_baseDir, 'runs', consortiumId, runId);
