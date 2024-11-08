@@ -32,17 +32,33 @@ async function createWindow(): Promise<void> {
   const developmentUrl = 'http://localhost:3000'
   // Load the correct URL (packaged or development)
   const startUrl = app.isPackaged ? productionUrl : developmentUrl
-
   await mainWindow.loadURL(startUrl)
 
-  // Load configuration and start the edge client if configured
   const config = await getConfig()
-  const logPath = config.logPath || path.join(app.getPath('userData'), './logs')
-  logToPath(logPath)
+
+  // Define default paths directly
+  const defaultAppLogPath = path.join(app.getPath('userData'), 'logs')
+  const defaultEdgeClientBasePath = path.join(app.getPath('userData'), 'base')
+
+  // Set log path and initialize logging
+  const appLogPath = config.logPath || defaultAppLogPath
+  logToPath(appLogPath)
 
   if (config.startEdgeClientOnLaunch) {
-    config.edgeClientConfig.logPath = path.join(logPath, './edgeClient')
-    startEdgeFederatedClient(config.edgeClientConfig)
+    const defaultEdgeClientLogPath = path.join(appLogPath, 'edgeClient')
+
+    const edgeClientLogPath =
+      config.edgeClientConfig.logPath || defaultEdgeClientLogPath
+    const edgeClientBasePath =
+      config.edgeClientConfig.path_base_directory || defaultEdgeClientBasePath
+
+    const edgeClientConfig = {
+      ...config.edgeClientConfig,
+      logPath: edgeClientLogPath,
+      path_base_directory: edgeClientBasePath,
+    }
+
+    startEdgeFederatedClient(edgeClientConfig)
   }
 
   // Handle window close event
