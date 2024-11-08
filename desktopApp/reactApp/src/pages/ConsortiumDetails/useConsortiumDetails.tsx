@@ -59,6 +59,7 @@ const useConsortiumDetails = () => {
 
     return {
         data: {
+            consortiumId,
             studyConfiguration,
             members,
             activeMembers,

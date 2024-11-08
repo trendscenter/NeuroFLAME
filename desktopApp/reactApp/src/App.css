@@ -50,8 +50,15 @@ a:hover {
 
 ul,
 ol {
-  margin-left: 0;
+  padding-left: 0;
+  margin-left: 1rem;
   margin-bottom: 1rem;
+}
+
+li {
+  margin-left: 0;
+  padding-left: 0;
+  line-break: anywhere;
 }
 
 /* Buttons */
@@ -262,6 +269,20 @@ textarea {
   100% { opacity: 1; }
 }
 
+.consortium-list-link {
+  display: block;
+  margin: 0 0 0.5rem;
+  text-align: right;
+}
+
+.consortium-details-grid-2 .consortium-list-link { 
+  display: block; 
+}
+
+.consortium-details-grid-3 .consortium-list-link { 
+  display: none; 
+}
+
 @media only screen and (min-width: 900px) {
   html {
     font-size: 14px;
@@ -274,5 +295,14 @@ textarea {
     top: initial;
     right: initial;
     margin: 0.5rem 0 1rem;
+  }
+  .consortium-details-grid-2 { 
+    margin-top: 2.1rem;
+  }
+  .consortium-details-grid-2 .consortium-list-link { 
+    display: none; 
+  }
+  .consortium-details-grid-3 .consortium-list-link { 
+    display: block; 
   }
 }
