@@ -61,5 +61,5 @@ export const useMembers = ({ members, activeMembers, readyMembers, leader }: Use
         }
     }
 
-    return { memberList, setMemberActive, setMemberReady };
+    return { memberList, setMemberActive, setMemberReady, consortiumId };
 };

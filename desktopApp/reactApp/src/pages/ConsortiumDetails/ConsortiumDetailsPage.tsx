@@ -5,7 +5,6 @@ import useConsortiumDetails from "./useConsortiumDetails";
 import DirectorySelect from "./DirectorySelect/DirectorySelect";
 import { useUserState } from "../../contexts/UserStateContext";
 import StartRunButton from "./StartRunButton/StartRunButton";
-import MemberLeaveButton from "./MemberLeaveButton/MemberLeaveButton";
 import { ConsortiumDetailsProvider } from "./ConsortiumDetailsContext";
 import { LatestRun } from "./LatestRun/LatestRun";
 import ComputationDisplay from "./ComputationDisplay/ComputationDisplay";
@@ -57,11 +56,6 @@ export default function ConsortiumDetailsPage() {
 
                     {/* Members Section */}
                     <Members members={members} activeMembers={activeMembers} readyMembers={readyMembers} leader={leader} />
-
-                    {/* Leave Consortium Button if member */}
-                    {!isLeader && isActive && (
-                        <MemberLeaveButton consortiumId={consortiumId} />
-                    )}
 
                     {/* Leader Notes */}
                     {studyConfiguration && <ConsortiumLeaderNotes consortiumLeaderNotes={studyConfiguration?.consortiumLeaderNotes} />}

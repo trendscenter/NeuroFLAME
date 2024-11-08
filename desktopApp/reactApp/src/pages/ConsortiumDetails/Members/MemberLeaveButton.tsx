@@ -38,7 +38,7 @@ const MemberLeaveButton: React.FC<MemberLeadButtonProps> = ({ consortiumId }) =>
                     variant="outlined"
                     onClick={handleLeave}
                     disabled={runStarted} // Disable after a run is started
-                    sx={{marginBottom: '1rem'}}
+                    size="small"
                     fullWidth
                 >
                    Leave Consortium
