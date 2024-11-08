@@ -57,7 +57,7 @@ export const runStartHandler = {
 
       // Unzip the file
       try {
-        await unzipFile({directory: runKitPath, fileName: 'kit.zip'})
+        await unzipFile({ directory: runKitPath, fileName: 'kit.zip' })
       } catch (e) {
         throw new Error(
           `Error unzipping the file: ${
@@ -100,13 +100,32 @@ export const runStartHandler = {
         directoriesToMount,
         portBindings: [],
         commandsToRun: ['python', '/workspace/entry_edge.py'],
+        onContainerExitError: async (containerId, error) => {
+          logger.error(`Error in container: ${containerId}\n${error}`)
+          reportRunError({
+            runId,
+            errorMessage: `Error in container: ${containerId}`,
+          })
+        },
+        onContainerExitSuccess(containerId) {
+          logger.info(`Container exited successfully: ${containerId}`)
+        },
       })
     } catch (error) {
-      logger.error(`Error in runStartHandler: ${JSON.stringify(error)}`)
-      
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : String(error || 'Unknown error')
+      const errorStack =
+        error instanceof Error ? error.stack : 'No stack trace available'
+
+      logger.error(
+        `Error in runStartHandler: ${errorMessage}\nStack Trace: ${errorStack}`,
+      )
+
       await reportRunError({
         runId: data.runStartEdge.runId,
-        errorMessage: `Error starting run: ${JSON.stringify(error)}`,
+        errorMessage: `Error starting run: ${errorMessage}`,
       })
     }
   },
