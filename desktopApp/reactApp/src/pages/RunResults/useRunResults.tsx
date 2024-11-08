@@ -63,9 +63,9 @@ export function useRunResults() {
     }
 
     const handleShowFiles = () => {
-        setFilesPanelWidth({ sm: 2, md: 1 });
+        setFilesPanelWidth({ sm: 2 });
         setFilesPanelShow('inline');
-        setIframePanelWidth({ sm: 10, md: 11 });
+        setIframePanelWidth({ sm: 10 });
         setArrowForwardShow('none'); 
         setIframeExpanded(false);        
     }

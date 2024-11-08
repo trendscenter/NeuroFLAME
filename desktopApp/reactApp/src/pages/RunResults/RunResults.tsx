@@ -59,7 +59,7 @@ export default function RunResults() {
                         {fileList.map((file, index) => (
                             <li key={index}>
                                 <button
-                                    style={{ background: 'none', border: 'none', color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}
+                                    style={{ background: 'none', border: 'none', color: 'blue', textDecoration: 'underline', cursor: 'pointer', padding: '0' }}
                                     onClick={() => setFrameSrc(`${edgeClientRunResultsUrl}/${file.url}?x-access-token=${localStorage.getItem('accessToken')}`)}
                                 >
                                     {file.name}
