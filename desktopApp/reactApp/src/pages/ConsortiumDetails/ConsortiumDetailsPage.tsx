@@ -50,12 +50,6 @@ export default function ConsortiumDetailsPage() {
                         <StartRunButton />
                     )}
 
-                    {/* Start Run Button Section (only if leader a computation has been selected) */}
-                    {!isLeader && isActive && (
-                        <MemberLeaveButton consortiumId={consortiumId} />
-                    )}
-
-
                     {/* Directory Select Section (only if active) */}
                     {isActive &&  (
                         <DirectorySelect />
@@ -63,6 +57,13 @@ export default function ConsortiumDetailsPage() {
 
                     {/* Members Section */}
                     <Members members={members} activeMembers={activeMembers} readyMembers={readyMembers} leader={leader} />
+
+                    {/* Leave Consortium Button if member */}
+                    {!isLeader && isActive && (
+                        <MemberLeaveButton consortiumId={consortiumId} />
+                    )}
+
+                    {/* Leader Notes */}
                     {studyConfiguration && <ConsortiumLeaderNotes consortiumLeaderNotes={studyConfiguration?.consortiumLeaderNotes} />}
                 </Grid>
                 <Grid size={{ sm: 6, md: 4 }} className="consortium-details-grid-2">
