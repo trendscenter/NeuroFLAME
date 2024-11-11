@@ -10,9 +10,7 @@ interface ConsortiumLeaderNotesProps {
 
 export default function ConsortiumLeaderNotes({ consortiumLeaderNotes }: ConsortiumLeaderNotesProps) {
 
-    const consortiumLeaderNotesObj = useConsortiumLeaderNotes(consortiumLeaderNotes)
-
-    const { isEditing, handleEdit, handleSave, handleCancel, isLeader } = consortiumLeaderNotesObj;
+    const { isEditing, handleEdit, handleSave, handleCancel, isLeader } = useConsortiumLeaderNotes(consortiumLeaderNotes);
 
     return (
         <Box p={2} borderRadius={2}  bgcolor={'white'} marginBottom={0}>
