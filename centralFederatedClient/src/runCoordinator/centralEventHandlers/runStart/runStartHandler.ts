@@ -1,7 +1,7 @@
-import reportRunError from './reportRunError.js'
-import reportRunReady from './reportRunReady.js'
-import startRun from './startRun.js'
-import { logger } from '../../../logger.js'
+import reportRunError from './reportRunError.js';
+import reportRunReady from './reportRunReady.js';
+import startRun from './startRun.js';
+import { logger } from '../../../logger.js';
 
 export const RUN_START_SUBSCRIPTION = `
 subscription runStartSubscription {
@@ -12,11 +12,10 @@ subscription runStartSubscription {
         computationParameters
         imageName
     }
-}`
+}`;
 
 export const runStartHandler = {
-  error: (err: any) =>
-    logger.error('Run Start Central - Subscription error:', err),
+  error: (err: any) => logger.error(`Run Start Central - Subscription error: ${err}`),
   complete: () => logger.info('Run Start Central - Subscription completed'),
   next: async ({ data }: { data: any }) => {
     const {
@@ -25,7 +24,7 @@ export const runStartHandler = {
       userIds,
       computationParameters,
       imageName,
-    } = data.runStartCentral
+    } = data.runStartCentral;
 
     try {
       await startRun({
@@ -34,17 +33,24 @@ export const runStartHandler = {
         consortiumId,
         runId,
         computationParameters,
-      })
+      });
 
       // wait a 1 second to report run ready
-      // TODO: replace with a more robust solution
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // report to the central api that the run is ready
-      return await reportRunReady({ runId })
-    } catch (e: any) {
-      logger.error('Run Start Central - Error:', e)
-      return await reportRunError({ runId, errorMessage: e.toString() })
+      return await reportRunReady({ runId });
+    } catch (error) {
+      const errorMessage = error instanceof Error
+        ? error.message
+        : String(error || 'Unknown error');
+      const errorStack = error instanceof Error
+        ? error.stack
+        : 'No stack trace available';
+
+      logger.error(`Run Start Central - Error: ${errorMessage}\nStack Trace: ${errorStack}`);
+
+      return await reportRunError({ runId, errorMessage: errorMessage });
     }
   },
-}
+};
