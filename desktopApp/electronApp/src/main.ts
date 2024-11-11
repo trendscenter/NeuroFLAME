@@ -18,7 +18,6 @@ const configPath: string = getConfigPath()
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 let mainWindow: BrowserWindow | null = null
 
-
 // Get the configuration file path based on command-line arguments or default location
 
 // Function to create the main application window
@@ -33,23 +32,34 @@ async function createWindow(): Promise<void> {
   const developmentUrl = 'http://localhost:3000'
   // Load the correct URL (packaged or development)
   const startUrl = app.isPackaged ? productionUrl : developmentUrl
-
   await mainWindow.loadURL(startUrl)
 
-  // Load configuration and start the edge client if configured
   const config = await getConfig()
-  const logPath = config.logPath || path.join(app.getPath('userData'), './logs')
-  logToPath(logPath)
+
+  // Define default paths directly
+  const defaultAppLogPath = path.join(app.getPath('userData'), 'logs')
+  const defaultEdgeClientBasePath = path.join(app.getPath('userData'), 'base')
+
+  // Set log path and initialize logging
+  const appLogPath = config.logPath || defaultAppLogPath
+  logToPath(appLogPath)
 
   if (config.startEdgeClientOnLaunch) {
-    config.edgeClientConfig.logPath = path.join(logPath, './edgeClient')
-    startEdgeFederatedClient(config.edgeClientConfig)
-  }
+    const defaultEdgeClientLogPath = path.join(appLogPath, 'edgeClient')
 
-  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    createNewWindow(url, mainWindow);
-    return { action: 'deny' };  // Prevent the default behavior (opening in the browser)
-  });
+    const edgeClientLogPath =
+      config.edgeClientConfig.logPath || defaultEdgeClientLogPath
+    const edgeClientBasePath =
+      config.edgeClientConfig.path_base_directory || defaultEdgeClientBasePath
+
+    const edgeClientConfig = {
+      ...config.edgeClientConfig,
+      logPath: edgeClientLogPath,
+      path_base_directory: edgeClientBasePath,
+    }
+
+    startEdgeFederatedClient(edgeClientConfig)
+  }
 
   // Handle window close event
   mainWindow.on('closed', () => {
@@ -93,27 +103,3 @@ ipcMain.handle('restartApp', () => {
   app.relaunch() // Relaunch the application with the same arguments and working directory
   app.exit(0) // Exit the current instance
 })
-
-function createNewWindow(url:string, mainWindow:any) {
-  // Get the current position of the main window
-  const { x, y } = mainWindow.getBounds();
-
-  // Define an offset (e.g., 100px right and 100px down from the main window)
-  const offsetX = 100;
-  const offsetY = 100;
-
-  // Create a new BrowserWindow with the offset position
-  const newWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    x: x + offsetX,
-    y: y + offsetY,
-    webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-    },
-  });
-
-  // Load the URL into the new window
-  newWindow.loadURL(url);
-}
