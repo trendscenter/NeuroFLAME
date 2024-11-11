@@ -10,6 +10,7 @@ import computationNotesMarkdownExample from './computationNotesMarkdownExample.j
 import computationNotesNvflareSsrCsv from './computationNotesNvflareSsrCsv.js'
 import computationNotesNvflareBoilerplate from './computationNotesNvflareBoilerplate.js'
 import consortiumLeaderNotesMulitsiteBrainStudy from './consortiumLeaderNotesMulitsiteBrainStudy.js'
+import computationNotesSingleRoundRidgeRegression from './computationNotesSingleRoundRidgeRegression.js'
 
 const { databaseDetails } = await getConfig()
 const { url, user, pass } = databaseDetails
@@ -96,17 +97,20 @@ const seedDatabase = async () => {
       },
       {
         _id: computation3Id,
-        title: 'single round ridge regression',
-        imageName: 'single_round_ridge_regression',
-        imageDownloadUrl: 'https://example.com/single_round_ridge_regression',
-        notes: 'This is a test computation.',
+        title: 'Single Round Ridge Regression',
+        imageName:
+          'dylanrmartin/computations:single_round_ridge_regression-748881be1c0b5b75efdd363485193d7d310d8df9',
+        imageDownloadUrl:
+          'https://hub.docker.com/layers/dylanrmartin/computations/single_round_ridge_regression-748881be1c0b5b75efdd363485193d7d310d8df9/images/sha256-3a7e61e8e10f7d59571dfa8526c9a84d3e48727fdd8c12923fc02c896543e004?context=repo',
+        notes: computationNotesSingleRoundRidgeRegression,
         owner: user3Id.toString(),
       },
       {
         _id: computation4Id,
         title: 'NVFlare SSR CSV',
         imageName: 'coinstacteam/nvflare-ssr-csv',
-        imageDownloadUrl: 'https://hub.docker.com/repository/docker/coinstacteam/nvflare-ssr-csv',
+        imageDownloadUrl:
+          'https://hub.docker.com/repository/docker/coinstacteam/nvflare-ssr-csv',
         notes: computationNotesNvflareSsrCsv,
         owner: user1Id.toString(),
       },
@@ -116,67 +120,76 @@ const seedDatabase = async () => {
 
     // Create consortia
     const consortia = [
-      {
-        _id: consortium1Id,
-        title: 'Consortium One',
-        description: 'This is the first consortium',
-        leader: user1Id,
-        members: [user1Id, user2Id, user3Id],
-        activeMembers: [user1Id, user2Id, user3Id],
-        studyConfiguration: {
-          consortiumLeaderNotes: 'Leader notes for Consortium One',
-          computationParameters: JSON.stringify({ decimal_places: 2 }),
-          computation: {
-            title: computations[0].title,
-            imageName: computations[0].imageName,
-            notes: computations[0].notes,
-            imageDownloadUrl: computations[0].imageDownloadUrl,
-            owner: computations[0].owner,
-          },
-        },
-      },
+      // {
+      //   _id: consortium1Id,
+      //   title: 'Boilerplate Consortium',
+      //   description: 'This is the first consortium',
+      //   leader: user1Id,
+      //   members: [user1Id, user2Id, user3Id],
+      //   activeMembers: [user1Id, user2Id, user3Id],
+      //   studyConfiguration: {
+      //     consortiumLeaderNotes: `Example parameters: \n${JSON.stringify(
+      //       { decimal_places: 2 },
+      //       null,
+      //       2,
+      //     )}`,
+      //     computationParameters: JSON.stringify({ decimal_places: 2 }),
+      //     computation: {
+      //       title: computations[0].title,
+      //       imageName: computations[0].imageName,
+      //       notes: computations[0].notes,
+      //       imageDownloadUrl: computations[0].imageDownloadUrl,
+      //       owner: computations[0].owner,
+      //     },
+      //   },
+      // },
       {
         _id: consortium2Id,
-        title: 'Consortium Two',
-        description: 'This is the second consortium',
+        title: 'Single Round Ridge Regression Consortium',
+        description:
+          'This is a test consortium for single round ridge regression',
         leader: user2Id,
         members: [user1Id, user2Id],
         activeMembers: [user1Id, user2Id],
         studyConfiguration: {
           consortiumLeaderNotes: 'Leader notes for Consortium Two',
-          computationParameters: JSON.stringify({ decimal_places: 10 }),
+          computationParameters: JSON.stringify({
+            Covariates: ['MDD', 'Age', 'Sex', 'ICV'],
+            Dependents: ['L_hippo', 'R_hippo', 'Tot_hippo'],
+          }),
           computation: {
-            title: computations[1].title,
-            imageName: computations[1].imageName,
-            imageDownloadUrl: computations[1].imageDownloadUrl,
-            notes: computations[1].notes,
-            owner: computations[1].owner,
+            title: computations[2].title,
+            imageName: computations[2].imageName,
+            imageDownloadUrl: computations[2].imageDownloadUrl,
+            notes: computations[2].notes,
+            owner: computations[2].owner,
           },
         },
       },
       {
         _id: consortium3Id,
         title: 'Multisite Brain Study',
-        description: 'Our Goal is to see if there are any statistical connections between Hippocampal measurements and MDD, Age, Sex, and ICV data',
+        description:
+          'Our Goal is to see if there are any statistical connections between Hippocampal measurements and MDD, Age, Sex, and ICV data',
         leader: user1Id,
         members: [user1Id, user2Id],
         activeMembers: [user1Id, user2Id],
         studyConfiguration: {
           consortiumLeaderNotes: consortiumLeaderNotesMulitsiteBrainStudy,
           computationParameters: JSON.stringify({
-            "Dependents": {
-                "L_hippo":"int",
-                "R_hippo":"int",
-                "Tot_hippo":"int"
+            Dependents: {
+              L_hippo: 'int',
+              R_hippo: 'int',
+              Tot_hippo: 'int',
             },
-            "Covariates": {
-                "MDD":"bool",
-                "Age":"int",
-                "Sex":"int",
-                "ICV":"int"
+            Covariates: {
+              MDD: 'bool',
+              Age: 'int',
+              Sex: 'int',
+              ICV: 'int',
             },
-            "Lambda": 0
-        }),
+            Lambda: 0,
+          }),
           computation: {
             title: computations[3].title,
             imageName: computations[3].imageName,
@@ -192,50 +205,50 @@ const seedDatabase = async () => {
 
     // Create runs
     const runs = [
-      {
-        _id: run1Id,
-        consortium: consortium1Id,
-        consortiumLeader: user1Id,
-        studyConfiguration: consortia[0].studyConfiguration,
-        members: consortia[0].members,
-        status: 'Complete',
-        runErrors: [],
-        createdAt: Date.now(),
-        lastUpdated: Date.now(),
-      },
-      {
-        _id: run2Id,
-        consortium: consortium2Id,
-        consortiumLeader: user2Id,
-        studyConfiguration: consortia[1].studyConfiguration,
-        members: consortia[1].members,
-        status: 'Pending',
-        runErrors: [],
-        createdAt: Date.now(),
-        lastUpdated: Date.now(),
-      },
-      {
-        _id: run3Id,
-        consortium: consortium1Id,
-        consortiumLeader: user1Id,
-        studyConfiguration: consortia[0].studyConfiguration,
-        members: consortia[0].members,
-        status: 'Error',
-        runErrors: [
-          {
-            user: user1Id,
-            timestamp: Date.now().toString(),
-            message: 'Error message for user 1',
-          },
-          {
-            user: user2Id,
-            timestamp: Date.now().toString(),
-            message: 'Error message for user 2',
-          },
-        ],
-        createdAt: Date.now(),
-        lastUpdated: Date.now(),
-      },
+      // {
+      //   _id: run1Id,
+      //   consortium: consortium1Id,
+      //   consortiumLeader: user1Id,
+      //   studyConfiguration: consortia[0].studyConfiguration,
+      //   members: consortia[0].members,
+      //   status: 'Complete',
+      //   runErrors: [],
+      //   createdAt: Date.now(),
+      //   lastUpdated: Date.now(),
+      // },
+      // {
+      //   _id: run2Id,
+      //   consortium: consortium2Id,
+      //   consortiumLeader: user2Id,
+      //   studyConfiguration: consortia[1].studyConfiguration,
+      //   members: consortia[1].members,
+      //   status: 'Pending',
+      //   runErrors: [],
+      //   createdAt: Date.now(),
+      //   lastUpdated: Date.now(),
+      // },
+      // {
+      //   _id: run3Id,
+      //   consortium: consortium1Id,
+      //   consortiumLeader: user1Id,
+      //   studyConfiguration: consortia[0].studyConfiguration,
+      //   members: consortia[0].members,
+      //   status: 'Error',
+      //   runErrors: [
+      //     {
+      //       user: user1Id,
+      //       timestamp: Date.now().toString(),
+      //       message: 'Error message for user 1',
+      //     },
+      //     {
+      //       user: user2Id,
+      //       timestamp: Date.now().toString(),
+      //       message: 'Error message for user 2',
+      //     },
+      //   ],
+      //   createdAt: Date.now(),
+      //   lastUpdated: Date.now(),
+      // },
     ]
     await Run.insertMany(runs)
     logger.info('Runs seeded successfully!')
