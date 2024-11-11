@@ -20,20 +20,6 @@ export default function ConsortiumDetailsPage() {
     const { consortiumId, studyConfiguration, members, activeMembers, readyMembers, leader, title, description } = data;
     const navigate = useNavigate();
 
-    const { consortiumLeave } = useCentralApi();
-
-    // Handle leaving the consortium
-    const handleLeave = async () => {
-        try {
-            await consortiumLeave({ consortiumId: consortiumId });
-            // You can refetch or update the UI state to reflect the change
-        } catch (error) {
-            console.error("Failed to leave the consortium:", error);
-        } finally {
-            navigate('/consortiumList');
-        }
-    };
-
     const isActive = activeMembers.some((member) => member.id === userId);
 
     return (
