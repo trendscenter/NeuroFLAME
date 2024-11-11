@@ -17,7 +17,7 @@ import { useCentralApi } from "../../apis/centralApi/centralApi";
 export default function ConsortiumDetailsPage() {
     const { userId } = useUserState();
     const { data, status, refetch, isLeader } = useConsortiumDetails();
-    const { consortiumId, studyConfiguration, members, activeMembers, readyMembers, leader, title, description } = data;
+    const { studyConfiguration, members, activeMembers, readyMembers, leader, title, description } = data;
     const navigate = useNavigate();
 
     const isActive = activeMembers.some((member) => member.id === userId);
