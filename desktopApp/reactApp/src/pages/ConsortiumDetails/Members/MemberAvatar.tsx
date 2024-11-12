@@ -3,6 +3,7 @@ import { Avatar, Box } from "@mui/material";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Shield from '../../../assets/shield.svg';
 import GreyShield from '../../../assets/grey_shield.svg';
+import Crown from '../../../assets/crown.svg';
 
 const UserColor: string[] = [
   "#2FA84F", //green
@@ -70,6 +71,22 @@ const MemberAvatar: React.FC<MemberAvatarProps> = (props) => {
             zIndex: '3',
           }}
         /> : ''}
+        {isLeader && 
+          <img 
+          src={Crown}
+          style={{ 
+            position: 'absolute',
+            borderRadius: '16px',
+            color: '#2FA84F', 
+            width: '20px', 
+            height: '20px', 
+            top: '-10px',
+            left: '0px',
+            zIndex: '3',
+            rotate: '-25deg'
+          }} 
+        />
+        }
       <UserAvatar index={index} admin={isLeader} active={isActive}>
         <span
           style={{ 
@@ -82,17 +99,17 @@ const MemberAvatar: React.FC<MemberAvatarProps> = (props) => {
         >
           {username.charAt(0).toUpperCase()}
         </span>
-        {isLeader && 
-        <img 
-          src={isActive ? Shield : GreyShield}
-          style={{ 
-            position: 'absolute',
-            width: '50px', 
-            height: '50px', 
-            zIndex: '1',
-            objectFit: 'cover',
-          }} 
-        />}
+        {isLeader &&  
+          <img 
+            src={isActive ? Shield : GreyShield}
+            style={{ 
+              position: 'absolute',
+              width: '50px', 
+              height: '50px', 
+              zIndex: '1',
+              objectFit: 'cover',
+            }} 
+          />}  
       </UserAvatar>
       <span className='username' style={isActive ? { color: '#000' } : { color: '#ccc' }}>{username}</span>
     </Box>
