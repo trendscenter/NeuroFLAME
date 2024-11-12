@@ -1,6 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
-import path from 'path'
-import url from 'url'
+import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 import { start as startEdgeFederatedClient } from 'edge-federated-client'
 import { logger, logToPath } from './logger.js'
 import { createMainWindow } from './window.js'
@@ -12,84 +10,49 @@ import {
   saveConfig,
 } from './config.js'
 import { useDirectoryDialog } from './dialogs.js'
+import initializeConfig from './configManager.js'
 
-const configPath: string = getConfigPath()
-
-const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 let mainWindow: BrowserWindow | null = null
 
-// Get the configuration file path based on command-line arguments or default location
+async function appOnReady(): Promise<void> {
+  try {
+    const config = await initializeConfig()
+    logToPath(config.logPath as string)
 
-// Function to create the main application window
-async function createWindow(): Promise<void> {
-  mainWindow = await createMainWindow(__dirname)
-  const appPath = app.getAppPath()
-  const productionUrl = url.format({
-    pathname: path.join(appPath, '../app/build/index.html'),
-    protocol: 'file:',
-    slashes: true,
-  })
-  const developmentUrl = 'http://localhost:3000'
-  // Load the correct URL (packaged or development)
-  const startUrl = app.isPackaged ? productionUrl : developmentUrl
-  await mainWindow.loadURL(startUrl)
-
-  const config = await getConfig()
-
-  // Define default paths directly
-  const defaultAppLogPath = path.join(app.getPath('userData'), 'logs')
-  const defaultEdgeClientBasePath = path.join(app.getPath('userData'), 'base')
-
-  // Set log path and initialize logging
-  const appLogPath = config.logPath || defaultAppLogPath
-  logToPath(appLogPath)
-
-  if (config.startEdgeClientOnLaunch) {
-    const defaultEdgeClientLogPath = path.join(appLogPath, 'edgeClient')
-
-    const edgeClientLogPath =
-      config.edgeClientConfig.logPath || defaultEdgeClientLogPath
-    const edgeClientBasePath =
-      config.edgeClientConfig.path_base_directory || defaultEdgeClientBasePath
-
-    const edgeClientConfig = {
-      ...config.edgeClientConfig,
-      logPath: edgeClientLogPath,
-      path_base_directory: edgeClientBasePath,
+    if (config.startEdgeClientOnLaunch) {
+      startEdgeFederatedClient(config.edgeClientConfig)
     }
-
-    startEdgeFederatedClient(edgeClientConfig)
+  } catch (error) {
+    // Show non-blocking error to inform user but do not halt app
+    showInitializationError(error as Error)
   }
 
-  // Handle window close event
+  mainWindow = await createMainWindow()
   mainWindow.on('closed', () => {
+    logger.info('Main window closed')
     mainWindow = null
   })
 }
 
-// Event listeners for application lifecycle
-app.on('ready', createWindow)
+app.on('ready', appOnReady)
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+  if (process.platform !== 'darwin') app.quit()
 })
 app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow().catch(logger.error)
-  }
+  if (!mainWindow) appOnReady().catch((err) => showInitializationError(err))
 })
 
-// IPC handlers for various operations
-ipcMain.handle('getConfigPath', () => configPath)
+// IPC handlers
+ipcMain.handle('getConfigPath', () => getConfigPath())
 ipcMain.handle('getConfig', getConfig)
 ipcMain.handle('openConfig', openConfig)
-ipcMain.handle('saveConfig', async (event, configString) => {
-  return await saveConfig(configString)
-})
+ipcMain.handle(
+  'saveConfig',
+  async (_, configString) => await saveConfig(configString),
+)
 ipcMain.handle('applyDefaultConfig', applyDefaultConfig)
-ipcMain.handle('useDirectoryDialog', (event, pathString) => {
-  logger.info('useDirectoryDialog', { pathString })
+
+ipcMain.handle('useDirectoryDialog', (_, pathString) => {
   if (mainWindow) {
     return useDirectoryDialog({ mainWindow, pathString })
   }
@@ -99,7 +62,24 @@ ipcMain.handle('useDirectoryDialog', (event, pathString) => {
     error: 'Main window is not available',
   }
 })
+
 ipcMain.handle('restartApp', () => {
-  app.relaunch() // Relaunch the application with the same arguments and working directory
-  app.exit(0) // Exit the current instance
+  app.relaunch()
+  app.exit(0)
 })
+
+function showInitializationError(error: Error) {
+  const errorMessage = `
+    The application encountered an error during startup and may not function as expected.
+    
+    Details:
+    ${error.message}
+    
+    Technical Information for Troubleshooting:
+    ${error.stack || 'No stack trace available'}
+    
+    Please contact support if the issue persists.
+  `
+
+  dialog.showErrorBox('Application Initialization Error', errorMessage.trim())
+}
