@@ -13,9 +13,13 @@ import { electronApi } from './apis/electronApi/electronApi';
 import ApolloClientsProvider from './contexts/ApolloClientsProvider';
 import { HashRouter as Router } from 'react-router-dom';
 import { UserStateProvider } from './contexts/UserStateContext';
+import interceptExternalLinks from './utils/interceptExternalLinks';
 
 const startApp = async () => {
   console.log("Starting app...");
+
+
+  interceptExternalLinks();
 
   // Attempt to get the configuration
   const config = await electronApi.getConfig();

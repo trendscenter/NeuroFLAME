@@ -1,7 +1,8 @@
 import { Computation } from "../../../apis/centralApi/generated/graphql";
 import { Box, Chip, Typography, Card, CardContent } from "@mui/material";
 import { Maybe } from "graphql/jsutils/Maybe";
-import MarkdownRenderer from "./MarkdownRenderer";
+import ReactMarkdown from 'react-markdown';
+
 
 interface ComputationDisplayProps {
     computation: Maybe<Computation> | undefined;
@@ -46,7 +47,8 @@ export default function ComputationDisplay({ computation }: ComputationDisplayPr
                     />
                 </div>
                 <Box>
-                    <MarkdownRenderer>{notes}</MarkdownRenderer>
+                    {/* <MarkdownRenderer>{notes}</MarkdownRenderer> */}
+                    <ReactMarkdown>{notes}</ReactMarkdown>
                 </Box>
             </CardContent>
         </Box>
