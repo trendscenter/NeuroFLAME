@@ -47,7 +47,6 @@ export default function ComputationDisplay({ computation }: ComputationDisplayPr
                     />
                 </div>
                 <Box>
-                    {/* <MarkdownRenderer>{notes}</MarkdownRenderer> */}
                     <ReactMarkdown>{notes}</ReactMarkdown>
                 </Box>
             </CardContent>
