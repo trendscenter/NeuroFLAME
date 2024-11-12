@@ -13,11 +13,11 @@ interface MembersDisplayProps {
     }[];
     setMemberActive: (memberId: string, isActive: boolean) => void;
     setMemberReady: (memberId: string, isReady: boolean) => void;
-    consortiumId: string;
+    handleLeave: () => void;
 }
 
 
-export function MembersDisplay({ memberList, setMemberActive, setMemberReady, consortiumId }: MembersDisplayProps) {
+export function MembersDisplay({ memberList, setMemberActive, setMemberReady, handleLeave }: MembersDisplayProps) {
 
     const itsMe = memberList.find((member) => member.isMe === true);
 
@@ -139,7 +139,7 @@ export function MembersDisplay({ memberList, setMemberActive, setMemberReady, co
                 </Box>
             </div>
         </Box>
-        <MemberLeaveButton consortiumId={consortiumId} />
+        <MemberLeaveButton handleLeave={handleLeave} />
     </Box>);
 }
                 
