@@ -13,7 +13,6 @@ import { electronApi } from './apis/electronApi/electronApi';
 import ApolloClientsProvider from './contexts/ApolloClientsProvider';
 import { HashRouter as Router } from 'react-router-dom';
 import { UserStateProvider } from './contexts/UserStateContext';
-import { setupLinkInterceptor } from './linkInterceptor';
 
 const startApp = async () => {
   console.log("Starting app...");
@@ -21,9 +20,6 @@ const startApp = async () => {
   // Attempt to get the configuration
   const config = await electronApi.getConfig();
   console.log("Config loaded:", config);
-
-  // Initialize the link interceptor
-  const cleanupLinkInterceptor = setupLinkInterceptor();
 
   // Check if the root element exists
   const rootElement = document.getElementById('root');
