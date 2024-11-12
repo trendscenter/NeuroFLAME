@@ -1,5 +1,5 @@
-import { Computation } from "../../../../apis/centralApi/generated/graphql";
-import { Box, Chip, Typography, Card, CardContent, Link } from "@mui/material";
+import { Computation } from "../../../apis/centralApi/generated/graphql";
+import { Box, Chip, Typography, Card, CardContent } from "@mui/material";
 import { Maybe } from "graphql/jsutils/Maybe";
 import ReactMarkdown from 'react-markdown';
 
@@ -12,8 +12,7 @@ export default function ComputationDisplay({ computation }: ComputationDisplayPr
         return (
             <Card>
                 <CardContent>
-                    <Typography variant="h6">Computation Display</Typography>
-                    <Typography variant="body1">No computation selected</Typography>
+                <Typography fontSize="11px">Computation Notes:</Typography>
                 </CardContent>
             </Card>
         );
@@ -40,6 +39,7 @@ export default function ComputationDisplay({ computation }: ComputationDisplayPr
                         label="Download URL" 
                         component="a" 
                         href={imageDownloadUrl} 
+                        target="_blank"
                         size="small" 
                         variant="outlined" 
                         clickable 

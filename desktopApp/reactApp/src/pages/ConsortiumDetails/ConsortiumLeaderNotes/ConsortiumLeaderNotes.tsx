@@ -9,6 +9,7 @@ interface ConsortiumLeaderNotesProps {
 }
 
 export default function ConsortiumLeaderNotes({ consortiumLeaderNotes }: ConsortiumLeaderNotesProps) {
+
     const { isEditing, handleEdit, handleSave, handleCancel, isLeader } = useConsortiumLeaderNotes(consortiumLeaderNotes);
 
     return (

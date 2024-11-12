@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import ComputationList from "./ComputationList";
 import { useComputationSelect } from "./useComputationSelect";
-import { useConsortiumDetailsContext } from "../../../ConsortiumDetailsContext";
+import { useConsortiumDetailsContext } from "../../ConsortiumDetailsContext";
 
 export default function ComputationSelect({ computation }: { computation: any }) {
     const { computations, loading, error, selectComputation } = useComputationSelect();

@@ -1,7 +1,7 @@
 // src/hooks/useComputationSelect.ts
 import { useState, useEffect } from "react";
-import { useCentralApi } from "../../../../../apis/centralApi/centralApi";
-import { ComputationListItem } from "../../../../../apis/centralApi/generated/graphql";
+import { useCentralApi } from "../../../../apis/centralApi/centralApi";
+import { ComputationListItem } from "../../../../apis/centralApi/generated/graphql";
 import { useParams } from "react-router-dom";
 
 export const useComputationSelect = () => {

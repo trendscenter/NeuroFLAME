@@ -3,7 +3,7 @@ import { PublicUser } from "../../../apis/centralApi/generated/graphql";
 import { useUserState } from "../../../contexts/UserStateContext";
 import { useCentralApi } from "../../../apis/centralApi/centralApi";
 import { useEdgeApi } from "../../../apis/edgeApi/edgeApi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useConsortiumDetailsContext } from "../ConsortiumDetailsContext";
 
 interface UseMembersProps {
@@ -15,9 +15,10 @@ interface UseMembersProps {
 
 export const useMembers = ({ members, activeMembers, readyMembers, leader }: UseMembersProps) => {
     const { userId } = useUserState();
-    const { consortiumSetMemberActive, consortiumSetMemberReady } = useCentralApi();
+    const { consortiumSetMemberActive, consortiumSetMemberReady, consortiumLeave } = useCentralApi();
     const consortiumId = useParams<{ consortiumId: string }>().consortiumId as string;
     const { refetch } = useConsortiumDetailsContext();
+    const navigate = useNavigate();
 
     const [memberMountDir, setMemberMountDir] = useState<string>('');
 
@@ -61,5 +62,18 @@ export const useMembers = ({ members, activeMembers, readyMembers, leader }: Use
         }
     }
 
-    return { memberList, setMemberActive, setMemberReady };
+    // Handle leaving the consortium
+    const handleLeave = async () => {
+        try {
+            await consortiumLeave({ consortiumId: consortiumId });
+            // You can refetch or update the UI state to reflect the change
+        } catch (error) {
+            console.error("Failed to leave the consortium:", error);
+        } finally {
+            navigate('/consortiumList');
+        }
+    };
+    
+
+    return { memberList, setMemberActive, setMemberReady, handleLeave };
 };

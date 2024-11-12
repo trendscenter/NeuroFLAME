@@ -1,8 +1,8 @@
 // src/hooks/useComputationParameters.ts
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useCentralApi } from "../../../../apis/centralApi/centralApi";
-import { useConsortiumDetailsContext } from "../../ConsortiumDetailsContext";
+import { useCentralApi } from "../../../apis/centralApi/centralApi";
+import { useConsortiumDetailsContext } from "../ConsortiumDetailsContext";
 
 export const useComputationParameters = (initialParameters: string) => {
     const [isEditing, setIsEditing] = useState(false);

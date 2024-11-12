@@ -1,5 +1,6 @@
 import { Box, CardActions, FormControlLabel, Switch, Typography } from "@mui/material";
 import MemberAvatar from "./MemberAvatar";
+import MemberLeaveButton from "./MemberLeaveButton";
 
 interface MembersDisplayProps {
     memberList: {
@@ -12,10 +13,11 @@ interface MembersDisplayProps {
     }[];
     setMemberActive: (memberId: string, isActive: boolean) => void;
     setMemberReady: (memberId: string, isReady: boolean) => void;
+    handleLeave: () => void;
 }
 
 
-export function MembersDisplay({ memberList, setMemberActive, setMemberReady }: MembersDisplayProps) {
+export function MembersDisplay({ memberList, setMemberActive, setMemberReady, handleLeave }: MembersDisplayProps) {
 
     const itsMe = memberList.find((member) => member.isMe === true);
 
@@ -29,7 +31,7 @@ export function MembersDisplay({ memberList, setMemberActive, setMemberReady }: 
         style={{position: 'relative'}}
         >
         <Box>
-            <Box>
+            <Box sx={{position: 'relative'}}>
                 <Typography variant="h6" gutterBottom>
                     Members
                 </Typography>
@@ -84,7 +86,7 @@ export function MembersDisplay({ memberList, setMemberActive, setMemberReady }: 
                 })}
                 </Box>
             </Box>
-            <div style={{position: "absolute", bottom: '1rem', right: '1rem'}}>
+            <div style={{position: "absolute", bottom: '3.5rem', right: '1rem'}}>
                 <Box
                     style={{
                         display:"flex",
@@ -137,6 +139,7 @@ export function MembersDisplay({ memberList, setMemberActive, setMemberReady }: 
                 </Box>
             </div>
         </Box>
+        <MemberLeaveButton handleLeave={handleLeave} />
     </Box>);
 }
                 
