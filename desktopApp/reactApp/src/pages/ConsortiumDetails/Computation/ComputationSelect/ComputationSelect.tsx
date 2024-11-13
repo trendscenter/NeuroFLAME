@@ -39,7 +39,7 @@ export default function ComputationSelect({ computation }: { computation: any })
                     )}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseModal} color="secondary">
+                    <Button onClick={handleCloseModal} color="warning">
                         Cancel
                     </Button>
                 </DialogActions>
