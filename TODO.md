@@ -1,6 +1,2 @@
-- [ ] Organize state and contexts in the UI
-- [ ] consider subscription for live changes to consortium details
-- [ ] further decouple COINSTAC and NVFLARE
-  - [ ] provision inside the container
 - [ ] create guide for starting the platform locally
 - [ ] revisit/refactor configurations and default configuration handling
