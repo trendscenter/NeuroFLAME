@@ -11,13 +11,11 @@ const ComputationList: React.FC<ComputationListProps> = ({ computations, onSelec
     return (
         <List>
             {computations.map((computation) => (
-                <ListItem key={computation.id} divider>
-                    <ListItemAvatar>
-                        <Avatar alt={computation.title} src={computation.imageName} />
-                    </ListItemAvatar>
+                <ListItem key={computation.id} divider sx={{display: 'flex', justifyContent: 'space-between'}}>
                     <ListItemText
+                        sx={{maxWidth: '400px'}}
                         primary={computation.title}
-                        secondary={computation.imageName ? `Image: ${computation.imageName}` : ""}
+                        secondary={computation.imageName ? `${computation.imageName}` : ""}
                     />
                     <Button
                         variant="contained"
