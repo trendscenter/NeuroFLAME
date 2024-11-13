@@ -1,15 +1,26 @@
 import { useNavigate } from 'react-router-dom';
-import { Alert, Box, Button, Card, Container, Typography } from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import { Alert, Box, Button, Card, Container, IconButton, Typography } from "@mui/material";
 import { useComputationDetails } from "./useComputationDetails";
 import ReactMarkdown from 'react-markdown';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { useState } from "react";
+
 
 export default function ComputationDetails() {
     const navigate = useNavigate();
 
     const { computationDetails, loading, error } = useComputationDetails();
 
-    console.log(computationDetails);
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = () => {
+        if (computationDetails.imageDownloadUrl) {
+            navigator.clipboard.writeText(computationDetails.imageDownloadUrl);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000); // Reset copy status after 2 seconds
+        }
+    };
+
     return (
         <Box p={2}>
             {/* Error State */}
@@ -40,6 +51,40 @@ export default function ComputationDetails() {
                         <Typography variant="body2" color="textSecondary">
                             {computationDetails.imageName}
                         </Typography>
+                        <Box marginTop={2} display="flex" flexDirection="column" alignItems="flex-start">
+                        <Typography>
+                            Image Download:
+                        </Typography>
+                        <Box display="flex" alignItems="center" marginBottom="1rem">
+                            <Typography
+                                component="code"
+                                sx={{
+                                    bgcolor: '#f5f5f5',
+                                    padding: '4px 8px',
+                                    borderRadius: 1,
+                                    fontFamily: 'monospace',
+                                    fontSize: '0.875rem',
+                                    width: 'calc(100% - 2rem)',
+                                    lineBreak: 'anywhere'
+                                }}
+                            >
+                                {computationDetails.imageDownloadUrl}
+                            </Typography>
+                            <IconButton
+                                onClick={handleCopy}
+                                size="small"
+                                aria-label="copy download URL"
+                                sx={{ marginLeft: 1 }}
+                            >
+                                <ContentCopyIcon fontSize="small" />
+                            </IconButton>
+                            {copied && (
+                                <Typography fontSize="0.75rem" color="green" marginLeft={1}>
+                                    Copied!
+                                </Typography>
+                            )}
+                        </Box>
+                    </Box>
                         <Box marginTop="1rem">
                             <ReactMarkdown>{computationDetails.notes}</ReactMarkdown>
                         </Box>                       
