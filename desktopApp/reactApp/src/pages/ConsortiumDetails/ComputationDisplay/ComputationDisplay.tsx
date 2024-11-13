@@ -43,30 +43,41 @@ export default function ComputationDisplay({ computation }: ComputationDisplayPr
             <CardContent>
                 <Typography fontSize="11px">Computation Notes:</Typography>
                 <Typography variant="h5" fontWeight="600" color="black">{title}</Typography>
-                <Typography variant="h6">{imageName}</Typography>
-                
-                <Box display="flex" alignItems="center" marginY={1}>
-                    <Typography 
-                        component="code" 
-                        sx={{ 
-                            bgcolor: '#f5f5f5', 
-                            padding: '4px 8px', 
-                            borderRadius: 1, 
-                            fontFamily: 'monospace', 
-                            fontSize: '0.875rem' 
-                        }}
-                    >
-                        {imageDownloadUrl}
+                <Typography variant="body2" color="textSecondary">
+                    {imageName}
+                </Typography>
+
+                <Box marginTop={2} display="flex" flexDirection="column" alignItems="flex-start">
+                    <Typography fontSize="0.875rem" fontWeight="500" color="textSecondary">
+                        Image Download:
                     </Typography>
-                    <IconButton 
-                        onClick={handleCopy} 
-                        size="small" 
-                        aria-label="copy download URL"
-                        sx={{ marginLeft: 1 }}
-                    >
-                        <ContentCopyIcon fontSize="small" />
-                    </IconButton>
-                    {copied && <Typography fontSize="0.75rem" color="green" marginLeft={1}>Copied!</Typography>}
+                    <Box display="flex" alignItems="center">
+                        <Typography
+                            component="code"
+                            sx={{
+                                bgcolor: '#f5f5f5',
+                                padding: '4px 8px',
+                                borderRadius: 1,
+                                fontFamily: 'monospace',
+                                fontSize: '0.875rem'
+                            }}
+                        >
+                            {imageDownloadUrl}
+                        </Typography>
+                        <IconButton
+                            onClick={handleCopy}
+                            size="small"
+                            aria-label="copy download URL"
+                            sx={{ marginLeft: 1 }}
+                        >
+                            <ContentCopyIcon fontSize="small" />
+                        </IconButton>
+                        {copied && (
+                            <Typography fontSize="0.75rem" color="green" marginLeft={1}>
+                                Copied!
+                            </Typography>
+                        )}
+                    </Box>
                 </Box>
 
                 <Box>
