@@ -9,6 +9,9 @@ const modules = {
         ['bold', 'italic', 'underline'],
         [{'list': 'bullet'}],
     ],
+    clipboard: {
+        matchVisual: false
+    }
 };
 
 const formats = [
