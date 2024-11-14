@@ -13,8 +13,6 @@ export function RunDetails() {
 
     return (
         <Box p={2}>
-            {error && <Alert severity="error">{error}</Alert>}
-            {loading && <Typography variant="body1" color="textSecondary">Loading...</Typography>}
             {runDetails && (
                 <Box>
                     <Box display="flex" justifyContent="space-between" marginLeft="1rem" marginRight="1rem">
@@ -111,6 +109,8 @@ export function RunDetails() {
                     </Grid>
                 </Box>
             )}
+            {error && <Alert severity="error">{error}</Alert>}
+            {loading && <Typography variant="body1" color="textSecondary">Loading...</Typography>}
         </Box>
     );
 }
