@@ -1,5 +1,21 @@
-import { Box, TextField, Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useState } from "react";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
+const modules = {
+    toolbar: [
+        [{ 'header': [1, 2, false] }],
+        ['bold', 'italic', 'underline'],
+        [{'list': 'bullet'}],
+    ],
+};
+
+const formats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'bullet', 'indent',
+];
 
 interface ConsortiumLeaderNotesEditProps {
     consortiumLeaderNotes: string;
@@ -18,15 +34,18 @@ export default function ConsortiumLeaderNotesEdit({
         onSave(notes);
     };
 
+    const handleContentChange = (content: any) => {
+        setNotes(content);
+      };
+
     return (
         <Box>
-            <TextField
-                label="Consortium Leader Notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                multiline
-                fullWidth
-                rows={4}
+            <ReactQuill 
+                theme="snow" 
+                value={notes} 
+                onChange={handleContentChange} 
+                modules={modules} 
+                formats={formats}
             />
             <Box mt={2}>
                 <Button variant="contained" color="primary" onClick={handleSave} sx={{ mr: 1 }}>
