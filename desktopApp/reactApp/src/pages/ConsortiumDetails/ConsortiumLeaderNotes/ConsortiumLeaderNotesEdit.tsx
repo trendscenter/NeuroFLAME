@@ -1,5 +1,8 @@
-import { Box, TextField, Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useState } from "react";
+import MDEditor from '@uiw/react-md-editor';
+import '@uiw/react-md-editor/markdown-editor.css';
+import '@uiw/react-markdown-preview/markdown.css';
 
 interface ConsortiumLeaderNotesEditProps {
     consortiumLeaderNotes: string;
@@ -20,14 +23,15 @@ export default function ConsortiumLeaderNotesEdit({
 
     return (
         <Box>
-            <TextField
-                label="Consortium Leader Notes"
+            {/* Markdown Editor */}
+            <MDEditor
+                data-color-mode="light"
                 value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                multiline
-                fullWidth
-                rows={4}
+                onChange={(value = '') => setNotes(value)}
+                height={400}
             />
+
+            {/* Action Buttons */}
             <Box mt={2}>
                 <Button variant="contained" color="primary" onClick={handleSave} sx={{ mr: 1 }}>
                     Save

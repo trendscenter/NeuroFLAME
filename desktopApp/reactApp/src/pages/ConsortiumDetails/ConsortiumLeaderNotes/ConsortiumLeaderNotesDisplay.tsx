@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import parse from 'html-react-parser';
+import ReactMarkdown from "react-markdown";
 
 interface ConsortiumLeaderNotesDisplayProps {
     consortiumLeaderNotes: string;
@@ -9,7 +9,7 @@ export default function ConsortiumLeaderNotesDisplay({ consortiumLeaderNotes }: 
     return (
         <Box>
             {consortiumLeaderNotes && <div>
-                {parse(consortiumLeaderNotes)}
+                <ReactMarkdown>{consortiumLeaderNotes}</ReactMarkdown>
             </div>}
         </Box>
     );
