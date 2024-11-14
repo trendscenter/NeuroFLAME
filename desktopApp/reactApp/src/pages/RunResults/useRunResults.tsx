@@ -9,9 +9,9 @@ export function useRunResults() {
     const [error, setError] = useState<string | null>(null);
     const [frameSrc, setFrameSrc] = useState<string | null>(null)
     const [edgeClientRunResultsUrl, setEdgeClientRunResultsUrl] = useState<string | null>(null);
-    const [filesPanelWidth, setFilesPanelWidth] = useState<object>({ sm: 2, md: 1 })
+    const [filesPanelWidth, setFilesPanelWidth] = useState<object>({ sm: 3, md: 2 })
     const [filesPanelShow, setFilesPanelShow] = useState<string>('inline')
-    const [iframePanelWidth, setIframePanelWidth] = useState<object>({ sm: 10, md: 11 })
+    const [iframePanelWidth, setIframePanelWidth] = useState<object>({ sm: 9, md: 10 })
     const [iframeExpanded, setIframeExpanded] = useState<boolean>(false)
     const [arrowForwardShow, setArrowForwardShow] = useState<string>('none')
 
@@ -55,17 +55,17 @@ export function useRunResults() {
     }, [consortiumId, runId, edgeClientRunResultsUrl, frameSrc]);
 
     const handleHideFiles = () => {
-        setFilesPanelWidth({ sm: 0 });
+        setFilesPanelWidth({ sm: 0, md: 0 });
         setFilesPanelShow('none');
-        setIframePanelWidth({ sm: 12 });
+        setIframePanelWidth({ sm: 12, md: 12 });
         setArrowForwardShow('inline');
         setIframeExpanded(true);
     }
 
     const handleShowFiles = () => {
-        setFilesPanelWidth({ sm: 3 });
+        setFilesPanelWidth({ sm: 3, md: 2 });
         setFilesPanelShow('inline');
-        setIframePanelWidth({ sm: 9 });
+        setIframePanelWidth({ sm: 9, md: 10 });
         setArrowForwardShow('none'); 
         setIframeExpanded(false);        
     }
