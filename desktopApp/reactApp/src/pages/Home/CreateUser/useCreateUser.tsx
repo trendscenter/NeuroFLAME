@@ -6,6 +6,7 @@ export function useCreateUser() {
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState(false);
 
     const handleUserCreate = async (username: string, password: string) => {
         try {
@@ -18,8 +19,9 @@ export function useCreateUser() {
             setError('Create user failed, please try again.');
         } finally {
             setLoading(false);
+            setSuccess(true);
         }
     };
 
-    return { handleUserCreate, loading, error };
+    return { handleUserCreate, loading, error, success };
 };
