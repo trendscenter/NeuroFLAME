@@ -11,6 +11,7 @@ import { RunDetails } from './RunDetails/RunDetails';
 import { RunList } from './RunList/RunList';
 import RunResults from './RunResults/RunResults';
 import ComputationListPage from './ComputationList/ComputationListPage';
+import ComputationDetailsPage from './ComputationDetails/ComputationDetailsPage';
 import AdminPage from './Admin/AdminPage';
 
 
@@ -25,6 +26,7 @@ export default function AppRoutes() {
             <Route path="/run/details/:runId" element={<RunDetails/>} />
             <Route path="/runList" element={<RunList/>} />
             <Route path="/computationList" element={<ComputationListPage></ComputationListPage>} />
+            <Route path="/computation/details/:computationId" element={<ComputationDetailsPage />} />
             <Route path="/run/results/:consortiumId/:runId" element={<RunResults />} />
             <Route path="/appConfig" element={<AppConfig/>}/>
             <Route path="/admin" element={<AdminPage/>}/>
