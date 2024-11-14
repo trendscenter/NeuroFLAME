@@ -1,5 +1,7 @@
-import { Box, TextField, Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useState } from "react";
+import {  MDXEditor, UndoRedo, BoldItalicUnderlineToggles, ListsToggle, listsPlugin, toolbarPlugin } from '@mdxeditor/editor'
+import '@mdxeditor/editor/style.css'
 
 interface ConsortiumLeaderNotesEditProps {
     consortiumLeaderNotes: string;
@@ -20,13 +22,22 @@ export default function ConsortiumLeaderNotesEdit({
 
     return (
         <Box>
-            <TextField
-                label="Consortium Leader Notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                multiline
-                fullWidth
-                rows={4}
+            <MDXEditor
+                markdown={notes}
+                onChange={(e) => setNotes(e)}
+                plugins={[
+                    listsPlugin(),
+                    toolbarPlugin({
+                    toolbarClassName: 'my-classname',
+                    toolbarContents: () => (
+                        <>
+                        {' '}
+                        <BoldItalicUnderlineToggles />
+                        <ListsToggle />
+                        </>
+                    )
+                    })
+                ]}
             />
             <Box mt={2}>
                 <Button variant="contained" color="primary" onClick={handleSave} sx={{ mr: 1 }}>
