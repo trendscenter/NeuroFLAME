@@ -1,5 +1,9 @@
-import { Box, TextField, Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useState } from "react";
+import {  
+    MDXEditor, BoldItalicUnderlineToggles, ListsToggle, headingsPlugin, quotePlugin, listsPlugin, toolbarPlugin, diffSourcePlugin, DiffSourceToggleWrapper, markdownShortcutPlugin, 
+    linkPlugin} from '@mdxeditor/editor'
+import '@mdxeditor/editor/style.css'
 
 interface ConsortiumLeaderNotesEditProps {
     consortiumLeaderNotes: string;
@@ -20,13 +24,29 @@ export default function ConsortiumLeaderNotesEdit({
 
     return (
         <Box>
-            <TextField
-                label="Consortium Leader Notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                multiline
-                fullWidth
-                rows={4}
+            <MDXEditor
+                markdown={notes}
+                onChange={(e) => setNotes(e)}
+                plugins={[
+                    headingsPlugin(),
+                    quotePlugin(),
+                    linkPlugin(),
+                    listsPlugin(),
+                    toolbarPlugin({
+                    toolbarClassName: 'my-classname',
+                    toolbarContents: () => (
+                        <>
+                        {' '}
+                        <DiffSourceToggleWrapper options={['rich-text','source']} >
+                        <BoldItalicUnderlineToggles />
+                        <ListsToggle />
+                        </DiffSourceToggleWrapper>
+                        </>
+                    )
+                    }),
+                    diffSourcePlugin({ diffMarkdown: notes, viewMode: 'rich-text' }),
+                    markdownShortcutPlugin(),
+                ]}
             />
             <Box mt={2}>
                 <Button variant="contained" color="primary" onClick={handleSave} sx={{ mr: 1 }}>

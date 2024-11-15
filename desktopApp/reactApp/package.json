@@ -9,6 +9,7 @@
     "@emotion/styled": "^11.13.0",
     "@fontsource/inter": "^5.1.0",
     "@fontsource/lato": "^5.1.0",
+    "@mdxeditor/editor": "^3.19.0",
     "@mui/icons-material": "^6.1.0",
     "@mui/material": "^6.1.0",
     "@testing-library/jest-dom": "^5.17.0",
