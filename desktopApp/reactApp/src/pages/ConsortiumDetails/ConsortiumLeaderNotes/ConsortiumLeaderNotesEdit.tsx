@@ -37,7 +37,7 @@ export default function ConsortiumLeaderNotesEdit({
                     toolbarContents: () => (
                         <>
                         {' '}
-                        <DiffSourceToggleWrapper >
+                        <DiffSourceToggleWrapper options={['rich-text','source']} >
                         <BoldItalicUnderlineToggles />
                         <ListsToggle />
                         </DiffSourceToggleWrapper>
