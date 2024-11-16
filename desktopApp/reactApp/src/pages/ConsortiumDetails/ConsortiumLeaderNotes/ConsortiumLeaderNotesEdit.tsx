@@ -39,7 +39,7 @@ export default function ConsortiumLeaderNotesEdit({
                         {' '}
                         <DiffSourceToggleWrapper options={['rich-text','source']} >
                         <BoldItalicUnderlineToggles />
-                        <ListsToggle />
+                        <ListsToggle options={['number','bullet']} />
                         </DiffSourceToggleWrapper>
                         </>
                     )
