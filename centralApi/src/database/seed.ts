@@ -47,8 +47,8 @@ const computations = [
     {
         _id: predefinedIds.computation1Id,
         title: 'NVFLARE boilerplate average',
-        imageName: 'dylanrmartin/computations:boilerplate_average_app-3c3853c028e606b7fe495b0064abf456ec5a324e',
-        imageDownloadUrl: 'docker pull dylanrmartin/computations:boilerplate_average_app-3c3853c028e606b7fe495b0064abf456ec5a324e',
+        imageName: 'dylanrmartin/computations:boilerplate_average_app-9a51878c2ef13180187867d20b3361c516891d11',
+        imageDownloadUrl: 'dylanrmartin/computations:boilerplate_average_app-9a51878c2ef13180187867d20b3361c516891d11',
         notes: computationNotesNvflareBoilerplate,
         owner: predefinedIds.user1Id.toString(),
     },
