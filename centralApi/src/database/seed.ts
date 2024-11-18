@@ -63,8 +63,8 @@ const computations = [
     {
         _id: predefinedIds.computation3Id,
         title: 'Single Round Ridge Regression',
-        imageName: 'dylanrmartin/computations:single_round_ridge_regression-748881be1c0b5b75efdd363485193d7d310d8df9',
-        imageDownloadUrl: 'docker pull dylanrmartin/computations:single_round_ridge_regression-748881be1c0b5b75efdd363485193d7d310d8df9',
+        imageName: 'dylanrmartin/computations:single_round_ridge_regression-105e1c2c1502a466700ed75d19550fdd4c80db42',
+        imageDownloadUrl: 'docker pull dylanrmartin/computations:single_round_ridge_regression-105e1c2c1502a466700ed75d19550fdd4c80db42',
         notes: computationNotesSingleRoundRidgeRegression,
         owner: predefinedIds.user3Id.toString(),
     },
