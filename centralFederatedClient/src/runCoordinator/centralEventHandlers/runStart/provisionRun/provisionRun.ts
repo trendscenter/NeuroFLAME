@@ -53,7 +53,7 @@ export async function provisionRun({
         { hostDirectory: path_run, containerDirectory: '/provisioning/' },
       ],
       portBindings: [],
-      commandsToRun: [`python`, `/workspace/entry_provision.py`],
+      commandsToRun: [`python`, `/workspace/system/entry_provision.py`],
       onContainerExitSuccess: async (containerId) => {
         return resolve(void 0)
       },

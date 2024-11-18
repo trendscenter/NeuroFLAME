@@ -67,7 +67,7 @@ export default async function startRun({
         { hostPort: fed_learn_port, containerPort: fed_learn_port },
         { hostPort: admin_port, containerPort: admin_port },
       ],
-      commandsToRun: ['python', '/workspace/entry_central.py'],
+      commandsToRun: ['python', '/workspace/system/entry_central.py'],
       onContainerExitSuccess: () => reportRunComplete({ runId }),
       onContainerExitError: (_, error) => reportRunError({ runId, errorMessage: error }),
     });

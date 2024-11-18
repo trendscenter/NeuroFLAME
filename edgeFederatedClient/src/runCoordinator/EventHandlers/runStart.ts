@@ -99,7 +99,7 @@ export const runStartHandler = {
         imageName,
         directoriesToMount,
         portBindings: [],
-        commandsToRun: ['python', '/workspace/entry_edge.py'],
+        commandsToRun: ['python', '/workspace/system/entry_edge.py'],
         onContainerExitError: async (containerId, error) => {
           logger.error(`Error in container: ${containerId}\n${error}`)
           reportRunError({

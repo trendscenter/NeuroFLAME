@@ -47,8 +47,8 @@ const computations = [
     {
         _id: predefinedIds.computation1Id,
         title: 'NVFLARE boilerplate average',
-        imageName: 'boilerplate_average_app',
-        imageDownloadUrl: 'https://example.com/boilerplate_average_app',
+        imageName: 'dylanrmartin/computations:boilerplate_average_app-9a51878c2ef13180187867d20b3361c516891d11',
+        imageDownloadUrl: 'docker pull dylanrmartin/computations:boilerplate_average_app-9a51878c2ef13180187867d20b3361c516891d11',
         notes: computationNotesNvflareBoilerplate,
         owner: predefinedIds.user1Id.toString(),
     },
@@ -63,8 +63,8 @@ const computations = [
     {
         _id: predefinedIds.computation3Id,
         title: 'Single Round Ridge Regression',
-        imageName: 'dylanrmartin/computations:single_round_ridge_regression-748881be1c0b5b75efdd363485193d7d310d8df9',
-        imageDownloadUrl: 'docker pull dylanrmartin/computations:single_round_ridge_regression-748881be1c0b5b75efdd363485193d7d310d8df9',
+        imageName: 'dylanrmartin/computations:single_round_ridge_regression-a9694e87fe1ff08764a4e8be505f5bbf43cbb594',
+        imageDownloadUrl: 'docker pull dylanrmartin/computations:single_round_ridge_regression-a9694e87fe1ff08764a4e8be505f5bbf43cbb594',
         notes: computationNotesSingleRoundRidgeRegression,
         owner: predefinedIds.user3Id.toString(),
     },
