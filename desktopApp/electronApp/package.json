@@ -1,6 +1,6 @@
 {
   "name": "coinstac-mint-electron",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "desktop app",
   "main": "build/main.js",
   "type": "module",
