@@ -1,1 +1,14 @@
-export default 'Please provide the following within your dataset directory:<br /><b>data.csv (header/datatype)</b><br /><ul><li>L_hippo / integer </li><li>R_hippo / integer</li><li>Tot_hippo / integer </li></ul><b>covariates.csv (header/datatype)</b><br /><ul><li>MDD / boolean</li><li>Age / integer</li><li>Sex / integer</li><li>ICV / integer</li></ul>'
+export default `Please provide the following within your dataset directory:
+
+**data.csv** (header/datatype)
+
+* L\_hippo / integer
+* R\_hippo / integer
+* Tot\_hippo / integer
+
+**covariates.csv** (header/datatype)
+
+* MDD / boolean
+* Age / integer
+* Sex / integer
+* ICV / integer`
