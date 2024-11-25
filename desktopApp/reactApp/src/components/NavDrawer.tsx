@@ -17,7 +17,7 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ open, onClose, navSetDrawerOpen }
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
       <List>
-        <ListItem onClick={() => { navSetDrawerOpen(false) }} component={Link} to="/">
+        <ListItem onClick={() => { navSetDrawerOpen(false) }} component={Link} to="/home">
           <ListItemText primary="Home" />
         </ListItem>
         <ListItem onClick={() => { navSetDrawerOpen(false) }} component={Link} to="/consortiumList">

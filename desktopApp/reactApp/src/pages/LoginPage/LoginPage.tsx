@@ -1,15 +1,15 @@
-// HomePage.tsx
+// LoginPage.tsx
 import React, { useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { CreateUser } from './CreateUser/CreateUser';
 import { Login } from './Login/Login';
 import { ChangePassword } from './ChangePassword/ChangePassword';
-import { useHomePage } from './useHomePage';
+import { useLoginPage } from './useLoginPage';
 import logo from '../../assets/coinstac-logo.png';
 import { useNavigate } from 'react-router-dom';
 
-const HomePage: React.FC = () => {
-  const { isLoggedIn, logout } = useHomePage(); // Assuming logout is provided by useHomePage
+const LoginPage: React.FC = () => {
+  const { isLoggedIn, logout } = useLoginPage(); // Assuming logout is provided by useLoginPage
   const [showCreateUser, setShowCreateUser] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const navigate = useNavigate();
@@ -100,4 +100,4 @@ const HomePage: React.FC = () => {
   );
 };
 
-export default HomePage;
+export default LoginPage;
