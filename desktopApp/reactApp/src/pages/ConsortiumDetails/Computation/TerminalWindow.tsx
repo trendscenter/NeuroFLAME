@@ -12,7 +12,7 @@ const ScrollToBottomWrapper = forwardRef<HTMLDivElement, React.ComponentProps<ty
 
 const TerminalWindow: React.FC<{command:string}> = ({command}) => {
   // State to store terminal input and output
-  const [input, setInput] = useState('');
+  // const [input, setInput] = useState('');
   const [output, setOutput] = useState<string[]>([]);
   const [isTerminalReady, setTerminalReady] = useState(false);
   const [showTerminal, setShowTerminal] = useState(false);
@@ -21,7 +21,6 @@ const TerminalWindow: React.FC<{command:string}> = ({command}) => {
   const { spawnTerminal, terminalInput, terminalOutput, removeTerminalOutputListener } = electronApi;
   
   // Refs to interact with the DOM elements
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const terminalRef = useRef<HTMLDivElement | null>(null); 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -29,25 +28,30 @@ const TerminalWindow: React.FC<{command:string}> = ({command}) => {
     // Request Electron to spawn a new terminal (IPC call to spawn terminal)
     if(!isTerminalReady){
       spawnTerminal(setTerminalReady);
-      checkIfImageDownloaded();
     }
     terminalOutput(output, setOutput);
+    checkIfImageDownloaded();
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
+    return () => {
+      // Cleanup the listener when the component is unmounted or the terminal is closed
+      removeTerminalOutputListener();
+    };
   }, []);
 
   useEffect(() => {
-    let imageId = false;
-    let outputObj = Array.from(new Set(output))[0];
-    if(outputObj && JSON.parse(outputObj)[0]){
-      imageId = JSON.parse(outputObj)[0]['Id'];
-    }
-    if(outputObj && imageId){
+    Array.from(new Set(output)).map((item, index) => (
+      testOutputForImage(item)
+    ));
+  }, [output])
+
+  const testOutputForImage = (str:string) => {
+    if(str.includes('"Id": "sha256:') || str.includes('Status: Downloaded newer image for')){
       setImageExists(true);
-    }else{
+    } else {
       setImageExists(false);
     }
-    console.log(imageId, outputObj);
-  }, [output])
+  }
 
   const checkIfImageDownloaded = () => {
     const imageName = command.replace('docker pull ','');
@@ -58,12 +62,11 @@ const TerminalWindow: React.FC<{command:string}> = ({command}) => {
       terminalInput(input);
       terminalOutput(output, setOutput);
       setShowTerminal(true);
-      setInput('');
   }; 
 
   return (
     <>
-      {!imageExists &&
+      {!imageExists && !showTerminal &&
       <Button 
         variant='contained' 
         size='small'
@@ -72,22 +75,18 @@ const TerminalWindow: React.FC<{command:string}> = ({command}) => {
       >
         Run Docker Pull
       </Button>}
-      {showTerminal && <ScrollToBottomWrapper
-        ref={terminalRef} 
-        className="terminalWindow" 
-      >
-        {/* Display the terminal output */}
+      {showTerminal && <ScrollToBottomWrapper ref={terminalRef} className="terminalWindow">
         {Array.from(new Set(output)).map((item, index) => (
           <div key={index} style={{whiteSpace: 'nowrap'}}>&gt; {item}</div>
         ))}
       </ScrollToBottomWrapper>}
-      {imageExists && <Box display='flex' justifyContent='space-between' alignContent='center'>
-      <Box display='flex' justifyContent='flex-start' alignContent='center'>
+      <Box display='flex' justifyContent='space-between' alignContent='center'>
+      {imageExists && <Box display='flex' justifyContent='flex-start' alignContent='center'>
         <CheckCircleIcon sx={{color: '#2FB600'}} />
-        <Typography style={{fontSize: '0.8rem', lineHeight: '2'}}>Docker Image Downloaded</Typography>
-      </Box>
-        {showTerminal && <Button size='small' onClick={() => setShowTerminal(false)}>Hide Terminal</Button>}
+        <Typography style={{fontSize: '0.8rem', lineHeight: '2', marginLeft: '0.25rem'}}>Docker Image Downloaded</Typography>
       </Box>}
+      {showTerminal && <Button size='small' onClick={() => setShowTerminal(false)}>Hide Terminal</Button>}
+      </Box>
   </>
   );
 };
