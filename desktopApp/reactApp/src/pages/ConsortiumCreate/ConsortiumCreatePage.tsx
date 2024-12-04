@@ -42,7 +42,7 @@ export default function ConsortiumCreate() {
                     <Typography variant="h4" align="left">
                         Create New Consortium 
                     </Typography>
-                    <Button variant="outlined" onClick={() => navigate('/consortiumList')}>
+                    <Button variant="outlined" onClick={() => navigate('/consortium/list')}>
                         Back to Consortium List
                     </Button>
                 </Box>
