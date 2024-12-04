@@ -10,9 +10,10 @@ import ComputationDisplay from "./ComputationDisplay/ComputationDisplay";
 import ConsortiumLeaderNotes from "./ConsortiumLeaderNotes/ConsortiumLeaderNotes";
 import Computation from "./Computation/Computation";
 import ComputationParameters from "./ComputationParameters/ComputationParameters";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export function ConsortiumDetailsPage() {
+    const { consortiumId } = useParams<{ consortiumId: string }>();
     const { data: { studyConfiguration, members, activeMembers, readyMembers, leader, title, description }, status: { loading, error }, isLeader } = useConsortiumDetailsContext();
     const { userId } = useUserState();
     const navigate = useNavigate();
@@ -44,7 +45,10 @@ export function ConsortiumDetailsPage() {
             </Grid>
             <Grid size={{ sm: 6, md: 4 }} className="consortium-details-grid-2">
                 {/* Consortium Link @ Smaller Viewport */}
-                <a onClick={() => navigate('/consortiumList')} className='consortium-list-link'>
+                <a onClick={() => navigate(`/consortium/wizard/${consortiumId}`)} className='consortium-list-link'>
+                    &#60; To Wizard View
+                </a>
+                <a onClick={() => navigate('/consortium/list')} className='consortium-list-link'>
                     &#60; Back To Consortium List
                 </a>
                 {/* Latest Run */}
@@ -52,15 +56,18 @@ export function ConsortiumDetailsPage() {
                 {/* Computation */}
                 <Computation computation={studyConfiguration?.computation} />
                 {/* Computation Parameters */}
-                {studyConfiguration && studyConfiguration?.computation && <ComputationParameters/>}
+                {studyConfiguration && studyConfiguration?.computation && <ComputationParameters />}
             </Grid>
             <Grid size={{ sm: 12, md: 4 }} className="consortium-details-grid-3">
                 {/* Consortium Link @ Larger Viewport */}
-                <a onClick={() => navigate('/consortiumList')} className='consortium-list-link'>
+                {/* <a onClick={() => navigate('/consortium/list')} className='consortium-list-link'>
                     &#60; Back To Consortium List
+                </a> */}
+                <a onClick={() => navigate(`/consortium/wizard/${consortiumId}`)} className='consortium-list-link'>
+                   To Wizard View
                 </a>
                 {/* Computation Notes */}
-                <ComputationDisplay computation={studyConfiguration?.computation} />
+                <ComputationDisplay />
             </Grid>
         </Grid>
 

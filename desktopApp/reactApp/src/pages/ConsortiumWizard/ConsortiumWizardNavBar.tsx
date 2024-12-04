@@ -4,19 +4,15 @@ import { useLocation } from "react-router-dom";
 
 export default function ConsortiumWizardNavBar() {
     const steps = [
+        { label: 'Select Data', path: 'step-select-data' },
         { label: 'Select Computation', path: 'step-select-computation' },
         { label: 'Set Parameters', path: 'step-set-parameters' },
-        { label: 'Select Data', path: 'step-select-data' },
         { label: 'Start Run', path: 'step-start-run' },
     ];
 
     const location = useLocation();
-
     return <>
 
-        <Typography variant="h4" gutterBottom>
-            Consortium Wizard
-        </Typography>
         <Box sx={{ flexGrow: 1, my: 2 }}>
             <Grid container spacing={2}>
                 {steps.map((step, index) => {
