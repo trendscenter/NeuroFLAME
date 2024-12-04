@@ -3,7 +3,8 @@ import {
     Routes,
   } from 'react-router-dom';
 import { AppConfig } from './AppConfig/AppConfig';
-import HomePage from './Home/HomePage';
+import LoginPage from './LoginPage/LoginPage';
+import HomePage from './HomePage/HomePage';
 import ConsortiumListPage from './ConsortiumList/ConsortiumListPage';
 import ConsortiumDetailsPage from './ConsortiumDetails/ConsortiumDetailsPage';
 import ConsortiumCreatePage from './ConsortiumCreate/ConsortiumCreatePage';
@@ -18,7 +19,7 @@ import AdminPage from './Admin/AdminPage';
 export default function AppRoutes() {   
     return (
         <Routes>
-            <Route index path="/" element={<HomePage />} />
+            <Route index path="/" element={<LoginPage />} />
             <Route index path="/home" element={<HomePage />} />
             <Route path="/consortiumList" element={<ConsortiumListPage />} />
             <Route path="/consortiumCreate" element={<ConsortiumCreatePage />} />
