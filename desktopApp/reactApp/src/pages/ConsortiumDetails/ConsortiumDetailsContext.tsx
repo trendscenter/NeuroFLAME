@@ -94,7 +94,7 @@ export const ConsortiumDetailsProvider: React.FC<ConsortiumDetailsProviderProps>
                 subscription.unsubscribe();
             };
         }
-    }, [consortiumId, consortiumDetailsChanged, fetchConsortiumDetails]);
+    }, [consortiumId]);
 
     // Context value
     const contextValue: ConsortiumDetailsContextType = {

@@ -42,9 +42,6 @@ export default function Computation({ computation }: ComputationDisplayProps) {
 
     return (
         <Box p={2} borderRadius={2} marginBottom={2} bgcolor={'white'}>
-            <div>
-                Am I the leader? {isLeader.toString()}
-            </div>
             <Box display="flex" justifyContent="space-between">
                 <Box>
                     <Typography variant="h6" gutterBottom>
