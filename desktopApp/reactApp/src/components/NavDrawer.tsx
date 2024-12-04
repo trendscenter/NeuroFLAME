@@ -20,13 +20,13 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ open, onClose, navSetDrawerOpen }
         <ListItem onClick={() => { navSetDrawerOpen(false) }} component={Link} to="/">
           <ListItemText primary="Home" />
         </ListItem>
-        <ListItem onClick={() => { navSetDrawerOpen(false) }} component={Link} to="/consortiumList">
+        <ListItem onClick={() => { navSetDrawerOpen(false) }} component={Link} to="/consortium/list">
           <ListItemText primary="Consortium List" />
         </ListItem>
-        <ListItem onClick={() => { navSetDrawerOpen(false) }} component={Link} to="/runList">
+        <ListItem onClick={() => { navSetDrawerOpen(false) }} component={Link} to="/run/list">
           <ListItemText primary="Run List" />
         </ListItem>
-        <ListItem onClick={() => { navSetDrawerOpen(false) }} component={Link} to="/computationList">
+        <ListItem onClick={() => { navSetDrawerOpen(false) }} component={Link} to="/computation/list">
           <ListItemText primary="Computation List" />
         </ListItem>
         {
@@ -36,6 +36,9 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ open, onClose, navSetDrawerOpen }
             </ListItem>
           )
         }
+        <ListItem onClick={() => { navSetDrawerOpen(false) }} component={Link} to="/consortium/wizard/66289c79aecab67040a22002">
+          <ListItemText primary="consortium wizard test" />
+        </ListItem>
       </List>
     </Drawer>
   );

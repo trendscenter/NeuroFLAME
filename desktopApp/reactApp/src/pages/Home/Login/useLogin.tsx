@@ -21,7 +21,7 @@ export function useLogin() {
       const userData = await login({ username, password });
       await setUserData(userData);
       await connectAsUser();
-      navigate('/consortiumList');
+      navigate('/consortium/list');
     } catch (err) {
       setError('Login failed, please try again.');
     } finally {
