@@ -15,8 +15,9 @@ subscription runStartSubscription {
 }`
 
 export const runStartHandler = {
-  error: (err: any) =>
-    logger.error(`Run Start Central - Subscription error: ${err}`),
+  error: (err: any) =>{
+    logger.error(`Run Start Central - Subscription error`, { error: err })
+  },
   complete: () => logger.info('Run Start Central - Subscription completed'),
   next: async ({ data }: { data: any }) => {
     const {

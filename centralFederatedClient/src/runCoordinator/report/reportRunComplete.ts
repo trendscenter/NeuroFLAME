@@ -46,7 +46,7 @@ export default async function reportRunComplete({ runId }: { runId: string }) {
 
     // Handle the response data here
     if (responseData.errors) {
-      logger.error('GraphQL Error:', responseData.errors)
+      logger.error('GraphQL Error:', { error: responseData.errors })
       throw new Error('Failed to report run complete due to GraphQL error')
     }
 
@@ -56,7 +56,7 @@ export default async function reportRunComplete({ runId }: { runId: string }) {
       throw new Error('Invalid response data')
     }
   } catch (error) {
-    logger.error('Error reporting run complete:', {error})
+    logger.error('Error reporting run complete', { error })
     throw error
   }
 }

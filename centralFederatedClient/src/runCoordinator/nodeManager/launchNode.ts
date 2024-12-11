@@ -112,7 +112,7 @@ const attachDockerEventHandlers = (
 ) => {
   docker.getEvents((err, stream) => {
     if (err) {
-      logger.error(`Error getting Docker events: ${err}`)
+      logger.error(`Error getting Docker events`, { error: err })
       onContainerExitError && onContainerExitError(containerId, err)
       return
     }
@@ -145,7 +145,7 @@ const attachDockerEventHandlers = (
     })
 
     stream?.on('error', (err) => {
-      logger.error(`Event stream error: ${err}`)
+      logger.error(`Event stream error`, {error: err})
       onContainerExitError && onContainerExitError(containerId, err)
     })
   })

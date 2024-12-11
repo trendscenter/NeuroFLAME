@@ -19,7 +19,7 @@ subscription runStartSubscription {
 }`
 
 export const runStartHandler = {
-  error: (err: any) => logger.error(`Run Start - Subscription error: ${err}`),
+  error: (err: any) => logger.error(`Run Start - Subscription error`, { error: err }),
   complete: () => logger.info('Run Start - Subscription completed'),
   next: async ({ data }: { data: any }) => {
     logger.info('Run Start - Received data')
@@ -94,7 +94,7 @@ export const runStartHandler = {
       }
 
       // Launch the node
-      launchNode({
+      await launchNode({
         containerService: 'docker',
         imageName,
         directoriesToMount,

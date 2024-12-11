@@ -18,8 +18,13 @@ const logger = createLogger({
       if (errorStack) {
         output += `\nStack: ${errorStack}`
       }
+      
+      if (meta.error && !(meta.error instanceof Error)) {
+        const errorDetails = safeSerialize(meta.error)
+        output += `\nError Details: ${errorDetails}`
+      }
 
-      if(context){
+      if (context) {
         output += `\nContext: ${JSON.stringify(context, null, 2)}`
       }
       return output
@@ -28,7 +33,7 @@ const logger = createLogger({
   transports: [
     new transports.Console({
       level: 'info',
-      format: format.colorize({all: true}),
+      format: format.colorize({ all: true }),
     }),
   ],
 })
@@ -86,5 +91,29 @@ const logToPath = (logDir: string): void => {
     console.error('Failed to set up file transports for logging:', error)
   }
 }
+
+const safeSerialize = (obj: unknown): string => {
+  try {
+    if (typeof obj !== 'object' || obj === null) {
+      return JSON.stringify(obj, null, 2);
+    }
+
+    const result: Record<string | symbol, unknown> = {};
+
+    // Include regular properties
+    Object.getOwnPropertyNames(obj).forEach((key) => {
+      result[key] = (obj as Record<string, unknown>)[key];
+    });
+
+    // Include symbol properties
+    Object.getOwnPropertySymbols(obj).forEach((symbol) => {
+      result[symbol.toString()] = (obj as Record<symbol, unknown>)[symbol];
+    });
+
+    return JSON.stringify(result, null, 2);
+  } catch {
+    return 'Unable to serialize object';
+  }
+};
 
 export { logToPath, logger }
