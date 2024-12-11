@@ -1,5 +1,5 @@
-import getConfig from '../../../config/getConfig.js'
-import { logger } from '../../../logger.js'
+import getConfig from '../../config/getConfig.js'
+import { logger } from '../../logger.js'
 import fetch from 'node-fetch' // Import node-fetch
 
 // TypeScript interfaces for the GraphQL response
@@ -56,7 +56,7 @@ export default async function reportRunComplete({ runId }: { runId: string }) {
       throw new Error('Invalid response data')
     }
   } catch (error) {
-    logger.error('Error reporting run complete:', error)
+    logger.error('Error reporting run complete:', {error})
     throw error
   }
 }

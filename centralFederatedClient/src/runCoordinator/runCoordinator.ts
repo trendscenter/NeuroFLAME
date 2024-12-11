@@ -3,7 +3,7 @@ import { WebSocket } from 'ws'
 import {
   runStartHandler,
   RUN_START_SUBSCRIPTION,
-} from './centralEventHandlers/runStart/runStartHandler.js'
+} from './eventHandlers/runStart/runStartHandler.js'
 import { logger } from '../logger.js'
 
 // Interface for subscription event handlers

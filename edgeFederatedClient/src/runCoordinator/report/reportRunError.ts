@@ -1,6 +1,6 @@
-import { getConfig } from '../config/config.js'
-import { logger } from '../logger.js'
-import inMemoryStore from '../inMemoryStore.js'
+import { getConfig } from '../../config/config.js'
+import { logger } from '../../logger.js'
+import inMemoryStore from '../../inMemoryStore.js'
 
 // TypeScript interfaces for the GraphQL response
 interface GraphQLError {

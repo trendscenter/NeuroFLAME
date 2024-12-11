@@ -1,7 +1,7 @@
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
-import { logger } from '../logger.js';
+import { logger } from '../../../logger.js';
 
 interface DownloadFileParams {
   url: string;

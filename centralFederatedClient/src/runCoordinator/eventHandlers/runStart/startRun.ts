@@ -1,11 +1,11 @@
 import path from 'path';
 import { provisionRun } from './provisionRun/provisionRun.js';
 import { reservePort } from './portManagement.js';
-import { launchNode } from './launchNode.js';
+import { launchNode } from '../../nodeManager/launchNode.js';
 import uploadToFileServer from './uploadToFileServer.js';
 import getConfig from '../../../config/getConfig.js';
-import reportRunError from './reportRunError.js';
-import reportRunComplete from './reportRunComplete.js';
+import reportRunError from '../../report/reportRunError.js';
+import reportRunComplete from '../../report/reportRunComplete.js';
 import { logger } from '../../../logger.js';
 
 interface StartRunArgs {

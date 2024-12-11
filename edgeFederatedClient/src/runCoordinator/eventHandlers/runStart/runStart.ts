@@ -1,11 +1,11 @@
-import { getConfig } from '../../config/config.js'
-import downloadFile from '../downloadFile.js'
-import { launchNode } from '../launchNode.js'
+import { getConfig } from '../../../config/config.js'
+import downloadFile from './downloadFile.js'
+import { launchNode } from '../../nodeManager/launchNode.js'
 import path from 'path'
-import { unzipFile } from '../unzipFile.js'
+import { unzipFile } from './unzipFile.js'
 import fs from 'fs/promises'
-import { logger } from '../../logger.js'
-import reportRunError from '../reportRunError.js'
+import { logger } from '../../../logger.js'
+import reportRunError from '../../report/reportRunError.js'
 
 export const RUN_START_SUBSCRIPTION = `
 subscription runStartSubscription {

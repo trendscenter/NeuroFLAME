@@ -1,5 +1,5 @@
-import getConfig from '../../../config/getConfig.js'
-import { logger } from '../../../logger.js'
+import getConfig from '../../config/getConfig.js'
+import { logger } from '../../logger.js'
 import fetch from 'node-fetch' // Import node-fetch
 
 // TypeScript interfaces for the GraphQL response
