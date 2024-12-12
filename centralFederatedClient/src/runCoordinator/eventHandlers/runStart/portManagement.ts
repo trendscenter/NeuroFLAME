@@ -16,7 +16,9 @@ export async function reservePort({
   end,
 }: ReservePortOptions): Promise<ReservePortResult> {
   if (start < 1024 || end > 65535 || start > end) {
-    throw new Error('Invalid port range. Must be between 1024 and 65535 and start must be less than end.')
+    throw new Error(
+      'Invalid port range. Must be between 1024 and 65535 and start must be less than end.',
+    )
   }
 
   return new Promise((resolve, reject) => {
@@ -38,11 +40,12 @@ export async function reservePort({
 
       server.on('error', (err: NodeJS.ErrnoException) => {
         if (err.code === 'EADDRINUSE' && port < end) {
-          logger.warn(`Port ${port} is in use, trying next port...`)
           port++
           attemptPort() // Try the next port
         } else if (err.code === 'EADDRINUSE') {
-          logger.error(`No available ports in range ${start}-${end}. All are in use.`)
+          logger.error(
+            `No available ports in range ${start}-${end}. All are in use.`,
+          )
           reject(new Error('All ports in the specified range are in use.'))
         } else {
           logger.error(`Error reserving port: ${err.message}`)

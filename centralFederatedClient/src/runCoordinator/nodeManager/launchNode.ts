@@ -58,7 +58,9 @@ const launchDockerNode = async ({
   onContainerExitSuccess,
   onContainerExitError,
 }: Omit<LaunchNodeArgs, 'containerService'>) => {
-  logger.info('Running docker command')
+  logger.info(
+    `Attempting to launch Docker container from imageName: ${imageName}`,
+  )
 
   const binds = directoriesToMount.map(
     (mount) => `${mount.hostDirectory}:${mount.containerDirectory}`,
@@ -145,7 +147,7 @@ const attachDockerEventHandlers = (
     })
 
     stream?.on('error', (err) => {
-      logger.error(`Event stream error`, {error: err})
+      logger.error(`Event stream error`, { error: err })
       onContainerExitError && onContainerExitError(containerId, err)
     })
   })

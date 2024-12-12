@@ -37,7 +37,7 @@ export async function subscribeToCentralApi({
     },
   })
 
-  logger.info('Subscribing to central API...')
+  logger.info(`Subscribing to central API at ${wsUrl}`)
   subscribe(client, RUN_START_SUBSCRIPTION, runStartHandler)
 }
 

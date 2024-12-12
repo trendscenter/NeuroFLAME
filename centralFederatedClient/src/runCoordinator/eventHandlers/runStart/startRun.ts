@@ -45,6 +45,7 @@ export default async function startRun({
     const admin_port = reserved_admin_port
 
     // Provision the run
+    logger.info(`Provisioning run ${runId}`)
     await provisionRun({
       image_name: imageName,
       userIds,
@@ -56,6 +57,7 @@ export default async function startRun({
     })
 
     // Upload run data to the file server
+    logger.info(`Uploading runKits for run ${runId}`)
     await uploadToFileServer({
       consortiumId,
       runId,
