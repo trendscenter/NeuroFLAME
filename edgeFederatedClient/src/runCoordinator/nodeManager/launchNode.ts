@@ -58,7 +58,9 @@ const launchDockerNode = async ({
   onContainerExitSuccess,
   onContainerExitError,
 }: Omit<LaunchNodeArgs, 'containerService'>) => {
-  logger.info('Running docker command')
+  logger.info(
+    `Attempting to launch Docker container from imageName: ${imageName}`,
+  )
 
   const binds = directoriesToMount.map(
     (mount) => `${mount.hostDirectory}:${mount.containerDirectory}`,
@@ -73,6 +75,10 @@ const launchDockerNode = async ({
   })
 
   try {
+
+    await isDockerRunning()
+    await doesImageExist(imageName)
+
     // Create the container
     const container = await docker.createContainer({
       Image: imageName,
@@ -89,64 +95,77 @@ const launchDockerNode = async ({
     logger.info(`Container started successfully: ${container.id}`)
 
     // Add event handlers for the container
-    attachDockerEventHandlers(
-      container.id,
+    attachDockerEventHandlers({
+      containerId: container.id,
       onContainerExitSuccess,
       onContainerExitError,
-    )
+    })
 
     // Return the container ID
     return container.id
   } catch (error) {
-    logger.error(`Failed to launch Docker container: ${error}`)
-    onContainerExitError &&
-      onContainerExitError('', (error as Error).toString())
+    logger.error(
+      `Failed to launch Docker container: ${(error as Error).message}`,
+    )
     throw error
   }
 }
 
-const attachDockerEventHandlers = (
-  containerId: string,
-  onContainerExitSuccess?: (containerId: string) => void,
-  onContainerExitError?: (containerId: string, error: string) => void,
-) => {
-  docker.getEvents((err, stream) => {
-    if (err) {
-      logger.error(`Error getting Docker events: ${err}`)
-      onContainerExitError && onContainerExitError(containerId, err)
-      return
+const attachDockerEventHandlers = async ({
+  containerId,
+  onContainerExitSuccess,
+  onContainerExitError,
+}: {
+  containerId: string
+  onContainerExitSuccess?: (containerId: string) => void
+  onContainerExitError?: (containerId: string, error: string) => void
+}) => {
+  const container = docker.getContainer(containerId)
+
+  try {
+    const { StatusCode } = await container.wait()
+    if (StatusCode !== 0) {
+      logger.error(
+        `Container ${containerId} exited with error code ${StatusCode}`,
+      )
+      onContainerExitError &&
+        onContainerExitError(containerId, `Exit Code: ${StatusCode}`)
+    } else {
+      logger.info(`Container ${containerId} exited successfully.`)
+      onContainerExitSuccess && onContainerExitSuccess(containerId)
     }
-    stream?.on('data', (chunk) => {
-      const event = JSON.parse(chunk.toString())
+  } catch (error) {
+    logger.error(`Error waiting for container ${containerId}`, { error })
+    onContainerExitError &&
+      onContainerExitError(containerId, (error as Error).message)
+  }
+}
 
-      if (event.Type === 'container' && event.Actor.ID === containerId) {
-        if (event.Action === 'die') {
-          const exitCode = parseInt(event.Actor.Attributes.exitCode, 10)
-          if (exitCode !== 0) {
-            logger.error(
-              `Container ${containerId} stopped due to an error with exit code: ${exitCode}`,
-            )
-            onContainerExitError &&
-              onContainerExitError(
-                containerId,
-                `Container Exit Code: ${exitCode}`,
-              )
-          } else {
-            logger.info(`Container ${containerId} stopped gracefully`)
-            onContainerExitSuccess && onContainerExitSuccess(containerId)
-          }
-        }
+const isDockerRunning = async () => {
+  try {
+    await docker.ping()
+  } catch (error) {
+    throw new Error(
+      'Docker is not running. Please ensure the Docker daemon is active.',
+    )
+  }
+}
 
-        if (event.Action === 'stop') {
-          logger.info(`Container ${containerId} stopped gracefully`)
-          onContainerExitSuccess && onContainerExitSuccess(containerId)
-        }
-      }
+const doesImageExist = async (imageName: string) => {
+  try {
+    const images = await docker.listImages({
+      filters: { reference: [imageName] },
     })
-
-    stream?.on('error', (err) => {
-      logger.error(`Event stream error: ${err}`)
-      onContainerExitError && onContainerExitError(containerId, err)
-    })
-  })
+    if (images.length === 0) {
+      throw new Error(
+        `Image "${imageName}" does not exist. Please pull the image or verify its name.`,
+      )
+    }
+  } catch (error) {
+    throw new Error(
+      `Failed to check existence of image "${imageName}": ${
+        (error as Error).message
+      }`,
+    )
+  }
 }

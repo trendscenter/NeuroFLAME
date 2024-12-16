@@ -19,7 +19,8 @@ subscription runStartSubscription {
 }`
 
 export const runStartHandler = {
-  error: (err: any) => logger.error(`Run Start - Subscription error`, { error: err }),
+  error: (err: any) =>
+    logger.error(`Run Start - Subscription error`, { error: err }),
   complete: () => logger.info('Run Start - Subscription completed'),
   next: async ({ data }: { data: any }) => {
     logger.info('Run Start - Received data')
@@ -101,7 +102,7 @@ export const runStartHandler = {
         portBindings: [],
         commandsToRun: ['python', '/workspace/system/entry_edge.py'],
         onContainerExitError: async (containerId, error) => {
-          logger.error(`Error in container: ${containerId}\n${error}`)
+          logger.error(`Error in container: ${containerId}`, { error: error })
           reportRunError({
             runId,
             errorMessage: `Error in container: ${containerId}`,
@@ -112,20 +113,11 @@ export const runStartHandler = {
         },
       })
     } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : String(error || 'Unknown error')
-      const errorStack =
-        error instanceof Error ? error.stack : 'No stack trace available'
-
-      logger.error(
-        `Error in runStartHandler: ${errorMessage}\nStack Trace: ${errorStack}`,
-      )
+      logger.error('Error in runStartHandler', { error: error })
 
       await reportRunError({
         runId: data.runStartEdge.runId,
-        errorMessage: `Error starting run: ${errorMessage}`,
+        errorMessage: `Error starting run: ${(error as Error).message}`,
       })
     }
   },

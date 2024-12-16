@@ -88,10 +88,7 @@ export default async function startRun({
         reportRunError({ runId, errorMessage: error }),
     })
   } catch (error) {
-    const errorMessage = `Run ${runId} failed: ${
-      error instanceof Error ? error.message : String(error)
-    }`
     logger.error(`Start Run Failed`, { error: error })
-    await reportRunError({ runId, errorMessage })
+    await reportRunError({ runId, errorMessage: (error as Error).message })
   }
 }
