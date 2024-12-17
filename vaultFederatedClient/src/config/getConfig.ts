@@ -6,7 +6,6 @@ interface VaultFederatedClientConfig {
   httpUrl: string
   wsUrl: string
   accessToken: string
-  userId: string
   fileServerUrl: string
   baseDir: string
   datasetDir: string

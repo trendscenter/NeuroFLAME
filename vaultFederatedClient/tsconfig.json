@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "rootDir": "./src",
+    "rootDirs": ["src"],
     "outDir": "dist",
     "lib": ["es2020"],
     "target": "es2020",
@@ -9,10 +9,6 @@
     "esModuleInterop": true,
     "types": ["node"],
     "sourceMap": true,
-    "strict": true,
-    "declaration": true
-  },
-  "include": [
-    "src/**/*.ts"
-  ]
+    "strict": true, 
+  }
 }

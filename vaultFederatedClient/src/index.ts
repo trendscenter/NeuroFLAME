@@ -6,7 +6,6 @@ interface FederatedClientLaunchConfiguration {
   httpUrl: string
   wsUrl: string
   accessToken: string
-  userId: string
 }
 
 export async function start(
