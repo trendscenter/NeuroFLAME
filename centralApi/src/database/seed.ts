@@ -23,6 +23,7 @@ const predefinedIds = {
     user2Id: new mongoose.Types.ObjectId('66289c79aebab67040a20069'),
     user3Id: new mongoose.Types.ObjectId('66289c79aebab67040a20070'),
     user4Id: new mongoose.Types.ObjectId('66289c79aebab67040a20071'),
+    user5IdVault: new mongoose.Types.ObjectId('66289c79aebab67040a20072'),
     computation1Id: new mongoose.Types.ObjectId('66289c79aebab67040a21000'),
     computation2Id: new mongoose.Types.ObjectId('66289c79aebab67040a21001'),
     computation3Id: new mongoose.Types.ObjectId('66289c79aebab67040a21002'),
@@ -41,6 +42,7 @@ const users = [
     { _id: predefinedIds.user3Id, username: 'user3', hash: await bcrypt.hash('password3', saltRounds) },
     { _id: predefinedIds.user4Id, username: 'user4', hash: await bcrypt.hash('password4', saltRounds), roles: ['admin'] },
     { _id: predefinedIds.centralUserId, username: 'centralUser', hash: await bcrypt.hash('centralPassword', saltRounds), roles: ['central'] },
+    { _id: predefinedIds.user5IdVault, username: 'vaultUser1', hash: await bcrypt.hash('vaultPassword1', saltRounds), roles: ['vault'] },
 ];
 
 const computations = [
