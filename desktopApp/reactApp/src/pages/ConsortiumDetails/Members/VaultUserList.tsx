@@ -27,7 +27,7 @@ const VaultUserList: React.FC<VaultUserListProps> = ({ onClose }) => {
         getVaultUserList()
             .then((res) => setVaultUserList(res))
             .catch((err) => console.error("Error fetching users:", err));
-    }, [getVaultUserList]);
+    }, []);
 
     const handleAdd = async (userId: string) => {
         try {
