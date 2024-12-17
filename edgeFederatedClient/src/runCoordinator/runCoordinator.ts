@@ -4,7 +4,7 @@ import {logger} from '../logger.js'
 import {
   runStartHandler,
   RUN_START_SUBSCRIPTION,
-} from './EventHandlers/runStart.js'
+} from './eventHandlers/runStart/runStart.js'
 
 // Interface for subscription event handlers
 interface EventHandlers {

@@ -1,6 +1,6 @@
 import path from 'path'
 import fs from 'fs'
-import { launchNode } from '../launchNode.js'
+import { launchNode } from '../../../nodeManager/launchNode.js'
 import { prepareHostingDirectory } from './prepareHostingDirectory.js'
 
 interface provisionRunArgs {

@@ -2,7 +2,7 @@ import * as unzipper from 'unzipper';
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
-import { logger } from '../logger.js';
+import { logger } from '../../../logger.js';
 
 const readdir = promisify(fs.readdir);
 const chmod = promisify(fs.chmod);

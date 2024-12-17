@@ -1,5 +1,5 @@
-import getConfig from '../../../config/getConfig.js'
-import { logger } from '../../../logger.js'
+import getConfig from '../../config/getConfig.js'
+import { logger } from '../../logger.js'
 import fetch from 'node-fetch' // Import node-fetch
 
 // TypeScript interfaces for the GraphQL response
@@ -52,12 +52,9 @@ export default async function reportRunError({
 
     // Handle the response data here
     if (responseData.errors) {
-      logger.error(`GraphQL Error: ${JSON.stringify(responseData.errors)}`)
+      logger.error(`GraphQL Error`, { error: responseData.errors })
       throw new Error('Failed to report run error due to GraphQL error')
     }
-    logger.info(
-      `reportRunError response data: ${JSON.stringify(responseData.data)}`,
-    )
 
     if (responseData.data && responseData.data.reportRunError) {
       return responseData.data.reportRunError
@@ -65,7 +62,7 @@ export default async function reportRunError({
       throw new Error('Invalid response data')
     }
   } catch (error) {
-    logger.error(`Error reporting run error: ${JSON.stringify(error)}`)
+    logger.error(`Error reporting run error`, { error })
     throw error
   }
 }
