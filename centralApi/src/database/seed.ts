@@ -119,7 +119,7 @@ const consortia = [
     title: 'Single Round Ridge Regression Consortium',
     description: 'Test consortium for single round ridge regression',
     leader: predefinedIds.user1Id,
-    members: [predefinedIds.user5IdVault],
+    members: [predefinedIds.user1Id, predefinedIds.user5IdVault],
     activeMembers: [predefinedIds.user1Id, predefinedIds.user5IdVault],
     studyConfiguration: {
       consortiumLeaderNotes: 'Leader notes for single round ridge regression',
@@ -135,7 +135,7 @@ const consortia = [
     title: 'Multisite Brain Study',
     description:
       'Exploring connections between Hippocampal measurements and MDD, Age, Sex, and ICV',
-    leader: predefinedIds.user1Id,
+    leader: predefinedIds.user2Id,
     members: [predefinedIds.user1Id, predefinedIds.user2Id],
     activeMembers: [predefinedIds.user1Id, predefinedIds.user2Id],
     studyConfiguration: {

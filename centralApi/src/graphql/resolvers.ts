@@ -1072,6 +1072,7 @@ export default {
       }
     },
     leaderSetMemberInactive: async (
+      _: unknown,
       { consortiumId, userId },
       context,
     ): Promise<Boolean> => {
@@ -1104,6 +1105,7 @@ export default {
       return true
     },
     leaderRemoveMember: async (
+      _: unknown,
       { consortiumId, userId },
       context,
     ): Promise<Boolean> => {
@@ -1133,6 +1135,7 @@ export default {
       return true
     },
     leaderAddVaultUser: async (
+      _: unknown,
       { consortiumId, userId },
       context,
     ): Promise<Boolean> => {
@@ -1164,6 +1167,10 @@ export default {
           activeMembers: userId,
           readyMembers: userId,
         },
+      })
+
+      pubsub.publish('CONSORTIUM_DETAILS_CHANGED', {
+        consortiumId: consortiumId,
       })
 
       return true
