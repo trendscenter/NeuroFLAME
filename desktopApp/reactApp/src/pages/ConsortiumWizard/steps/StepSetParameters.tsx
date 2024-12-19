@@ -4,24 +4,31 @@ import { Grid, Box } from "@mui/material";
 
 export default function StepSetParameters() {
     return (
-        <Grid container spacing={2}>
-            <Grid item xs={6}>
-                <ComputationParameters />
-            </Grid>
-            <Grid item xs={6}>
-                {/* Wrapping ComputationDisplay with Box to control overflow */}
-                <Box
-                    sx={{
-                        height: '100%',
-                        maxHeight: '50vh',  // Limit height to keep within view
-                        overflowY: 'auto',  // Allow vertical scrolling if content exceeds
+        <Box
+            sx={{
+                height: 'calc(100vh - 26rem)',  // Limit height to keep within view
+                overflowY: 'scroll',  // Allow vertical scrolling if content exceeds
+                padding: 1,
+                boxSizing: 'border-box',
+                border: '1px solid #eee'
+            }}
+        >
+            <Grid container spacing={2}>
+                <Grid item xs={6}>
+                    <ComputationParameters />
+                </Grid>
+                <Grid item xs={6}>
+                    {/* Wrapping ComputationDisplay with Box to control overflow */}
+                    <Box sx={{
+                        height: 'calc(100vh - 26rem)',  // Limit height to keep within view
+                        overflowY: 'scroll',  // Allow vertical scrolling if content exceeds
                         padding: 1,
                         boxSizing: 'border-box',
-                    }}
-                >
-                    <ComputationDisplay />
-                </Box>
+                    }}>
+                        <ComputationDisplay />
+                    </Box>
+                </Grid>
             </Grid>
-        </Grid>
+        </Box>
     );
 }
