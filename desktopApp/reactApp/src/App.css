@@ -82,6 +82,10 @@ button:disabled {
   cursor: not-allowed;
 }
 
+button.Mui-disabled.MuiStepButton-horizontal {
+  background: none;
+}
+
 .button {
   display: inline-block;
   border: none;
