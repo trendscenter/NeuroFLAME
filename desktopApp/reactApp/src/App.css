@@ -279,11 +279,16 @@ textarea {
   text-align: right;
 }
 
-.consortium-details-grid-2 .consortium-list-link { 
-  display: block; 
+.consortium-details-grid-2 .consortium-links { 
+  display: flex; 
+  flex-direction: row; 
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 0.5rem;
+  margin-bottom: 0.6rem;
 }
 
-.consortium-details-grid-3 .consortium-list-link { 
+.consortium-details-grid-3 .consortium-links { 
   display: none; 
 }
 
@@ -303,10 +308,15 @@ textarea {
   .consortium-details-grid-2 { 
     margin-top: 2.1rem;
   }
-  .consortium-details-grid-2 .consortium-list-link { 
+  .consortium-details-grid-2 .consortium-links { 
     display: none; 
   }
-  .consortium-details-grid-3 .consortium-list-link { 
-    display: block; 
+  .consortium-details-grid-3 .consortium-links { 
+    display: flex; 
+    flex-direction: row; 
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: -0.5rem;
+    margin-bottom: 0.6rem;
   }
 }

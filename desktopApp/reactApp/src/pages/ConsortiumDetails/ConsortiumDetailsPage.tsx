@@ -1,4 +1,5 @@
 import Grid from '@mui/material/Grid2';
+import { Box, Button } from "@mui/material";
 import { Members } from "./Members/Members";
 import { TitleAndDescription } from "./TitleAndDescription/TitleAndDescription";
 import DirectorySelect from "./DirectorySelect/DirectorySelect";
@@ -44,13 +45,15 @@ export function ConsortiumDetailsPage() {
                 {studyConfiguration && <ConsortiumLeaderNotes consortiumLeaderNotes={studyConfiguration?.consortiumLeaderNotes} />}
             </Grid>
             <Grid size={{ sm: 6, md: 4 }} className="consortium-details-grid-2">
-                {/* Consortium Link @ Smaller Viewport */}
-                <a onClick={() => navigate(`/consortium/wizard/${consortiumId}`)} className='consortium-list-link'>
-                    &#60; To Wizard View
-                </a>
-                <a onClick={() => navigate('/consortium/list')} className='consortium-list-link'>
-                    &#60; Back To Consortium List
-                </a>
+                {/* Consortium Links @ Smaller Viewport */}
+                <Box className="consortium-links">
+                    <Button onClick={() => navigate(`/consortium/wizard/${consortiumId}`)} variant='outlined' size='small' style={{marginRight:'0.5rem'}}>
+                        Setup Wizard
+                    </Button>
+                    <Button onClick={() => navigate('/consortium/list')} variant='outlined' size='small'>
+                        Consortia
+                    </Button>
+                </Box>
                 {/* Latest Run */}
                 <LatestRun />
                 {/* Computation */}
@@ -60,12 +63,14 @@ export function ConsortiumDetailsPage() {
             </Grid>
             <Grid size={{ sm: 12, md: 4 }} className="consortium-details-grid-3">
                 {/* Consortium Link @ Larger Viewport */}
-                {/* <a onClick={() => navigate('/consortium/list')} className='consortium-list-link'>
-                    &#60; Back To Consortium List
-                </a> */}
-                <a onClick={() => navigate(`/consortium/wizard/${consortiumId}`)} className='consortium-list-link'>
-                   To Wizard View
-                </a>
+                <Box className="consortium-links">
+                    <Button onClick={() => navigate(`/consortium/wizard/${consortiumId}`)} variant='outlined' size='small' style={{marginRight:'0.5rem'}}>
+                        Setup Wizard
+                    </Button>
+                    <Button onClick={() => navigate('/consortium/list')} variant='outlined' size='small'>
+                        Consortia
+                    </Button>
+                </Box>
                 {/* Computation Notes */}
                 <ComputationDisplay />
             </Grid>

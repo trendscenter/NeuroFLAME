@@ -36,9 +36,25 @@ export function MembersDisplay({ memberList, setMemberActive, setMemberReady, ha
                     Members
                 </Typography>
                 <Box style={{width: 'calc(100% - 70px)'}}>
+                 {/* Display Leader */}
+                 {memberList.map(({ id, username, isActive, isReady, isLeader }, index) => {
+                    if (isReady && isActive && isLeader) {
+                        return (
+                            <MemberAvatar 
+                                key={`${id}-${index}`}
+                                username={username} 
+                                isLeader={isLeader} 
+                                isActive={isActive} 
+                                isReady={isReady}
+                                index={index} 
+                            />
+                        );
+                    }
+                    return null; // To handle the case where isReady is false
+                })}
                 {/* Display All Active And Ready Members */}
                 {memberList.map(({ id, username, isActive, isReady, isLeader }, index) => {
-                    if (isReady && isActive) {
+                    if (isReady && isActive && !isLeader) {
                         return (
                             <MemberAvatar 
                                 key={`${id}-${index}`}
@@ -54,7 +70,7 @@ export function MembersDisplay({ memberList, setMemberActive, setMemberReady, ha
                 })}
                 {/* Display Active Members */}
                 {memberList.map(({ id, username, isActive, isReady, isLeader }, index) => {
-                    if (isActive && !isReady) {
+                    if (isActive && !isReady && !isLeader) {
                         return (
                             <MemberAvatar 
                                 key={`${id}-${index}`}
@@ -70,7 +86,7 @@ export function MembersDisplay({ memberList, setMemberActive, setMemberReady, ha
                 })}
                 {/* Display Joined Members */}
                 {memberList.map(({ id, username, isActive, isReady, isLeader }, index) => {
-                    if (!isActive && !isReady) {
+                    if (!isActive && !isReady && !isLeader) {
                         return (
                             <MemberAvatar 
                                 key={`${id}-${index}`}
