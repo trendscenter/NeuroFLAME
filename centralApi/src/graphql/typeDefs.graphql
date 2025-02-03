@@ -1,6 +1,12 @@
 type PublicUser {
   id: String!
   username: String!
+  vault: Vault
+}
+
+type Vault {
+  name: String!
+  description: String!
 }
 
 type ConsortiumListItem {
@@ -115,6 +121,7 @@ type Query {
   getComputationDetails(computationId: String!): Computation!
   getRunList(consortiumId: String): [RunListItem!]!  # Non-nullable array and non-nullable items
   getRunDetails(runId: String!): RunDetails!
+  getVaultUserList: [PublicUser!]!  # Non-nullable array and non-nullable items
 }
 
 type Mutation {
@@ -139,6 +146,9 @@ type Mutation {
   userChangePassword(password: String!): Boolean!
   adminChangeUserRoles(username: String!, roles: [String!]!): Boolean!
   adminChangeUserPassword(username: String!, password: String!): Boolean!
+  leaderSetMemberInactive(consortiumId: String!, userId: String!): Boolean!
+  leaderRemoveMember(consortiumId: String!, userId: String!): Boolean!
+  leaderAddVaultUser(consortiumId: String!, userId: String!): Boolean!
 }
 
 type Subscription {
