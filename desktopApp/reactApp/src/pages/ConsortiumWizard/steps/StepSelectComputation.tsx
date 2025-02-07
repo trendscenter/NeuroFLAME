@@ -7,7 +7,7 @@ export default function StepSelectComputation() {
     const selectedComputation = consortiumDetails?.studyConfiguration?.computation;
 
     return  (   
-    <Box style={{maxWidth: '400px', border: '1px solid #eee' }}>
+    <Box style={{maxWidth: '400px', border: '1px solid #eee', marginBottom: '1rem' }}>
         <Computation computation={selectedComputation}></Computation>
     </Box>
     )
