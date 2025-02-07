@@ -23,9 +23,6 @@ export default function StepViewRequirements(){
         >
             <Grid container spacing={2}>
                 <Grid item xs={6}>
-                    {consortiumLeaderNotes && <ConsortiumLeaderNotes consortiumLeaderNotes={consortiumLeaderNotes} />}
-                </Grid>
-                <Grid item xs={6}>
                     {/* Wrapping ComputationDisplay with Box to control overflow */}
                     <Box sx={{
                         height: 'calc(100vh - 26rem)',  // Limit height to keep within view
@@ -36,6 +33,9 @@ export default function StepViewRequirements(){
                         <ComputationDisplay />
                     </Box>
                 </Grid>
+                {consortiumLeaderNotes && <Grid item xs={6}>
+                    <ConsortiumLeaderNotes consortiumLeaderNotes={consortiumLeaderNotes} />
+                </Grid>}
             </Grid>
         </Box>
         </>
