@@ -1,12 +1,20 @@
+import { Box, Grid } from '@mui/material'; 
+import ConsortiumLeaderNotes from "../../ConsortiumDetails/ConsortiumLeaderNotes/ConsortiumLeaderNotes";
 import ComputationDisplay from "../../ConsortiumDetails/ComputationDisplay/ComputationDisplay";
-import ComputationParameters from "../../ConsortiumDetails/ComputationParameters/ComputationParameters";
-import { Grid, Box } from "@mui/material";
+import { useConsortiumDetailsContext } from "../../ConsortiumDetails/ConsortiumDetailsContext";
 
-export default function StepSetParameters() {
+export default function StepViewRequirements(){
+    const {data: consortiumDetails} = useConsortiumDetailsContext();
+    const consortiumLeaderNotes = consortiumDetails?.studyConfiguration?.consortiumLeaderNotes;
+
     return (
+        <>
+        <Box style={{margin: '1rem 0', color: 'red'}}>
+            Before you begin, please review both the Leader and Computation Notes for this Consortium and set up your data accordingly.
+        </Box>
         <Box
             sx={{
-                height: 'calc(100vh - 28rem)',  // Limit height to keep within view
+                height: 'calc(100vh - 31rem)',  // Limit height to keep within view
                 overflowY: 'scroll',  // Allow vertical scrolling if content exceeds
                 padding: 1,
                 boxSizing: 'border-box',
@@ -15,7 +23,7 @@ export default function StepSetParameters() {
         >
             <Grid container spacing={2}>
                 <Grid item xs={6}>
-                    <ComputationParameters />
+                    {consortiumLeaderNotes && <ConsortiumLeaderNotes consortiumLeaderNotes={consortiumLeaderNotes} />}
                 </Grid>
                 <Grid item xs={6}>
                     {/* Wrapping ComputationDisplay with Box to control overflow */}
@@ -30,5 +38,6 @@ export default function StepSetParameters() {
                 </Grid>
             </Grid>
         </Box>
-    );
+        </>
+    )
 }

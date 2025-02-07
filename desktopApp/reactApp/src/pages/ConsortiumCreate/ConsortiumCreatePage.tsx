@@ -64,12 +64,13 @@ export default function ConsortiumCreate() {
                         defaultValue={description}
                         onChange={(e) => setDescription(e.target.value)}
                     />
-                    <Box marginTop={2} display="flex" gap={2}>
-                        <Button variant="contained" onClick={createAndDetails} disabled={loading}>
-                            {loading ? 'Creating...' : 'Create'}
-                        </Button>
-                        <Button variant="contained" onClick={createAndWizard} disabled={loading}>
+                    <Box marginTop={2} display="flex" gap={2} alignItems='center'>
+                        <Button variant="contained" onClick={createAndWizard} disabled={loading} color="success">
                             {loading ? 'Creating...' : 'Create and Use Wizard'}
+                        </Button>
+                        <Typography>or</Typography>
+                        <Button variant="contained" onClick={createAndDetails} disabled={loading}>
+                            {loading ? 'Creating...' : 'Create and View Detail'}
                         </Button>
                     </Box>
                     {error && <p style={{ color: 'red' }}>{error}</p>}

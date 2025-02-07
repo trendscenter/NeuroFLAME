@@ -24,7 +24,7 @@ export function MembersStatusDisplay({ memberList, setMemberReady }: MembersStat
         {itsMe && itsMe.isActive && 
             <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center'>
                 <Button
-                    color="primary"
+                    color="success"
                     onClick={() => setMemberReady(itsMe.id, true)}
                     size="medium"
                     variant="contained" 
