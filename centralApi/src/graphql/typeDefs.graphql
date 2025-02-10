@@ -87,6 +87,11 @@ type RunEventPayload {
   timestamp: String!
 }
 
+type RunCompletePayload {
+  runId: String!
+  consortiumId: String!
+}
+
 type RunListItem {
   consortiumId: String!
   consortiumTitle: String!
@@ -158,6 +163,8 @@ type Subscription {
   runStartCentral: RunStartCentralPayload!
   # used by edge federated client
   runStartEdge: RunStartEdgePayload!
+  # used by federated clients
+  runComplete: RunCompletePayload!
   # used by desktop App
   runEvent: RunEventPayload!
   consortiumLatestRunChanged(consortiumId: String!): String!
