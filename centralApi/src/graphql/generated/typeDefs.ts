@@ -14,7 +14,7 @@ type ConsortiumListItem {
   title: String!
   description: String!
   leader: PublicUser!
-  members: [PublicUser!]!  # Non-nullable array and non-nullable items
+  members: [PublicUser!]!  
 }
 
 type ComputationListItem {
@@ -30,7 +30,7 @@ input StartRunInput {
 type RunStartCentralPayload {
   runId: String!
   imageName: String!
-  userIds: [String!]!  # Non-nullable array and non-nullable items
+  userIds: [String!]!  
   consortiumId: String!
   computationParameters: String!
 }
@@ -66,9 +66,9 @@ type ConsortiumDetails {
   title: String!
   description: String!
   leader: PublicUser!
-  members: [PublicUser!]!  # Non-nullable array and non-nullable items
-  activeMembers: [PublicUser!]!  # Non-nullable array and non-nullable items
-  readyMembers: [PublicUser!]!  # Non-nullable array and non-nullable items
+  members: [PublicUser!]!  
+  activeMembers: [PublicUser!]!  
+  readyMembers: [PublicUser!]!  
   studyConfiguration: StudyConfiguration!
 }
 
@@ -76,7 +76,7 @@ type LoginOutput {
   accessToken: String!
   userId: String!
   username: String!
-  roles: [String!]!  # Non-nullable array and non-nullable items
+  roles: [String!]!  
 }
 
 type RunEventPayload {
@@ -109,28 +109,30 @@ type RunDetails {
   status: String!
   lastUpdated: String!
   createdAt: String!
-  members: [PublicUser!]!  # Non-nullable array and non-nullable items
+  members: [PublicUser!]!  
   studyConfiguration: StudyConfiguration!
-  runErrors: [RunError!]!  # Non-nullable array and non-nullable items
+  runErrors: [RunError!]!  
 }
 
 type Query {
-  getConsortiumList: [ConsortiumListItem!]!  # Non-nullable array and non-nullable items
-  getComputationList: [ComputationListItem!]!  # Non-nullable array and non-nullable items
+  getConsortiumList: [ConsortiumListItem!]!  
+  getComputationList: [ComputationListItem!]!  
   getConsortiumDetails(consortiumId: String!): ConsortiumDetails!
   getComputationDetails(computationId: String!): Computation!
-  getRunList(consortiumId: String): [RunListItem!]!  # Non-nullable array and non-nullable items
+  getRunList(consortiumId: String): [RunListItem!]!  
   getRunDetails(runId: String!): RunDetails!
-  getVaultUserList: [PublicUser!]!  # Non-nullable array and non-nullable items
+  getVaultUserList: [PublicUser!]!  
 }
 
 type Mutation {
-  login(username: String!, password: String!): LoginOutput!
-  startRun(input: StartRunInput!): StartRunOutput!
+  # used by federated clients
   reportRunReady(runId: String!): Boolean!
   reportRunError(runId: String!, errorMessage: String!): Boolean!
   reportRunComplete(runId: String!): Boolean!
   reportRunStatus(runId: String!, status: String!): Boolean!
+  # used by desktop App
+  login(username: String!, password: String!): LoginOutput!
+  startRun(input: StartRunInput!): StartRunOutput!
   studySetComputation(consortiumId: String!, computationId: String!): Boolean!
   studySetParameters(consortiumId: String!, parameters: String!): Boolean!
   studySetNotes(consortiumId: String!, notes: String!): Boolean!
@@ -152,8 +154,11 @@ type Mutation {
 }
 
 type Subscription {
+  # used by central federated client
   runStartCentral: RunStartCentralPayload!
+  # used by edge federated client
   runStartEdge: RunStartEdgePayload!
+  # used by desktop App
   runEvent: RunEventPayload!
   consortiumLatestRunChanged(consortiumId: String!): String!
   consortiumDetailsChanged(consortiumId: String!): String!
