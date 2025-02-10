@@ -41,55 +41,71 @@ export function MembersDisplay({ memberList, setMemberActive, setMemberReady, ha
                 <Typography variant="h6" gutterBottom>
                     Members
                 </Typography>
-                <Box style={{ width: 'calc(100% - 70px)' }}>
-                    {/* Display All Active And Ready Members */}
-                    {memberList.map(({ id, username, isActive, isReady, isLeader }, index) => {
-                        if (isReady && isActive) {
-                            return (
-                                <MemberAvatar
-                                    key={`${id}-${index}`}
-                                    username={username}
-                                    isLeader={isLeader}
-                                    isActive={isActive}
-                                    isReady={isReady}
-                                    index={index}
-                                />
-                            );
-                        }
-                        return null; // To handle the case where isReady is false
-                    })}
-                    {/* Display Active Members */}
-                    {memberList.map(({ id, username, isActive, isReady, isLeader }, index) => {
-                        if (isActive && !isReady) {
-                            return (
-                                <MemberAvatar
-                                    key={`${id}-${index}`}
-                                    username={username}
-                                    isLeader={isLeader}
-                                    isActive={isActive}
-                                    isReady={isReady}
-                                    index={index}
-                                />
-                            );
-                        }
-                        return null; // To handle the case where isReady is false
-                    })}
-                    {/* Display Joined Members */}
-                    {memberList.map(({ id, username, isActive, isReady, isLeader }, index) => {
-                        if (!isActive && !isReady) {
-                            return (
-                                <MemberAvatar
-                                    key={`${id}-${index}`}
-                                    username={username}
-                                    isLeader={isLeader}
-                                    isActive={isActive}
-                                    isReady={isReady}
-                                    index={index}
-                                />
-                            );
-                        }
-                        return null; // To handle the case where isReady is false
-                    })}
+                <Box style={{width: 'calc(100% - 70px)'}}>
+                 {/* Display Leader */}
+                 {memberList.map(({ id, username, isActive, isReady, isLeader }, index) => {
+                    if (isReady && isActive && isLeader) {
+                        return (
+                            <MemberAvatar 
+                                key={`${id}-${index}`}
+                                username={username} 
+                                isLeader={isLeader} 
+                                isActive={isActive} 
+                                isReady={isReady}
+                                index={index} 
+                            />
+                        );
+                    }
+                    return null; // To handle the case where isReady is false
+                })}
+                {/* Display All Active And Ready Members */}
+                {memberList.map(({ id, username, isActive, isReady, isLeader }, index) => {
+                    if (isReady && isActive && !isLeader) {
+                        return (
+                            <MemberAvatar 
+                                key={`${id}-${index}`}
+                                username={username} 
+                                isLeader={isLeader} 
+                                isActive={isActive} 
+                                isReady={isReady}
+                                index={index} 
+                            />
+                        );
+                    }
+                    return null; // To handle the case where isReady is false
+                })}
+                {/* Display Active Members */}
+                {memberList.map(({ id, username, isActive, isReady, isLeader }, index) => {
+                    if (isActive && !isReady && !isLeader) {
+                        return (
+                            <MemberAvatar 
+                                key={`${id}-${index}`}
+                                username={username} 
+                                isLeader={isLeader} 
+                                isActive={isActive} 
+                                isReady={isReady}
+                                index={index} 
+                            />
+                        );
+                    }
+                    return null; // To handle the case where isReady is false
+                })}
+                {/* Display Joined Members */}
+                {memberList.map(({ id, username, isActive, isReady, isLeader }, index) => {
+                    if (!isActive && !isReady && !isLeader) {
+                        return (
+                            <MemberAvatar 
+                                key={`${id}-${index}`}
+                                username={username} 
+                                isLeader={isLeader} 
+                                isActive={isActive} 
+                                isReady={isReady}
+                                index={index} 
+                            />
+                        );
+                    }
+                    return null; // To handle the case where isReady is false
+                })}
                 </Box>
             </Box>
             <div style={{ position: "absolute", bottom: '3.5rem', right: '1rem' }}>

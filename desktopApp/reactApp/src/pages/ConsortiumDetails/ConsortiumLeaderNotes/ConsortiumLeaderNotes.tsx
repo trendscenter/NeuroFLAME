@@ -29,7 +29,7 @@ export default function ConsortiumLeaderNotes({ consortiumLeaderNotes }: Consort
                     Leader Notes
                 </Typography>
             </AccordionSummary>
-            <AccordionDetails sx={{margin: '0', padding: '0'}}>
+            <AccordionDetails sx={{margin: '0', padding: '0', maxHeight: '350px', overflow: 'scroll'}}>
                 {isEditing ? (
                     <ConsortiumLeaderNotesEdit
                         consortiumLeaderNotes={consortiumLeaderNotes}
