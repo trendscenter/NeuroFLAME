@@ -26,11 +26,11 @@
    ```bash
    cd _devCentralDatabase && docker-compose up
    ```
-5. Build the Edge Federated Client package
-  ```bash
-    cd edgeFederatedClient && npm run build
-  ```
-6. Seed the database
+5. Build the Edge Federated Client package:
+   ```bash
+   cd edgeFederatedClient && npm run build
+   ```
+6. Seed the database:
    ```bash
    cd centralApi && npm run seed
    ```
