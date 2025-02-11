@@ -24,10 +24,17 @@
    ```
 4. Launch the database container:
    ```bash
-   cd _devCentralDatabase/ && docker-compose up
+   cd _devCentralDatabase && docker-compose up
    ```
-
-5. Open multiple terminals and run the following commands in each:
+5. Build the Edge Federated Client package
+  ```bash
+    cd edgeFederatedClient && npm run build
+  ```
+6. Seed the database
+   ```bash
+   cd centralApi && npm run seed
+   ```
+7. Open multiple terminals and run the following commands in each:
    - Central API:
      ```bash
      cd centralApi && npm run start-configured
