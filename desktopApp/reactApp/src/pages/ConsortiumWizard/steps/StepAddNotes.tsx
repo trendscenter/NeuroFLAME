@@ -10,7 +10,11 @@ export default function StepAddNotes(){
     <Box style={{
         maxWidth: '400px',
         border: '1px solid #eee',
+        height: 'calc(100vh - 26rem)',  // Limit height to keep within view
+        overflowY: 'scroll',  // Allow vertical scrolling if content exceeds
+        padding: 1,
+        boxSizing: 'border-box',
     }}>
-        <ConsortiumLeaderNotes consortiumLeaderNotes={consortiumLeaderNotes ? consortiumLeaderNotes : ''} />
+        <ConsortiumLeaderNotes consortiumLeaderNotes={consortiumLeaderNotes ? consortiumLeaderNotes : ''} showAccordion={false} />
     </Box>)
 }
