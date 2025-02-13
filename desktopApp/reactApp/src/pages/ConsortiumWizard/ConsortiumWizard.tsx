@@ -12,6 +12,7 @@ import ConsortiumWizardNavBar from './ConsortiumWizardNavBar';
 import { ConsortiumDetailsProvider } from '../ConsortiumDetails/ConsortiumDetailsContext';
 import { useConsortiumDetailsContext } from "../ConsortiumDetails/ConsortiumDetailsContext";
 import { useCentralApi } from "../../apis/centralApi/centralApi";
+import { UserStateProvider, useUserState } from '../../contexts/UserStateContext';
 
 const ConsortiumWizard = () => {
 
@@ -38,6 +39,7 @@ const ConsortiumWizard = () => {
 
     const [step, setStep] = useState<number>(0); // Step index starts at 0
     const [steps, setSteps] = useState<StepsType[]>([]);
+    const [isReady, setIsReady] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const { consortiumLeave } = useCentralApi();
@@ -63,7 +65,9 @@ const ConsortiumWizard = () => {
     }
 
     const { consortiumId } = useParams<{ consortiumId: string }>();
-    const {isLeader, data} = useConsortiumDetailsContext();
+    const {data, isLeader} = useConsortiumDetailsContext();
+    const { userId } = useUserState();
+    const { readyMembers } = data;
 
     useEffect(() => {
         if( isLeader ){
@@ -78,6 +82,11 @@ const ConsortiumWizard = () => {
             navigate(steps[0].path);
         }
     }, [steps])
+
+    useEffect(() => {
+        const userIsReady = readyMembers.some(user => user.id === userId);
+        setIsReady(userIsReady);
+    }, [readyMembers]);
 
     // Handler to navigate to consortium control panel
     const handleNavigateToConsortiumDetails = () => {
@@ -140,37 +149,32 @@ const ConsortiumWizard = () => {
                     margin: '0 1rem',
                     justifyContent: 'space-between'
                 }}>
-                {step === 0 && <Button
+                {step === 0 && !isReady && <Button
                 variant='outlined'
                 color="primary"
                 onClick={handleCancelAndExit}
-                >Cancel & Exit</Button>}
+                >Cancel & Leave</Button>}
                 {step > 0 && <Button
                 variant="contained"
                 onClick={handleBack}>
                 Go Back A Step
                 </Button>}
-                {isLeader && <Button
-                variant='outlined'
-                color="primary"
-                onClick={handleNavigateToConsortiumDetails}
+                {(isReady || step === steps.length - 1) && (
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleNavigateToConsortiumDetails}
                 >
-                View Consortium Details
-                </Button>}
-                {step != steps.length - 1 && <Button
+                    View Consortium Details
+                </Button>
+                )}
+                {step !== steps.length - 1 && <Button
                 variant="contained"
                 color="primary"
                 onClick={handleNext}
                 disabled={step >= steps.length - 1}
                 >
                 Go To Next Step
-                </Button>}
-                {step === steps.length - 1 && !isLeader && <Button
-                variant='outlined'
-                color="primary"
-                onClick={handleNavigateToConsortiumDetails}
-                >
-                View Consortium Details
                 </Button>}
             </Box>
         </Box>}

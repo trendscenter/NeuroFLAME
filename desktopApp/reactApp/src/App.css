@@ -319,3 +319,9 @@ textarea {
     margin-bottom: 0.6rem;
   }
 }
+
+@media only screen and (max-width: 900px) {
+  .MuiStepLabel-label {
+    display: none !important;
+  }
+}

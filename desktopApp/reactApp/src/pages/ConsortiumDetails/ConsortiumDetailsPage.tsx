@@ -42,7 +42,7 @@ export function ConsortiumDetailsPage() {
                 <Members members={members} activeMembers={activeMembers} readyMembers={readyMembers} leader={leader} />
 
                 {/* Leader Notes */}
-                {studyConfiguration && <ConsortiumLeaderNotes consortiumLeaderNotes={studyConfiguration?.consortiumLeaderNotes} />}
+                {studyConfiguration && <ConsortiumLeaderNotes consortiumLeaderNotes={studyConfiguration?.consortiumLeaderNotes} showAccordion={true} />}
             </Grid>
             <Grid size={{ sm: 6, md: 4 }} className="consortium-details-grid-2">
                 {/* Consortium Links @ Smaller Viewport */}

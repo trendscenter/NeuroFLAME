@@ -34,7 +34,7 @@ export default function StepViewRequirements(){
                     </Box>
                 </Grid>
                 {consortiumLeaderNotes && <Grid item xs={6}>
-                    <ConsortiumLeaderNotes consortiumLeaderNotes={consortiumLeaderNotes} />
+                    <ConsortiumLeaderNotes consortiumLeaderNotes={consortiumLeaderNotes} showAccordion={false} />
                 </Grid>}
             </Grid>
         </Box>
