@@ -45,6 +45,11 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ open, onClose, navSetDrawerOpen }
         <ListItem onClick={() => { navSetDrawerOpen(false) }} component={Link} to="/computation/list">
           <ListItemText primary="Computations" />
         </ListItem>
+      </List>
+      <List 
+        style={{position: 'absolute', bottom: 0, borderTop: '1px solid white', width: '100%', background: '#efefef'}} 
+        sx={{ "& a": { textDecoration: "none", color: "#001f70" } }}
+      >
         {
           isAdmin && (
             <ListItem onClick={() => { navSetDrawerOpen(false) }} component={Link} to="/admin">
@@ -52,11 +57,6 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ open, onClose, navSetDrawerOpen }
             </ListItem>
           )
         }
-      </List>
-      <List 
-        style={{position: 'absolute', bottom: 0, borderTop: '1px solid white', width: '100%', background: '#efefef'}} 
-        sx={{ "& a": { textDecoration: "none", color: "#001f70" } }}
-      >
         <ListItem onClick={() => { navSetDrawerOpen(false) }} component={Link} to="/appConfig">
           <ListItemText primary="User Config" />
         </ListItem>
