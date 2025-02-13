@@ -33,9 +33,9 @@ export function MembersDisplay({ memberList, setMemberActive, setMemberReady, ha
         bgcolor={'white'}
         style={{ position: 'relative' }}
     >
-        {
+        {/* {
             isLeader && <VaultUsersButton />
-        }
+        } */}
         <Box>
             <Box sx={{ position: 'relative' }}>
                 <Typography variant="h6" gutterBottom>
