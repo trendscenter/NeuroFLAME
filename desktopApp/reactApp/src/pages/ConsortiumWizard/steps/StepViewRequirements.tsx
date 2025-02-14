@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material'; 
+import { Box, Grid, Typography } from '@mui/material'; 
 import ConsortiumLeaderNotes from "../../ConsortiumDetails/ConsortiumLeaderNotes/ConsortiumLeaderNotes";
 import ComputationDisplay from "../../ConsortiumDetails/ComputationDisplay/ComputationDisplay";
 import { useConsortiumDetailsContext } from "../../ConsortiumDetails/ConsortiumDetailsContext";
@@ -15,7 +15,7 @@ export default function StepViewRequirements(){
         <Box
             sx={{
                 height: 'calc(100vh - 31rem)',  // Limit height to keep within view
-                overflowY: 'scroll',  // Allow vertical scrolling if content exceeds
+                overflow: 'hidden',  // Allow vertical scrolling if content exceeds
                 padding: 1,
                 boxSizing: 'border-box',
                 border: '1px solid #eee'
@@ -24,13 +24,14 @@ export default function StepViewRequirements(){
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     {/* Wrapping ComputationDisplay with Box to control overflow */}
+                    <Typography variant="h6" style={{margin: '1rem 2rem 0'}}>Computation Notes</Typography>
                     <Box sx={{
                         height: 'calc(100vh - 26rem)',  // Limit height to keep within view
                         overflowY: 'scroll',  // Allow vertical scrolling if content exceeds
-                        padding: 1,
+                        padding: '0 1rem 1rem',
                         boxSizing: 'border-box',
                     }}>
-                        <ComputationDisplay />
+                        <ComputationDisplay notesHeading={false} />
                     </Box>
                 </Grid>
                 {consortiumLeaderNotes && <Grid item xs={6}>

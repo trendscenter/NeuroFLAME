@@ -5,8 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { useConsortiumDetailsContext } from "../ConsortiumDetailsContext";
 
 
-
-export default function ComputationDisplay() {
+const ComputationDisplay: React.FC<{notesHeading: boolean}> = ({ notesHeading}) => {
     const {data: consortiumDetails} = useConsortiumDetailsContext();
     const computation = consortiumDetails?.studyConfiguration?.computation as Maybe<Computation>;
 
@@ -31,7 +30,7 @@ export default function ComputationDisplay() {
         >
             <div id="compnotes" />{/* For Notes anchor placement at 800px wide */}
             <CardContent>
-                <Typography fontSize="11px">Computation Notes:</Typography>
+                {notesHeading && <Typography fontSize="11px">Computation Notes:</Typography>}
                 <Typography variant="h5" fontWeight="600" color="black">{title}</Typography>
                 <Typography variant="body2" color="textSecondary">
                     {imageName}
@@ -43,3 +42,5 @@ export default function ComputationDisplay() {
         </Box>
     );
 }
+
+export default ComputationDisplay;

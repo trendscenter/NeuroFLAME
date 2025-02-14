@@ -4,7 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Link, useLocation } from 'react-router-dom';
 import NavDrawer from './NavDrawer';
 import UserAvatar from './UserAvatar';
-import logoSM from '../assets/coinstac-logo-sm.png';
+import logoSM from '../assets/neuroflame-logo.png';
 
 interface HeaderProps {
   appUsername: string;
@@ -37,22 +37,20 @@ const Header: React.FC<HeaderProps> = ({ appUsername }) => {
             src={logoSM}
             alt="Logo"
             style={{
-              marginRight: '2px',
-              width: '28px',
-              height: '28px',
+              marginRight: '5px',
+              width: '50px',
+              height: '30px',
             }}
           />
           <Typography
-            component="h1"
-            variant="h6"
             color="inherit"
             sx={{
               fontFamily: 'Lato',
-              fontWeight: '600'
+              fontSize: '1.5rem'
             }}
             noWrap
           >
-            COINSTAC
+            Neuro<b>FLAME</b>
           </Typography>
           <Link to="/home" style={{ textDecoration: 'none' }}>
             <UserAvatar username={appUsername} />

@@ -72,7 +72,7 @@ export function ConsortiumDetailsPage() {
                     </Button>
                 </Box>
                 {/* Computation Notes */}
-                <ComputationDisplay />
+                <ComputationDisplay notesHeading={true} />
             </Grid>
         </Grid>
 

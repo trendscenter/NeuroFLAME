@@ -5,7 +5,7 @@ import { CreateUser } from './CreateUser/CreateUser';
 import { Login } from './Login/Login';
 import { ChangePassword } from './ChangePassword/ChangePassword';
 import { useLoginPage } from './useLoginPage';
-import logo from '../../assets/coinstac-logo.png';
+import logo from '../../assets/neuroflame-logo.png';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
@@ -31,13 +31,20 @@ const LoginPage: React.FC = () => {
         alignItems: 'center',
         marginBottom: '1rem'
       }}>
-        <img src={logo} alt="Logo" />
+        <img 
+          src={logo} 
+          alt="Logo" 
+          style={{
+            width: '110px', 
+            height: '70px',
+            marginRight: '1rem'
+          }} 
+        />
         <Typography style={{
           fontFamily: 'Lato',
-          fontWeight: 700,
           fontSize: '3rem',
           color: 'white',
-        }}>COINSTAC</Typography>
+        }}>Neuro<b>FLAME</b></Typography>
       </Box>
 
       <Box sx={{ maxWidth: 'xs' }}>
