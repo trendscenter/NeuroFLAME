@@ -25,7 +25,7 @@ export default function StepSetParameters() {
                         padding: 1,
                         boxSizing: 'border-box',
                     }}>
-                        <ComputationDisplay />
+                        <ComputationDisplay notesHeading={true} />
                     </Box>
                 </Grid>
             </Grid>

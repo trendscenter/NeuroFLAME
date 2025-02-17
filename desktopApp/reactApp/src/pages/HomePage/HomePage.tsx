@@ -10,18 +10,17 @@ const HomePage: React.FC = () => {
 
   return (
     <Box sx={{
-      width: "100vw",
-      height: "100vh",
-      padding: '1rem'
+      width: "calc(100vw - 2rem)",
+      padding: '1rem',
+      overflow: 'hidden'
     }}>
       <Box sx={{
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        padding: '0 1rem',
-        margin: '1rem 1.75rem 0 0'
-      }}>
-        <h2>Welcome to COINSTAC</h2>
+        margin: '1rem 0 0 0'
+      }} className='home-content-header'>
+        <h2>Welcome to NeuroFLAME</h2>
         <Box>
         <Button size='small' variant='outlined' sx={{marginRight: '1rem'}} onClick={() => navigate('/consortium/create')}>Create Consortium</Button>
           <Button size='small' variant='outlined' sx={{marginRight: '1rem'}} onClick={() => navigate('/computation/list')}>View Computation List</Button>
@@ -32,8 +31,8 @@ const HomePage: React.FC = () => {
         src="https://coinstac.org/app-landing-page/"
         style={{
           width: "calc(100vw - 2rem)",
-          height: "calc(100vh - 2rem)",
-          border: 'none'       
+          height: "80vh",
+          border: 'none'     
         }}
       ></iframe>
     </Box>
