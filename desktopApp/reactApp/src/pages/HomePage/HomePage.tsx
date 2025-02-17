@@ -18,9 +18,8 @@ const HomePage: React.FC = () => {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        padding: '0 1rem',
         margin: '1rem 0 0 0'
-      }}>
+      }} className='home-content-header'>
         <h2>Welcome to NeuroFLAME</h2>
         <Box>
         <Button size='small' variant='outlined' sx={{marginRight: '1rem'}} onClick={() => navigate('/consortium/create')}>Create Consortium</Button>
