@@ -62,9 +62,9 @@ export function AppConfig() {
         }
     }
 
-    const handleConfigChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setConfig(event.target.value)
-    }
+    const handleConfigChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setConfig(event.target.value);
+    };
 
     const enterEditMode = () => setIsEditing(true)
     const cancelEditMode = () => {
@@ -144,7 +144,7 @@ export function AppConfig() {
 
             <TextareaAutosize
                 value={config}
-                onChange={() => handleConfigChange}
+                onChange={handleConfigChange}
                 placeholder="Type here..."
                 minRows={3}
                 style={{
