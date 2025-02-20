@@ -11,6 +11,7 @@ import computationNotesNvflareSsrCsv from './seedContent/computationNotesNvflare
 import computationNotesNvflareBoilerplate from './seedContent/computationNotesNvflareBoilerplate.js'
 import consortiumLeaderNotesMulitsiteBrainStudy from './seedContent/consortiumLeaderNotesMulitsiteBrainStudy.js'
 import computationNotesSingleRoundRidgeRegression from './seedContent/computationNotesSingleRoundRidgeRegression.js'
+import computationNotesNeuroflameCompSrrFreesurfer from './seedContent/computationNotesNeuroflameCompSrrFreesurfer.js'
 
 const { databaseDetails } = await getConfig()
 const { url, user, pass } = databaseDetails
@@ -28,6 +29,7 @@ const predefinedIds = {
   computation2Id: new mongoose.Types.ObjectId('66289c79aebab67040a21001'),
   computation3Id: new mongoose.Types.ObjectId('66289c79aebab67040a21002'),
   computation4Id: new mongoose.Types.ObjectId('66289c79aebab67040a21003'),
+  computation5Id: new mongoose.Types.ObjectId('66289c79aebab67040a21004'),
   consortium1Id: new mongoose.Types.ObjectId('66289c79aecab67040a22001'),
   consortium2Id: new mongoose.Types.ObjectId('66289c79aecab67040a22002'),
   run1Id: new mongoose.Types.ObjectId('66289c79aecab67040a23000'),
@@ -110,6 +112,14 @@ const computations = [
     imageDownloadUrl: 'docker pull coinstacteam/nvflare-ssr-csv',
     notes: computationNotesNvflareSsrCsv,
     owner: predefinedIds.user1Id.toString(),
+  },
+  {
+    _id: predefinedIds.computation5Id,
+    title: 'test_neuroflame_comp_srr_freesurfer',
+    imageName: 'sbasodi1/test_neuroflame_comp_srr_freesurfer',
+    imageDownloadUrl: 'docker pull sbasodi1/test_neuroflame_comp_srr_freesurfer',
+    notes: computationNotesNeuroflameCompSrrFreesurfer,
+    owner: predefinedIds.user2Id.toString(),
   },
 ]
 
