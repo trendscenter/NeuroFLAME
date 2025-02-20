@@ -12,7 +12,7 @@ import ConsortiumWizardNavBar from './ConsortiumWizardNavBar';
 import { ConsortiumDetailsProvider } from '../ConsortiumDetails/ConsortiumDetailsContext';
 import { useConsortiumDetailsContext } from "../ConsortiumDetails/ConsortiumDetailsContext";
 import { useCentralApi } from "../../apis/centralApi/centralApi";
-import { UserStateProvider, useUserState } from '../../contexts/UserStateContext';
+import { useUserState } from '../../contexts/UserStateContext';
 
 const ConsortiumWizard = () => {
 

@@ -58,7 +58,7 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ open, onClose, navSetDrawerOpen }
           )
         }
         <ListItem onClick={() => { navSetDrawerOpen(false) }} component={Link} to="/appConfig">
-          <ListItemText primary="User Config" />
+          <ListItemText primary="App Config" />
         </ListItem>
         <ListItem onClick={() => { handleLogout() }} style={{cursor: 'pointer'}}>
           <ListItemText primary="Logout" sx={{ color: "#001f70" }} />

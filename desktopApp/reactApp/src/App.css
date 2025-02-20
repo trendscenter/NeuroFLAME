@@ -325,3 +325,15 @@ textarea {
     display: none !important;
   }
 }
+
+@media only screen and (max-width: 814px) {
+  .home-content-header {
+    padding: 0;
+  }
+}
+
+@media only screen and (min-width: 815px) {
+  .home-content-header {
+    padding: 0 1rem;
+  }
+}
