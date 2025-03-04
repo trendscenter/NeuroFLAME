@@ -12,6 +12,7 @@ import {
     Button,
     Divider,
     Typography,
+    Box
 } from "@mui/material";
 
 interface VaultUserListProps {
@@ -21,6 +22,7 @@ interface VaultUserListProps {
 const VaultUserList: React.FC<VaultUserListProps> = ({ onClose }) => {
     const { getVaultUserList, leaderAddVaultUser } = useCentralApi();
     const [vaultUserList, setVaultUserList] = useState<PublicUser[]>([]);
+    const [selectedVaultInfo, setSelectedVaultInfo] = useState<number>(0);
     const consortiumId = useParams<{ consortiumId: string }>().consortiumId as string;
 
     useEffect(() => {
@@ -39,34 +41,52 @@ const VaultUserList: React.FC<VaultUserListProps> = ({ onClose }) => {
     };
 
     return (
-        <Container maxWidth="sm" sx={{ mt: 4 }}>
-            <Typography variant="h6" gutterBottom>
-                Vaults
-            </Typography>
-            <List>
-                {vaultUserList.map(({ id, username, vault }) => (
-                    <React.Fragment key={id}>
-                        <ListItem
-                            secondaryAction={
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => handleAdd(id)}
+        <>
+            <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-start'}}>
+                <Box sx={{width: '50%', borderRight: '1px solid grey', padding: '0 1rem 1rem 0'}}>
+                    <List>
+                        {vaultUserList.map(({ id, username, vault}, index) => (
+                            <React.Fragment key={id}>
+                                <ListItem
+                                    secondaryAction={
+                                        <Box sx={{display: 'flex', flexDirection: 'row', gap: '0.5rem'}}>
+                                        <Button
+                                            variant="outlined"
+                                            color="primary"
+                                            size="small"
+                                            onClick={() => setSelectedVaultInfo(index)}
+                                        >
+                                            Info
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            size="small"
+                                            onClick={() => handleAdd(id)}
+                                        >
+                                            Add
+                                        </Button>
+                                        </Box>
+                                    }
                                 >
-                                    Add
-                                </Button>
-                            }
-                        >
-                            <ListItemText
-                                primary={username}
-                                secondary={vault?.name || "No Vault Assigned"}
-                            />
-                        </ListItem>
-                        <Divider component="li" />
-                    </React.Fragment>
-                ))}
-            </List>
-        </Container>
+                                    <ListItemText
+                                        primary={username}
+                                        secondary={vault?.name || "No Vault Assigned"}
+                                        primaryTypographyProps={{ fontWeight: "bold" }}
+                                    />
+                                </ListItem>
+                                <Divider component="li" />
+                            </React.Fragment>
+                        ))}
+                    </List>
+                </Box>
+                <Box sx={{width: '50%', padding: '0 0 1rem 1rem'}}>
+                    <h2 style={{color: 'black'}}>{vaultUserList[selectedVaultInfo]?.username}</h2>
+                    <h3>{vaultUserList[selectedVaultInfo]?.vault?.name}</h3>
+                    <div>{vaultUserList[selectedVaultInfo]?.vault?.description}</div>
+                </Box>
+            </Box>
+        </>
     );
 };
 
