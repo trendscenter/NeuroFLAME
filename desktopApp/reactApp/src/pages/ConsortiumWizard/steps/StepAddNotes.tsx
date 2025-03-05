@@ -10,7 +10,7 @@ export default function StepAddNotes(){
     <Box style={{
         maxWidth: '400px',
         border: '1px solid #eee',
-        height: 'calc(100vh - 26rem)',  // Limit height to keep within view
+        height: 'calc(100vh - 28rem)',  // Limit height to keep within view
         overflowY: 'scroll',  // Allow vertical scrolling if content exceeds
         padding: 1,
         boxSizing: 'border-box',
