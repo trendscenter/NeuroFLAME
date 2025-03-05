@@ -31,7 +31,7 @@ export default function MembersListEdit({ memberList, leaderSetMemberActive, lea
                             alignItems: 'center', 
                             width: 'calc(100% - 2rem)',
                             padding: '0.5rem 1rem',
-                            background: index % 2 == 0 ? 'white' : '#efefef'
+                            background: index % 2 == 0 ? 'white' : '#EEF2F2'
                         }}
                     >
                         <div>
