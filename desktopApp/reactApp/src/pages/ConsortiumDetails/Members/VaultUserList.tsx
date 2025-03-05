@@ -43,7 +43,7 @@ const VaultUserList: React.FC<VaultUserListProps> = ({ onClose }) => {
     return (
         <>
             <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-start'}}>
-                <Box sx={{width: '50%', borderRight: '1px solid grey', padding: '0 1rem 1rem 0'}}>
+                <Box sx={{width: '50%', borderRight: '1px solid grey', padding: '0 1rem 1rem 0', height: '275px', overflow: 'scroll'}}>
                     <List>
                         {vaultUserList.map(({ id, username, vault}, index) => (
                             <React.Fragment key={id}>
@@ -80,7 +80,7 @@ const VaultUserList: React.FC<VaultUserListProps> = ({ onClose }) => {
                         ))}
                     </List>
                 </Box>
-                <Box sx={{width: '50%', padding: '0 0 1rem 1rem'}}>
+                <Box sx={{width: '50%', padding: '0 1rem 1rem 1rem', height: '275px', overflow: 'scroll'}}>
                     <h2 style={{color: 'black'}}>{vaultUserList[selectedVaultInfo]?.username}</h2>
                     <h3>{vaultUserList[selectedVaultInfo]?.vault?.name}</h3>
                     <div>{vaultUserList[selectedVaultInfo]?.vault?.description}</div>
