@@ -48,7 +48,24 @@ export default function MembersListDisplay({ memberList }: MembersListDisplayPro
                         />
                     );
                 }
-                return null; // To handle the case where isReady is false
+                return null; // To handle the case where isActive and isReady is false
+            })}
+            {/* Display Ready Members */}
+            {memberList.map(({ id, username, isActive, isReady, isLeader }, index) => {
+                if (!isActive && isReady && !isLeader) {
+                    return (
+                        <MemberAvatar 
+                            key={`${id}-${index}`}
+                            username={username} 
+                            isLeader={isLeader} 
+                            isActive={isActive} 
+                            isReady={isReady}
+                            index={index} 
+                            direction="column"
+                        />
+                    );
+                }
+                return null; // To handle the case where isReady is true and isActive is false
             })}
             {/* Display Active Members */}
             {memberList.map(({ id, username, isActive, isReady, isLeader }, index) => {
@@ -65,7 +82,7 @@ export default function MembersListDisplay({ memberList }: MembersListDisplayPro
                         />
                     );
                 }
-                return null; // To handle the case where isReady is false
+                return null; // To handle the case where isActive is true and isReady is false
             })}
             {/* Display Joined Members */}
             {memberList.map(({ id, username, isActive, isReady, isLeader }, index) => {

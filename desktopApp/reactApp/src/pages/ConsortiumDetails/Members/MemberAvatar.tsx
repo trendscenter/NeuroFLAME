@@ -20,7 +20,7 @@ const GetUserColor = (index: number, active: boolean): string => {
     const valkeyIndex = index % UserColor.length; 
     return UserColor[valkeyIndex];
   } else {
-    return "#e8e8e8";
+    return "#ddd";
   }
 };
 
@@ -118,7 +118,7 @@ const MemberAvatar: React.FC<MemberAvatarProps> = (props) => {
       <span
         className="username"
         style={{
-          color: isActive ? '#000' : '#ccc',
+          color: isActive ? '#000' : '#aaa',
           marginLeft: direction === 'row' ? '0.5rem' : '0',
           fontSize: nameSize
         }}
