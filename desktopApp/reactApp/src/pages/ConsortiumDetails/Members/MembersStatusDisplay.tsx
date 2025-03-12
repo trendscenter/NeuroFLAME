@@ -21,7 +21,7 @@ export function MembersStatusDisplay({ memberList, setMemberReady }: MembersStat
     return(
      <>
         {/* Ready/Not Ready Switch */}
-        {itsMe && itsMe.isActive && 
+        {itsMe && 
             <Box display='flex' flexDirection='row' justifyContent='flex-start' alignItems='center'>
                 <Button
                     color="success"

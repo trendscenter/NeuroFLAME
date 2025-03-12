@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { Button, Box, Typography } from '@mui/material'; 
 import StepSelectComputation from './steps/StepSelectComputation';
