@@ -22,9 +22,9 @@ To make this process seamless, NeuroFlame provides an **easy-to-use desktop appl
 
 ## **Documentation**
 
-- **[User Guide](#)** – How to configure studies, execute runs, and interpret results.
-- **[Computation Author Guide](#)** – How to create and integrate custom computation modules.
-- **[Hosting and Deployment Guide](#)** – How to set up and maintain a NeuroFlame deployment.
-- **[Developer Guide](#)** – How to contribute to and extend the platform.
-- **[Architecture and Design](#)** – Technical deep dive into system architecture.
+- **[User Guide](./docs/user-guide.md)** – How to configure studies, execute runs, and interpret results.
+- **[Computation Author Guide](./docs/computation-author-guide.md)** – How to create and integrate custom computation modules.
+- **[Hosting and Deployment Guide](./docs/hosting-and-deployment-guide.md)** – How to set up and maintain a NeuroFlame deployment.
+- **[Developer Guide](./docs/developer-guide.md)** – How to contribute to and extend the platform.
+- **[Architecture and Design](./docs/architecture-and-design.md)** – Technical deep dive into system architecture.
 
