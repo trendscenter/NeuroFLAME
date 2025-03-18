@@ -30,6 +30,7 @@ const predefinedIds = {
   computation3Id: new mongoose.Types.ObjectId('66289c79aebab67040a21002'),
   computation4Id: new mongoose.Types.ObjectId('66289c79aebab67040a21003'),
   computation5Id: new mongoose.Types.ObjectId('66289c79aebab67040a21004'),
+  computation6Id: new mongoose.Types.ObjectId('66289c79aebab67040a21005'),
   consortium1Id: new mongoose.Types.ObjectId('66289c79aecab67040a22001'),
   consortium2Id: new mongoose.Types.ObjectId('66289c79aecab67040a22002'),
   run1Id: new mongoose.Types.ObjectId('66289c79aecab67040a23000'),
@@ -119,6 +120,14 @@ const computations = [
     imageName: 'sbasodi1/test_neuroflame_comp_srr_freesurfer',
     imageDownloadUrl: 'docker pull sbasodi1/test_neuroflame_comp_srr_freesurfer',
     notes: computationNotesNeuroflameCompSrrFreesurfer,
+    owner: predefinedIds.user2Id.toString(),
+  },
+  {
+    _id: predefinedIds.computation6Id,
+    title: 'flare_file_transfer',
+    imageName: 'dylanrmartin/computations:flare_file_transfer',
+    imageDownloadUrl: 'docker pull dylanrmartin/computations:flare_file_transfer',
+    notes: "---",
     owner: predefinedIds.user2Id.toString(),
   },
 ]
