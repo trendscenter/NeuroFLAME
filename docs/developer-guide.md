@@ -18,8 +18,8 @@ Follow these steps to set up and run the development environment.
 
 ### **1. Clone the Repository**
 ```bash
-git clone <repository-url>
-cd <repository-name>
+git clone https://github.com/NeuroFlame/NeuroFLAME.git
+cd NeuroFLAME
 ```
 
 ### **2. Install Dependencies**
