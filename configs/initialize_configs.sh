@@ -16,9 +16,9 @@ fi
 # Copy all JSON files from ./defaults to ./
 cp ./defaults/*.json ./
 
-# Replace {{REPO_DIR}} with the actual absolute path in each JSON file
+# Replace {{REPO_DIR}} with the actual absolute path in each JSON file using a portable method
 for file in ./*.json; do
-    sed -i "s#{{REPO_DIR}}#$REPO_DIR#g" "$file"
+    awk -v repo_dir="$REPO_DIR" '{gsub(/\{\{REPO_DIR\}\}/, repo_dir)}1' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
 done
 
 echo "Configuration files have been initialized."
