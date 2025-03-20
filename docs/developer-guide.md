@@ -37,7 +37,7 @@ cd configs && ./initialize_configs.sh
 ### **4. Start the Database**
 Launch the database container using Docker Compose:
 ```bash
-cd _devCentralDatabase && docker-compose up
+cd _devCentralDatabase && docker compose up -d
 ```
 
 ### **5. Build the Edge Federated Client Package**
