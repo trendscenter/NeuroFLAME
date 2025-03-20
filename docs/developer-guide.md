@@ -42,13 +42,13 @@ cd _devCentralDatabase && docker compose up -d
 
 ### **5. Build the Edge Federated Client Package**
 ```bash
-cd edgeFederatedClient && npm run build
+cd edgeFederatedClient && npm i && npm run build
 ```
 
 ### **6. Seed the Database**
 Run the seeding script to populate the database with test data:
 ```bash
-cd centralApi && npm run seed
+cd centralApi && npm i && npm run seed
 ```
 
 ### **7. Start the Services**
@@ -56,25 +56,25 @@ Open multiple terminal windows and run the following commands in each:
 
 #### **Central API**
 ```bash
-cd centralApi && npm run start-configured
+cd centralApi && npm i && npm run start-configured
 ```
 
 #### **Central Federated Client**
 ```bash
-cd centralFederatedClient && npm run start-configured
+cd centralFederatedClient && npm i && npm run start-configured
 ```
 
 #### **File Server**
 ```bash
-cd fileServer && npm run start-configured
+cd fileServer && npm i && npm run start-configured
 ```
 
 #### **Desktop App (React)**
 ```bash
-cd desktopApp/reactApp && npm run start
+cd desktopApp/reactApp && npm i && npm run start
 ```
 
 #### **Desktop App (Electron)**
 ```bash
-cd desktopApp/electronApp && npm run start-configured
+cd desktopApp/electronApp && npm i && npm run start-configured
 ```
