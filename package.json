@@ -3,10 +3,6 @@
     "private": true,
     "workspaces": [
         "desktopApp/electronApp",
-        "edgeFederatedClient",
-        "centralApi",
-        "fileServer",
-        "vaultFederatedClient",
-        "centralFederatedClient"
+        "edgeFederatedClient"
     ]
 }
