@@ -22,30 +22,30 @@ git clone https://github.com/NeuroFlame/NeuroFLAME.git
 cd NeuroFLAME
 ```
 
-### **2. Initialize Configuration**
+### **3. Initialize Configuration**
 Run the configuration initialization script:
 ```bash
 cd configs && ./initialize_configs.sh
 ```
 
-### **3. Start the Database**
+### **4. Start the Database**
 Launch the database container using Docker Compose:
 ```bash
 cd _devCentralDatabase && docker compose up -d
 ```
 
-### **4. Build the Edge Federated Client Package**
+### **5. Build the Edge Federated Client Package**
 ```bash
 cd edgeFederatedClient && npm i && npm run build
 ```
 
-### **5. Seed the Database**
+### **6. Seed the Database**
 Run the seeding script to populate the database with test data:
 ```bash
 cd centralApi && npm i && npm run seed
 ```
 
-### **6. Start the Services**
+### **7. Start the Services**
 Open multiple terminal windows and run the following commands in each:
 
 #### **Central API**
@@ -72,4 +72,3 @@ cd desktopApp/reactApp && npm i && npm run start
 ```bash
 cd desktopApp/electronApp && npm i && npm run start-configured
 ```
-
