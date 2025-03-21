@@ -30,7 +30,7 @@
   },
   "build": {
     "appId": "neuroflame",
-    "productName": "neuroflame",
+    "productName": "NeuroFLAME",
     "directories": {
       "buildResources": "assets",
       "output": "dist"
